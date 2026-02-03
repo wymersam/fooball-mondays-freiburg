@@ -436,14 +436,26 @@ func main() {
 	// Setup Gin router
 	r := gin.Default()
 
-	// CORS middleware for development
-	if os.Getenv("GIN_MODE") != "release" {
-		config := cors.DefaultConfig()
+	// CORS middleware
+	config := cors.DefaultConfig()
+	if os.Getenv("GIN_MODE") == "release" {
+		// Production - allow Railway frontend domain
+		allowedOrigins := []string{
+			"https://football-mondays-freiburg-production.up.railway.app",
+		}
+		// Add custom frontend URL if provided
+		if frontendURL := os.Getenv("FRONTEND_URL"); frontendURL != "" {
+			allowedOrigins = append(allowedOrigins, frontendURL)
+		}
+		config.AllowOrigins = allowedOrigins
+	} else {
+		// Development
 		config.AllowOrigins = []string{"http://localhost:3000"}
-		config.AllowCredentials = true
-		config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
-		r.Use(cors.New(config))
 	}
+	config.AllowCredentials = true
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	r.Use(cors.New(config))
 
 	// API routes
 	api := r.Group("/api")
