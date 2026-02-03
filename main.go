@@ -400,14 +400,15 @@ func userHandler(c *gin.Context) {
 
 // Serve static files
 func setupStaticFiles(r *gin.Engine) {
-	// Serve React build files in production
-	if os.Getenv("GIN_MODE") == "release" {
+	// Check if build directory exists (production)
+	if _, err := os.Stat("./build/index.html"); err == nil {
 		r.Static("/assets", "./build/assets")
 		r.StaticFile("/", "./build/index.html")
 		r.NoRoute(func(c *gin.Context) {
 			c.File("./build/index.html")
 		})
 	} else {
+		// Development mode - serve from public
 		r.Static("/static", "./public")
 		r.StaticFile("/", "./public/index.html")
 	}
