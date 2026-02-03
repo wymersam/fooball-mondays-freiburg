@@ -40,7 +40,11 @@ export interface ErrorResponse {
 
 // Component prop types
 export interface AuthFormProps {
-  onLogin: (username: string) => Promise<void>;
+  onLogin: (
+    username: string,
+    password: string,
+    isLogin: boolean,
+  ) => Promise<void>;
 }
 
 export interface ErrorMessageProps {

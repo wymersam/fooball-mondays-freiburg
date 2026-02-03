@@ -283,37 +283,41 @@ header h1 {
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .input-group label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-secondary);
   letter-spacing: 0.025em;
+  text-transform: uppercase;
 }
 
 /* Ultra-Modern Form Elements */
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
   padding: 1rem 1.25rem;
-  border: 2px solid var(--border);
+  border: 2px solid rgba(255, 0, 128, 0.2);
   border-radius: var(--radius-sm);
-  background: var(--background);
+  background: var(--surface);
   color: var(--text-primary);
   font-size: 1rem;
   transition: all var(--transition-normal);
   width: 100%;
   position: relative;
   font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="password"]:focus {
   outline: none;
   border-color: var(--primary);
   background: var(--surface-elevated);
@@ -323,17 +327,19 @@ input[type="text"]:focus {
   transform: translateY(-1px);
 }
 
-input[type="text"]:disabled {
+input[type="text"]:disabled,
+input[type="password"]:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-input[type="text"].loading {
+input[type="text"].loading,
+input[type="password"].loading {
   background: linear-gradient(
     90deg,
-    var(--background),
+    var(--surface),
     var(--surface-elevated),
-    var(--background)
+    var(--surface)
   );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
@@ -400,6 +406,23 @@ input[type="text"].loading {
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: var(--shadow-glow), var(--shadow-lg);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  width: 100%;
+  border: 2px solid rgba(255, 0, 128, 0.3);
+  font-size: 0.9rem;
+  padding: 0.875rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--surface-accent);
+  border-color: var(--primary);
+  color: var(--primary-light);
+  transform: translateY(-1px);
 }
 
 .btn-success {

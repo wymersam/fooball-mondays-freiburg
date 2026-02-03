@@ -25,13 +25,21 @@ function App() {
     }
   };
 
-  const handleLogin = async (username: string): Promise<void> => {
+  const handleLogin = async (
+    username: string,
+    password: string,
+    isLogin: boolean,
+  ): Promise<void> => {
     try {
-      const user = await authService.register(username);
+      const user = isLogin
+        ? await authService.login(username, password)
+        : await authService.register(username, password);
       setCurrentUser(user);
       setError("");
     } catch (err: any) {
-      setError(err.message || "Registration failed");
+      setError(
+        err.message || (isLogin ? "Login failed" : "Registration failed"),
+      );
     }
   };
 

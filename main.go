@@ -12,6 +12,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Data structures
@@ -23,8 +24,10 @@ type Signup struct {
 }
 
 type User struct {
-	Username  string    `json:"username"`
-	CreatedAt time.Time `json:"createdAt"`
+	Username     string    `json:"username"`
+	PasswordHash string    `json:"passwordHash"`
+	CreatedAt    time.Time `json:"createdAt"`
+	LastIP       string    `json:"lastIp,omitempty"`
 }
 
 type DataStore struct {
@@ -43,6 +46,12 @@ type SignupStatus struct {
 
 type RegisterRequest struct {
 	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type RegisterResponse struct {
@@ -272,10 +281,33 @@ func registerHandler(c *gin.Context) {
 		return
 	}
 
+	if len(req.Password) < 4 {
+		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "Password must be at least 4 characters"})
+		return
+	}
+
+	// Check if username already exists
+	for _, user := range dataStore.Users {
+		if user.Username == req.Username {
+			c.JSON(http.StatusBadRequest, ErrorResponse{Error: "Username already taken"})
+			return
+		}
+	}
+
+	// Hash password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "Failed to create account"})
+		return
+	}
+
 	userID := uuid.New().String()
+	clientIP := c.ClientIP()
 	dataStore.Users[userID] = User{
-		Username:  req.Username,
-		CreatedAt: time.Now(),
+		Username:     req.Username,
+		PasswordHash: string(hashedPassword),
+		CreatedAt:    time.Now(),
+		LastIP:       clientIP,
 	}
 
 	saveData(dataStore)
@@ -289,6 +321,53 @@ func registerHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, RegisterResponse{
 		Success:  true,
 		Username: req.Username,
+	})
+}
+
+func loginHandler(c *gin.Context) {
+	var req LoginRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "Invalid request format"})
+		return
+	}
+
+	// Find user by username
+	var foundUserID string
+	var foundUser User
+	for userID, user := range dataStore.Users {
+		if user.Username == req.Username {
+			foundUserID = userID
+			foundUser = user
+			break
+		}
+	}
+
+	if foundUserID == "" {
+		c.JSON(http.StatusUnauthorized, ErrorResponse{Error: "Invalid username or password"})
+		return
+	}
+
+	// Check password
+	err := bcrypt.CompareHashAndPassword([]byte(foundUser.PasswordHash), []byte(req.Password))
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, ErrorResponse{Error: "Invalid username or password"})
+		return
+	}
+
+	// Update last IP
+	foundUser.LastIP = c.ClientIP()
+	dataStore.Users[foundUserID] = foundUser
+	saveData(dataStore)
+
+	// Set cookie
+	isProduction := os.Getenv("PORT") != "" || os.Getenv("RAILWAY_ENVIRONMENT") != ""
+	secure := isProduction
+	c.SetSameSite(http.SameSiteNoneMode)
+	c.SetCookie("userId", foundUserID, 30*24*60*60, "/", "", secure, true)
+
+	c.JSON(http.StatusOK, RegisterResponse{
+		Success:  true,
+		Username: foundUser.Username,
 	})
 }
 
@@ -473,6 +552,7 @@ func main() {
 		api.GET("/health", healthHandler)
 		api.GET("/status", statusHandler)
 		api.POST("/register", registerHandler)
+		api.POST("/login", loginHandler)
 		api.POST("/signup", signupHandler)
 		api.DELETE("/signup", removeSignupHandler)
 		api.GET("/user", userHandler)

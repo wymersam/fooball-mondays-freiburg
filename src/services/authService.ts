@@ -18,11 +18,11 @@ class AuthService {
     return { username: data.username };
   }
 
-  async register(username: string): Promise<User> {
+  async register(username: string, password: string): Promise<User> {
     const response = await fetch(`${API_BASE}/api/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username }),
+      body: JSON.stringify({ username, password }),
       credentials: "include",
     });
 
@@ -31,6 +31,24 @@ class AuthService {
     if (!response.ok) {
       const errorData = data as any;
       throw new Error(errorData.error || "Registration failed");
+    }
+
+    return { username: data.username };
+  }
+
+  async login(username: string, password: string): Promise<User> {
+    const response = await fetch(`${API_BASE}/api/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+      credentials: "include",
+    });
+
+    const data: RegisterResponse = await response.json();
+
+    if (!response.ok) {
+      const errorData = data as any;
+      throw new Error(errorData.error || "Login failed");
     }
 
     return { username: data.username };
