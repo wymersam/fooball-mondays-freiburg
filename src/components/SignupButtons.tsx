@@ -1,10 +1,12 @@
 import { SignupButtonsProps } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 
 function SignupButtons({
   status,
   onSignup,
   onRemoveSignup,
 }: SignupButtonsProps) {
+  const { t } = useLanguage();
   if (!status) return null;
 
   const showButtons = status.canSignup || status.userSignedUp;
@@ -16,13 +18,13 @@ function SignupButtons({
       {status.userSignedUp ? (
         <button className="btn btn-danger" onClick={onRemoveSignup}>
           <span className="btn-icon">❌</span>
-          Remove My Signup
+          {t.removeMySignup}
         </button>
       ) : (
         status.canSignup && (
           <button className="btn btn-success" onClick={onSignup}>
             <span className="btn-icon">⚽</span>
-            {status.mainList.length >= 10 ? "Join Reserve List" : "Sign Me Up!"}
+            {status.mainList.length >= 10 ? t.joinReserveList : t.signMeUp}
           </button>
         )
       )}

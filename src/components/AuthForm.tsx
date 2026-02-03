@@ -1,7 +1,9 @@
 import { useState, FormEvent, ChangeEvent } from "react";
 import { AuthFormProps } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 
 function AuthForm({ onLogin }: AuthFormProps) {
+  const { t } = useLanguage();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLogin, setIsLogin] = useState<boolean>(true);
@@ -33,16 +35,16 @@ function AuthForm({ onLogin }: AuthFormProps) {
   return (
     <div className="auth-card">
       <div className="auth-header">
-        <h2>Welcome to Football Mondays! ⚽</h2>
-        <p>{isLogin ? "Sign in to your account" : "Create a new account"}</p>
+        <h2>{t.welcomeMessage}</h2>
+        <p>{isLogin ? t.signInPrompt : t.createAccountPrompt}</p>
       </div>
       <form className="auth-form" onSubmit={handleSubmit}>
         <div className="input-group">
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">{t.username}</label>
           <input
             id="username"
             type="text"
-            placeholder="e.g. john_doe"
+            placeholder={t.usernamePlaceholder}
             value={username}
             onChange={handleUsernameChange}
             minLength={2}
@@ -52,11 +54,11 @@ function AuthForm({ onLogin }: AuthFormProps) {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{t.password}</label>
           <input
             id="password"
             type="password"
-            placeholder="At least 4 characters"
+            placeholder={t.passwordPlaceholder}
             value={password}
             onChange={handlePasswordChange}
             minLength={4}
@@ -78,12 +80,12 @@ function AuthForm({ onLogin }: AuthFormProps) {
           {isSubmitting ? (
             <>
               <span className="spinner"></span>
-              {isLogin ? "Signing in..." : "Creating account..."}
+              {isLogin ? t.signingIn : t.creatingAccount}
             </>
           ) : isLogin ? (
-            "Sign in"
+            t.signIn
           ) : (
-            "Create Account"
+            t.createAccount
           )}
         </button>
         <button
@@ -92,9 +94,7 @@ function AuthForm({ onLogin }: AuthFormProps) {
           onClick={() => setIsLogin(!isLogin)}
           disabled={isSubmitting}
         >
-          {isLogin
-            ? "Need an account? Register"
-            : "Already have an account? Sign in"}
+          {isLogin ? t.needAccount : t.haveAccount}
         </button>
       </form>
     </div>

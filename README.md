@@ -10,6 +10,16 @@ A simple web application for managing weekly football sign-ups with React/TypeSc
 - Simple username-based authentication
 - Real-time status updates
 
+## Language Support
+
+This app currently supports 5 languages:
+
+- 🇬🇧 **English** (en)
+- 🇪🇸 **Spanish / Español** (es)
+- 🇮🇹 **Italian / Italiano** (it)
+- 🇸🇦 **Arabic / العربية** (ar) - with RTL support
+- 🇩🇪 **German / Deutsch** (de)
+
 ## Tech Stack
 
 - **Frontend**: React 18 with TypeScript
@@ -37,20 +47,6 @@ A simple web application for managing weekly football sign-ups with React/TypeSc
 
 3. **Access the App**:
    Open your browser to `http://localhost:3000`
-
-## Project Structure
-
-```
-football-mondays/
-├── public/           # Frontend files
-│   ├── index.html   # Main page
-│   ├── styles.css   # Styling
-│   └── app.js       # Frontend logic
-├── server.js        # Express server & API
-├── package.json     # Dependencies
-├── signups.json     # Data storage (created automatically)
-└── README.md        # This file
-```
 
 ## API Endpoints
 

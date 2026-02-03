@@ -1,39 +1,42 @@
+import { useLanguage } from "../context/LanguageContext";
+
 function Rules() {
+  const { t } = useLanguage();
   return (
     <div className="rules-card">
       <div className="rules-header">
-        <h3>📋 Game Rules</h3>
+        <h3>{t.gameRules}</h3>
       </div>
       <div className="rules-content">
         <div className="rule">
           <div className="rule-icon">🕰️</div>
           <div className="rule-text">
-            <h4>Sign-up Window</h4>
-            <p>List resets Monday 7:00 PM, signups open at 8:00 PM</p>
+            <h4>{t.signupWindow}</h4>
+            <p>{t.signupWindowDesc}</p>
           </div>
         </div>
 
         <div className="rule">
           <div className="rule-icon">🏟️</div>
           <div className="rule-text">
-            <h4>Playing Spots</h4>
-            <p>First 10 people get to play</p>
+            <h4>{t.playingSpots}</h4>
+            <p>{t.playingSpotsDesc}</p>
           </div>
         </div>
 
         <div className="rule">
           <div className="rule-icon">⏳</div>
           <div className="rule-text">
-            <h4>Reserve List</h4>
-            <p>Additional signups go to reserves</p>
+            <h4>{t.reserveListRule}</h4>
+            <p>{t.reserveListRuleDesc}</p>
           </div>
         </div>
 
         <div className="rule">
           <div className="rule-icon">👤</div>
           <div className="rule-text">
-            <h4>Self Sign-up Only</h4>
-            <p>You can only sign yourself up</p>
+            <h4>{t.selfSignupOnly}</h4>
+            <p>{t.selfSignupOnlyDesc}</p>
           </div>
         </div>
       </div>

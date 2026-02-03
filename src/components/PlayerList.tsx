@@ -1,6 +1,8 @@
 import { PlayerListProps } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 
 function PlayerList({ players, currentUser, isMainList }: PlayerListProps) {
+  const { t } = useLanguage();
   if (!players || players.length === 0) {
     return (
       <div
@@ -8,10 +10,8 @@ function PlayerList({ players, currentUser, isMainList }: PlayerListProps) {
       >
         <div className="empty-state">
           <div className="empty-icon">{isMainList ? "🏟️" : "⏳"}</div>
-          <h4>{isMainList ? "No players yet" : "No reserves yet"}</h4>
-          <p>
-            {isMainList ? "Be the first to sign up!" : "No one waiting yet"}
-          </p>
+          <h4>{isMainList ? t.noPlayersYet : t.noReservesYet}</h4>
+          <p>{isMainList ? t.beTheFirstToSignUp : t.noOneWaitingYet}</p>
         </div>
       </div>
     );
@@ -36,10 +36,10 @@ function PlayerList({ players, currentUser, isMainList }: PlayerListProps) {
               <div className="player-details">
                 <span className="player-name">
                   {player.username}
-                  {isCurrentUser && <span className="you-badge">You</span>}
+                  {isCurrentUser && <span className="you-badge">{t.you}</span>}
                 </span>
                 <span className="signup-time">
-                  Signed up:{" "}
+                  {t.signedUpAt}{" "}
                   {new Date(player.signupTime).toLocaleTimeString("en-GB", {
                     hour: "2-digit",
                     minute: "2-digit",

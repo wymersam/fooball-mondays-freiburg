@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import AuthForm from "./components/AuthForm";
 import MainApp from "./components/MainApp";
 import ErrorMessage from "./components/ErrorMessage";
+import LanguageSelector from "./components/LanguageSelector";
 import { authService } from "./services/authService";
 import { User } from "./types";
+import { LanguageProvider } from "./context/LanguageContext";
 
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -62,22 +64,26 @@ function App() {
   }
 
   return (
-    <div className="container">
-      <ErrorMessage message={error} />
+    <LanguageProvider>
+      <div className="language-selector-wrapper">
+        <LanguageSelector />
+      </div>
+      <div className="container">
+        <ErrorMessage message={error} />
 
-      {!currentUser ? (
-        <>
-          <AuthForm onLogin={handleLogin} />
-          <p className="footer">created by Sammy :)</p>
-        </>
-      ) : (
-        <MainApp
-          currentUser={currentUser}
-          onError={showError}
-          onLogout={handleLogout}
-        />
-      )}
-    </div>
+        {!currentUser ? (
+          <>
+            <AuthForm onLogin={handleLogin} />
+          </>
+        ) : (
+          <MainApp
+            currentUser={currentUser}
+            onError={showError}
+            onLogout={handleLogout}
+          />
+        )}
+      </div>
+    </LanguageProvider>
   );
 }
 

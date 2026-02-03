@@ -6,8 +6,10 @@ import Rules from "./Rules";
 import { apiService } from "../services/apiService";
 import { authService } from "../services/authService";
 import { MainAppProps, SignupStatus } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 
 function MainApp({ currentUser, onError, onLogout }: MainAppProps) {
+  const { t } = useLanguage();
   const [status, setStatus] = useState<SignupStatus | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -39,7 +41,7 @@ function MainApp({ currentUser, onError, onLogout }: MainAppProps) {
   };
 
   const handleRemoveSignup = async (): Promise<void> => {
-    if (!window.confirm("Are you sure you want to remove your signup?")) {
+    if (!window.confirm(t.areYouSureRemove)) {
       return;
     }
 
@@ -61,17 +63,17 @@ function MainApp({ currentUser, onError, onLogout }: MainAppProps) {
   };
 
   if (loading) {
-    return <div className="loading">Loading current status...</div>;
+    return <div className="loading">{t.loadingStatus}</div>;
   }
 
   return (
     <>
       <div className="user-info">
         <span>
-          Signed in as: <strong>{currentUser.username}</strong>
+          {t.signedInAs} <strong>{currentUser.username}</strong>
         </span>
         <button className="btn-logout" onClick={handleLogout}>
-          Sign out
+          {t.signOut}
         </button>
       </div>
 
