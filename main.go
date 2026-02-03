@@ -488,6 +488,69 @@ func userHandler(c *gin.Context) {
 	})
 }
 
+// Admin handler to clear all users
+func adminClearUsersHandler(c *gin.Context) {
+	// Check admin secret from header or query param
+	adminSecret := c.GetHeader("X-Admin-Secret")
+	if adminSecret == "" {
+		adminSecret = c.Query("secret")
+	}
+
+	expectedSecret := os.Getenv("ADMIN_SECRET")
+	if expectedSecret == "" {
+		c.JSON(http.StatusForbidden, ErrorResponse{Error: "Admin functionality not configured"})
+		return
+	}
+
+	if adminSecret != expectedSecret {
+		c.JSON(http.StatusUnauthorized, ErrorResponse{Error: "Invalid admin secret"})
+		return
+	}
+
+	// Clear all users
+	userCount := len(dataStore.Users)
+	dataStore.Users = make(map[string]User)
+	saveData(dataStore)
+
+	log.Printf("Admin cleared %d users", userCount)
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": fmt.Sprintf("Cleared %d users", userCount),
+	})
+}
+
+// Admin handler to clear all signups for current week
+func adminClearSignupsHandler(c *gin.Context) {
+	// Check admin secret
+	adminSecret := c.GetHeader("X-Admin-Secret")
+	if adminSecret == "" {
+		adminSecret = c.Query("secret")
+	}
+
+	expectedSecret := os.Getenv("ADMIN_SECRET")
+	if expectedSecret == "" {
+		c.JSON(http.StatusForbidden, ErrorResponse{Error: "Admin functionality not configured"})
+		return
+	}
+
+	if adminSecret != expectedSecret {
+		c.JSON(http.StatusUnauthorized, ErrorResponse{Error: "Invalid admin secret"})
+		return
+	}
+
+	// Clear signups for current week
+	currentWeek := getCurrentWeekKey()
+	signupCount := len(dataStore.Signups[currentWeek])
+	dataStore.Signups[currentWeek] = []Signup{}
+	saveData(dataStore)
+
+	log.Printf("Admin cleared %d signups for week %s", signupCount, currentWeek)
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": fmt.Sprintf("Cleared %d signups for week %s", signupCount, currentWeek),
+	})
+}
+
 // Serve static files
 func setupStaticFiles(r *gin.Engine) {
 	// Check if build directory exists (production)
@@ -564,6 +627,13 @@ func main() {
 		api.POST("/signup", signupHandler)
 		api.DELETE("/signup", removeSignupHandler)
 		api.GET("/user", userHandler)
+	}
+
+	// Admin routes
+	admin := r.Group("/api/admin")
+	{
+		admin.POST("/clear-users", adminClearUsersHandler)
+		admin.POST("/clear-signups", adminClearSignupsHandler)
 	}
 
 	// Setup static file serving
