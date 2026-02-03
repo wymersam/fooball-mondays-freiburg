@@ -312,11 +312,15 @@ func registerHandler(c *gin.Context) {
 
 	saveData(dataStore)
 
-	// Set cookie with SameSite=None for cross-origin support
+	// Set cookie - use Lax for development, None for production
 	isProduction := os.Getenv("PORT") != "" || os.Getenv("RAILWAY_ENVIRONMENT") != ""
-	secure := isProduction // HTTPS in production
-	c.SetSameSite(http.SameSiteNoneMode)
-	c.SetCookie("userId", userID, 30*24*60*60, "/", "", secure, true) // 30 days
+	if isProduction {
+		c.SetSameSite(http.SameSiteNoneMode)
+		c.SetCookie("userId", userID, 30*24*60*60, "/", "", true, true) // 30 days, secure
+	} else {
+		c.SetSameSite(http.SameSiteLaxMode)
+		c.SetCookie("userId", userID, 30*24*60*60, "/", "", false, true) // 30 days
+	}
 
 	c.JSON(http.StatusOK, RegisterResponse{
 		Success:  true,
@@ -359,11 +363,15 @@ func loginHandler(c *gin.Context) {
 	dataStore.Users[foundUserID] = foundUser
 	saveData(dataStore)
 
-	// Set cookie
+	// Set cookie - use Lax for development, None for production
 	isProduction := os.Getenv("PORT") != "" || os.Getenv("RAILWAY_ENVIRONMENT") != ""
-	secure := isProduction
-	c.SetSameSite(http.SameSiteNoneMode)
-	c.SetCookie("userId", foundUserID, 30*24*60*60, "/", "", secure, true)
+	if isProduction {
+		c.SetSameSite(http.SameSiteNoneMode)
+		c.SetCookie("userId", foundUserID, 30*24*60*60, "/", "", true, true) // 30 days, secure
+	} else {
+		c.SetSameSite(http.SameSiteLaxMode)
+		c.SetCookie("userId", foundUserID, 30*24*60*60, "/", "", false, true) // 30 days
+	}
 
 	c.JSON(http.StatusOK, RegisterResponse{
 		Success:  true,
