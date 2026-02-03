@@ -441,10 +441,10 @@ func main() {
 
 	// CORS middleware
 	config := cors.DefaultConfig()
-	
+
 	// Detect if we're in production (Railway sets PORT, or check for build files)
 	isProduction := os.Getenv("PORT") != "" || os.Getenv("RAILWAY_ENVIRONMENT") != ""
-	
+
 	if isProduction {
 		// Production - allow Railway domains and any custom frontend
 		allowedOrigins := []string{

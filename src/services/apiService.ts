@@ -1,10 +1,8 @@
 import { SignupStatus, SuccessResponse } from "../types";
 
-// API base URL - use Railway URL in production, localhost in development
-const API_BASE =
-  process.env.NODE_ENV === "production"
-    ? "https://football-mondays-production.up.railway.app" // Replace with your Railway URL
-    : "";
+// API base URL - empty string means use same origin (frontend and backend served together)
+// In development with Vite proxy, empty string uses the proxy
+const API_BASE = "";
 
 class ApiService {
   async getStatus(): Promise<SignupStatus> {
