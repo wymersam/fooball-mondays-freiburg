@@ -4,7 +4,7 @@ import { Language, languageNames, languageFlags } from "../types/translations";
 function LanguageSelector() {
   const { language, setLanguage } = useLanguage();
 
-  const languages: Language[] = ["en", "es", "it", "ar", "de"];
+  const languages: Language[] = ["en", "es", "it", "ar", "de", "pt"];
 
   return (
     <div className="language-selector">

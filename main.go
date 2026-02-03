@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/smtp"
 	"os"
 	"path/filepath"
 	"time"
@@ -12,6 +13,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -26,6 +28,7 @@ type Signup struct {
 type User struct {
 	Username     string    `json:"username"`
 	PasswordHash string    `json:"passwordHash"`
+	Email        string    `json:"email,omitempty"`
 	CreatedAt    time.Time `json:"createdAt"`
 	LastIP       string    `json:"lastIp,omitempty"`
 }
@@ -47,6 +50,7 @@ type SignupStatus struct {
 type RegisterRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+	Email    string `json:"email"`
 }
 
 type LoginRequest struct {
@@ -221,6 +225,86 @@ func saveData(data *DataStore) {
 	log.Printf("Saved shared data to %s", dataFilePath)
 }
 
+// Send email notification using Gmail SMTP (500 emails/day)
+func sendEmailNotification(email, subject, body string) error {
+	if email == "" {
+		return nil // User doesn't have email configured
+	}
+
+	// Get Gmail SMTP credentials from environment
+	smtpEmail := os.Getenv("SMTP_EMAIL")
+	smtpPassword := os.Getenv("SMTP_PASSWORD")
+
+	if smtpEmail == "" || smtpPassword == "" {
+		// If no credentials, just log (development mode)
+		log.Printf("=== EMAIL NOTIFICATION (NOT SENT - NO SMTP CONFIG) ===")
+		log.Printf("To: %s", email)
+		log.Printf("Subject: %s", subject)
+		log.Printf("Body: %s", body)
+		log.Printf("=======================================================")
+		return nil
+	}
+
+	// Setup authentication
+	auth := smtp.PlainAuth("", smtpEmail, smtpPassword, "smtp.gmail.com")
+
+	// Compose email message
+	fromName := "Football Mondays Freiburg"
+	msg := []byte("From: " + fromName + " <" + smtpEmail + ">\r\n" +
+		"To: " + email + "\r\n" +
+		"Subject: " + subject + "\r\n" +
+		"\r\n" +
+		body + "\r\n")
+
+	// Send email via Gmail SMTP
+	err := smtp.SendMail(
+		"smtp.gmail.com:587",
+		auth,
+		smtpEmail,
+		[]string{email},
+		msg,
+	)
+
+	if err != nil {
+		log.Printf("Error sending email to %s: %v", email, err)
+		return fmt.Errorf("failed to send email: %w", err)
+	}
+
+	log.Printf("✅ Email sent successfully to %s", email)
+	return nil
+}
+
+// Check if someone moved from reserve to starting XI and notify them
+func checkAndNotifyPromotions(currentWeek string, oldSignups, newSignups []Signup) {
+	// Create maps for quick lookup
+	oldPositions := make(map[string]int)
+	for i, signup := range oldSignups {
+		oldPositions[signup.UserID] = i + 1
+	}
+
+	// Check each person in the new signups
+	for i, signup := range newSignups {
+		newPosition := i + 1
+		oldPosition, existed := oldPositions[signup.UserID]
+
+		// If they moved from reserve (>10) to starting XI (<=10)
+		if existed && oldPosition > 10 && newPosition <= 10 {
+			// Get user details to send email notification
+			user, exists := dataStore.Users[signup.UserID]
+			if exists && user.Email != "" {
+				subject := "⚽ You're in the Starting XI!"
+				body := fmt.Sprintf(
+					"Great news, %s!\n\n"+
+						"You're in the Starting XI for Monday :).\n\n"+
+						"See you on the pitch! Jawooohhhlll 🏟️\n\n",
+					user.Username,
+				)
+				go sendEmailNotification(user.Email, subject, body)
+			}
+		}
+	}
+}
+
 // API Handlers
 func healthHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
@@ -306,6 +390,7 @@ func registerHandler(c *gin.Context) {
 	dataStore.Users[userID] = User{
 		Username:     req.Username,
 		PasswordHash: string(hashedPassword),
+		Email:        req.Email,
 		CreatedAt:    time.Now(),
 		LastIP:       clientIP,
 	}
@@ -454,6 +539,10 @@ func removeSignupHandler(c *gin.Context) {
 		return
 	}
 
+	// Store old signups before removal for promotion detection
+	oldSignups := make([]Signup, len(dataStore.Signups[currentWeek]))
+	copy(oldSignups, dataStore.Signups[currentWeek])
+
 	// Remove the signup
 	dataStore.Signups[currentWeek] = append(
 		dataStore.Signups[currentWeek][:signupIndex],
@@ -464,6 +553,9 @@ func removeSignupHandler(c *gin.Context) {
 	for i := range dataStore.Signups[currentWeek] {
 		dataStore.Signups[currentWeek][i].Position = i + 1
 	}
+
+	// Check and notify promotions
+	checkAndNotifyPromotions(currentWeek, oldSignups, dataStore.Signups[currentWeek])
 
 	saveData(dataStore)
 	c.JSON(http.StatusOK, SuccessResponse{Success: true})
@@ -593,6 +685,13 @@ func startWeeklyResetChecker() {
 }
 
 func main() {
+	// Load .env file if it exists (for local development)
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system environment variables")
+	} else {
+		log.Println("Loaded environment variables from .env file")
+	}
+
 	// Initialize data
 	initDataFile()
 

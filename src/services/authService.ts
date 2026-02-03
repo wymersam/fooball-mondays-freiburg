@@ -18,11 +18,15 @@ class AuthService {
     return { username: data.username };
   }
 
-  async register(username: string, password: string): Promise<User> {
+  async register(
+    username: string,
+    password: string,
+    email?: string,
+  ): Promise<User> {
     const response = await fetch(`${API_BASE}/api/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, email: email || "" }),
       credentials: "include",
     });
 

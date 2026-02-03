@@ -31,11 +31,12 @@ function App() {
     username: string,
     password: string,
     isLogin: boolean,
+    email?: string,
   ): Promise<void> => {
     try {
       const user = isLogin
         ? await authService.login(username, password)
-        : await authService.register(username, password);
+        : await authService.register(username, password, email);
       setCurrentUser(user);
       setError("");
     } catch (err: any) {

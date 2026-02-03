@@ -404,9 +404,17 @@ header h1 {
   text-transform: uppercase;
 }
 
+.input-hint {
+  font-size: 0.75rem;
+  color: white;
+  font-style: italic;
+  margin-top: -0.25rem;
+}
+
 /* Ultra-Modern Form Elements */
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="email"] {
   padding: 1rem 1.25rem;
   border: 2px solid rgba(255, 0, 128, 0.2);
   border-radius: var(--radius-sm);
@@ -421,7 +429,8 @@ input[type="password"] {
 }
 
 input[type="text"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="email"]:focus {
   outline: none;
   border-color: var(--primary);
   background: var(--surface-elevated);
@@ -432,13 +441,15 @@ input[type="password"]:focus {
 }
 
 input[type="text"]:disabled,
-input[type="password"]:disabled {
+input[type="password"]:disabled,
+input[type="email"]:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
 input[type="text"].loading,
-input[type="password"].loading {
+input[type="password"].loading,
+input[type="email"].loading {
   background: linear-gradient(
     90deg,
     var(--surface),

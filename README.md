@@ -10,30 +10,56 @@ A simple web application for managing weekly football sign-ups with React/TypeSc
 - Simple username-based authentication
 - Real-time status updates
 
-## Language Support
+## Features
 
-This app currently supports 5 languages:
+### Email Notifications
+
+- Reserve players get notified by email when promoted to starting XI
+- Optional email during registration
+- Powered by Resend (100 free emails/day)
+
+### Language Support
+
+This app supports 6 languages:
 
 - 🇬🇧 **English** (en)
 - 🇪🇸 **Spanish / Español** (es)
 - 🇮🇹 **Italian / Italiano** (it)
 - 🇸🇦 **Arabic / العربية** (ar) - with RTL support
 - 🇩🇪 **German / Deutsch** (de)
+- 🇧🇷 **Portuguese / Português** (pt)
 
 ## Tech Stack
 
-- **Frontend**: React 18 with TypeScript
-- **Backend**: Go with Gin framework
+- **Frontend**: React 19 with TypeScript, Vite
+- **Backend**: Go 1.24 with Gin framework
+- **Email**: Resend API (free tier)
 - **Data**: JSON file storage
-- **Styling**: CSS
+- **Styling**: CSS with RTL support
+
+## Setup
 
 1. **Install Dependencies**:
 
    ```bash
    npm install
+   go mod download
    ```
 
-2. **Start the Server**:
+2. **Configure Email (Optional)**:
+
+   ```bash
+   # Copy the example environment file
+   cp .env.example .env
+
+   # Edit .env and add your Resend API key
+   # Get free API key at: https://resend.com/api-keys
+   # Free tier: 100 emails/day, 3000/month
+   ```
+
+   The app will work without an API key but won't send actual emails (will just log them).
+
+3. **Start the Server**:
 
    ```bash
    npm start
@@ -45,7 +71,7 @@ This app currently supports 5 languages:
    npm run dev
    ```
 
-3. **Access the App**:
+4. **Access the App**:
    Open your browser to `http://localhost:3000`
 
 ## API Endpoints

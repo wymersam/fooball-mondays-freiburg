@@ -1,4 +1,4 @@
-export type Language = "en" | "es" | "it" | "ar" | "de";
+export type Language = "en" | "es" | "it" | "ar" | "de" | "pt";
 
 export interface Translations {
   // App title and header
@@ -13,6 +13,9 @@ export interface Translations {
   usernamePlaceholder: string;
   password: string;
   passwordPlaceholder: string;
+  email: string;
+  emailPlaceholder: string;
+  emailHint: string;
   signIn: string;
   signingIn: string;
   createAccount: string;
@@ -80,6 +83,9 @@ export const translations: Record<Language, Translations> = {
     usernamePlaceholder: "e.g. john_doe",
     password: "Password",
     passwordPlaceholder: "At least 4 characters",
+    email: "Email (optional)",
+    emailPlaceholder: "your.email@example.com",
+    emailHint: "Get notified when promoted to Starting XI",
     signIn: "Sign in",
     signingIn: "Signing in...",
     createAccount: "Create Account",
@@ -131,6 +137,9 @@ export const translations: Record<Language, Translations> = {
     usernamePlaceholder: "ej. juan_perez",
     password: "Contraseña",
     passwordPlaceholder: "Al menos 4 caracteres",
+    email: "Correo electrónico (opcional)",
+    emailPlaceholder: "tu.correo@ejemplo.com",
+    emailHint: "Recibe notificaciones cuando seas promovido al Once Inicial",
     signIn: "Iniciar sesión",
     signingIn: "Iniciando sesión...",
     createAccount: "Crear Cuenta",
@@ -184,6 +193,10 @@ export const translations: Record<Language, Translations> = {
     usernamePlaceholder: "es. mario_rossi",
     password: "Password",
     passwordPlaceholder: "Almeno 4 caratteri",
+    email: "Email (facoltativa)",
+    emailPlaceholder: "tua.email@esempio.com",
+    emailHint:
+      "Ricevi notifiche quando vieni promosso alla Formazione Titolare",
     signIn: "Accedi",
     signingIn: "Accesso in corso...",
     createAccount: "Crea Account",
@@ -237,6 +250,9 @@ export const translations: Record<Language, Translations> = {
     usernamePlaceholder: "مثلاً أحمد_محمد",
     password: "كلمة المرور",
     passwordPlaceholder: "4 أحرف على الأقل",
+    email: "(البريد الإلكتروني (اختياري",
+    emailPlaceholder: "your.email@example.com",
+    emailHint: "احصل على إشعارات عند الترقية إلى التشكيلة الأساسية",
     signIn: "تسجيل الدخول",
     signingIn: "...جاري تسجيل الدخول",
     createAccount: "إنشاء حساب",
@@ -290,6 +306,10 @@ export const translations: Record<Language, Translations> = {
     usernamePlaceholder: "z.B. hans_mueller",
     password: "Passwort",
     passwordPlaceholder: "Mindestens 4 Zeichen",
+    email: "E-Mail (optional)",
+    emailPlaceholder: "deine.email@beispiel.de",
+    emailHint:
+      "Erhalte Benachrichtigungen bei Beförderung zur Startaufstellung",
     signIn: "Anmelden",
     signingIn: "Anmeldung läuft...",
     createAccount: "Konto Erstellen",
@@ -334,6 +354,62 @@ export const translations: Record<Language, Translations> = {
       "Bist du sicher, dass du deine Anmeldung entfernen möchtest?",
     createdBy: "erstellt von Sammy :)",
   },
+  pt: {
+    appTitle: "Futebol às Segundas Freiburg",
+    subtitle: "Inscrições Semanais de Futebol",
+    welcomeMessage: "Bem-vindo ao Futebol às Segundas! ⚽",
+    signInPrompt: "Entre na sua conta",
+    createAccountPrompt: "Crie uma nova conta",
+    username: "Nome de usuário",
+    usernamePlaceholder: "ex. joao_silva",
+    password: "Senha",
+    passwordPlaceholder: "Pelo menos 4 caracteres",
+    email: "E-mail (opcional)",
+    emailPlaceholder: "seu.email@exemplo.com",
+    emailHint: "Receba notificações quando for promovido ao Time Titular",
+    signIn: "Entrar",
+    signingIn: "Entrando...",
+    createAccount: "Criar Conta",
+    creatingAccount: "Criando conta...",
+    needAccount: "Precisa de uma conta? Cadastre-se",
+    haveAccount: "Já tem uma conta? Entre",
+    signedInAs: "Conectado como:",
+    signOut: "Sair",
+    nextWeeksGame: "⚽ Jogo da próxima semana",
+    signupsOpen: "Inscrições ABERTAS!",
+    signupsClosed: "Inscrições Fechadas",
+    signupsOpenMessage: "Os primeiros 10 jogadores podem jogar!",
+    signupsClosedMessage:
+      "A lista reinicia segunda-feira às 19:00, inscrições abrem às 20:00",
+    playing: "Jogando",
+    reserve: "Reserva",
+    spotsLeft: "Vagas Restantes",
+    removeMySignup: "Remover Minha Inscrição",
+    signMeUp: "Me Inscrever!",
+    joinReserveList: "Entrar na Lista de Reservas",
+    startingXI: "🏟️ Time Titular",
+    reserveList: "⏳ Lista de Reservas",
+    noPlayersYet: "Ainda não há jogadores",
+    beTheFirstToSignUp: "Seja o primeiro a se inscrever!",
+    noReservesYet: "Ainda não há reservas",
+    noOneWaitingYet: "Ninguém esperando ainda",
+    you: "Você",
+    signedUpAt: "Inscrito:",
+    gameRules: "📋 Regras do Jogo",
+    signupWindow: "Janela de Inscrição",
+    signupWindowDesc:
+      "A lista reinicia segunda-feira às 19:00, inscrições abrem às 20:00",
+    playingSpots: "Vagas para Jogar",
+    playingSpotsDesc: "As primeiras 10 pessoas podem jogar",
+    reserveListRule: "Lista de Reservas",
+    reserveListRuleDesc: "Inscrições adicionais vão para as reservas",
+    selfSignupOnly: "Apenas Inscrição Própria",
+    selfSignupOnlyDesc: "Você só pode inscrever a si mesmo",
+    loading: "Carregando...",
+    loadingStatus: "Carregando status atual...",
+    areYouSureRemove: "Tem certeza de que deseja remover sua inscrição?",
+    createdBy: "criado por Sammy :)",
+  },
 };
 
 export const languageNames: Record<Language, string> = {
@@ -342,6 +418,7 @@ export const languageNames: Record<Language, string> = {
   it: "Italiano",
   ar: "العربية",
   de: "Deutsch",
+  pt: "Português",
 };
 
 export const languageFlags: Record<Language, string> = {
@@ -350,4 +427,5 @@ export const languageFlags: Record<Language, string> = {
   it: "🇮🇹",
   ar: "🇸🇦",
   de: "🇩🇪",
+  pt: "🇧🇷",
 };

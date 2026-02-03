@@ -44,6 +44,7 @@ export interface AuthFormProps {
     username: string,
     password: string,
     isLogin: boolean,
+    email?: string,
   ) => Promise<void>;
 }
 
