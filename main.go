@@ -280,8 +280,11 @@ func registerHandler(c *gin.Context) {
 
 	saveData(dataStore)
 
-	// Set cookie
-	c.SetCookie("userId", userID, 30*24*60*60, "/", "", false, true) // 30 days
+	// Set cookie with SameSite=None for cross-origin support
+	isProduction := os.Getenv("PORT") != "" || os.Getenv("RAILWAY_ENVIRONMENT") != ""
+	secure := isProduction // HTTPS in production
+	c.SetSameSite(http.SameSiteNoneMode)
+	c.SetCookie("userId", userID, 30*24*60*60, "/", "", secure, true) // 30 days
 
 	c.JSON(http.StatusOK, RegisterResponse{
 		Success:  true,
@@ -438,19 +441,26 @@ func main() {
 
 	// CORS middleware
 	config := cors.DefaultConfig()
-	if os.Getenv("GIN_MODE") == "release" {
-		// Production - allow Railway frontend domain
+	
+	// Detect if we're in production (Railway sets PORT, or check for build files)
+	isProduction := os.Getenv("PORT") != "" || os.Getenv("RAILWAY_ENVIRONMENT") != ""
+	
+	if isProduction {
+		// Production - allow Railway domains and any custom frontend
 		allowedOrigins := []string{
 			"https://football-mondays-freiburg-production.up.railway.app",
+			"https://football-mondays-production.up.railway.app",
 		}
 		// Add custom frontend URL if provided
 		if frontendURL := os.Getenv("FRONTEND_URL"); frontendURL != "" {
 			allowedOrigins = append(allowedOrigins, frontendURL)
 		}
 		config.AllowOrigins = allowedOrigins
+		log.Printf("CORS enabled for production origins: %v", allowedOrigins)
 	} else {
 		// Development
 		config.AllowOrigins = []string{"http://localhost:3000"}
+		log.Println("CORS enabled for development: http://localhost:3000")
 	}
 	config.AllowCredentials = true
 	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
