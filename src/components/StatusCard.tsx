@@ -25,7 +25,7 @@ function StatusCard({ status }: StatusCardProps) {
           <p>
             {status.canSignup
               ? "First 10 players get to play!"
-              : "Sign-ups open Monday at 8:00 PM"}
+              : "List resets Monday 7:00 PM, signups open at 8:00 PM"}
           </p>
         </div>
       </div>

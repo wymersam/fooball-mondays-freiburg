@@ -1,18 +1,18 @@
-# Build stage
-FROM node:18-alpine AS frontend-builder
+# Build frontend
+FROM node:22-alpine AS frontend-builder
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 COPY src/ src/
 COPY public/ public/
-COPY tsconfig.json .
+COPY index.html tsconfig.json vite.config.ts ./
 
 RUN npm run build
 
 # Go build stage
-FROM golang:1.21-alpine AS backend-builder
+FROM golang:1.24-alpine AS backend-builder
 
 WORKDIR /app
 COPY go.mod go.sum ./

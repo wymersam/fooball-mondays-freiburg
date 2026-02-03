@@ -9,7 +9,7 @@ function Rules() {
           <div className="rule-icon">🕰️</div>
           <div className="rule-text">
             <h4>Sign-up Window</h4>
-            <p>Opens Monday at 8:00 PM</p>
+            <p>List resets Monday 7:00 PM, signups open at 8:00 PM</p>
           </div>
         </div>
 

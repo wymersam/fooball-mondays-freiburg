@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -68,9 +68,23 @@ const DataFile = "signups.json"
 
 var dataStore *DataStore
 
-// Initialize data file if it doesn't exist
+// Get data file path (allows override via environment variable)
+func getDataFilePath() string {
+	if path := os.Getenv("DATA_FILE"); path != "" {
+		return path
+	}
+	return DataFile
+}
+
+// Initialise data file if it doesn't exist
 func initDataFile() {
-	if _, err := os.Stat(DataFile); os.IsNotExist(err) {
+	dataFilePath := getDataFilePath()
+	if _, err := os.Stat(dataFilePath); os.IsNotExist(err) {
+		// Ensure directory exists
+		if err := os.MkdirAll(filepath.Dir(dataFilePath), 0755); err != nil {
+			log.Printf("Error creating data directory: %v", err)
+		}
+
 		initialData := DataStore{
 			CurrentWeek: getCurrentWeekKey(),
 			Signups:     make(map[string][]Signup),
@@ -92,6 +106,16 @@ func getCurrentWeekKey() string {
 	return monday.Format("2006-01-02")
 }
 
+// Check if signups should be reset (Monday 7pm or later)
+func shouldResetSignups() bool {
+	now := time.Now()
+	weekday := now.Weekday()
+	hour := now.Hour()
+
+	// Reset on Monday at 7pm or later
+	return weekday == time.Monday && hour >= 19
+}
+
 // Check if it's Monday 8pm or later
 func isSignupTime() bool {
 	now := time.Now()
@@ -102,9 +126,51 @@ func isSignupTime() bool {
 	return (weekday == time.Monday && hour >= 20) || weekday > time.Monday
 }
 
+// Check and handle weekly reset at 7pm Monday
+func checkWeeklyReset() {
+	currentWeek := getCurrentWeekKey()
+
+	// If we're in a new week, reset automatically
+	if dataStore.CurrentWeek != currentWeek {
+		log.Printf("New week detected: %s (was %s)", currentWeek, dataStore.CurrentWeek)
+		resetSignupsForWeek(currentWeek)
+		return
+	}
+
+	// If it's Monday 7pm or later and we haven't reset yet for this week
+	if shouldResetSignups() {
+		// Check if we've already reset by looking at signup times
+		weekSignups := dataStore.Signups[currentWeek]
+		if len(weekSignups) > 0 {
+			// If there are signups and any are from before today 7pm, reset
+			now := time.Now()
+			resetTime := time.Date(now.Year(), now.Month(), now.Day(), 19, 0, 0, 0, now.Location())
+
+			for _, signup := range weekSignups {
+				if signup.SignupTime.Before(resetTime) {
+					log.Printf("Resetting signups for week %s at Monday 7pm", currentWeek)
+					resetSignupsForWeek(currentWeek)
+					break
+				}
+			}
+		}
+	}
+}
+
+// Reset signups for the current week
+func resetSignupsForWeek(weekKey string) {
+	dataStore.CurrentWeek = weekKey
+	if dataStore.Signups == nil {
+		dataStore.Signups = make(map[string][]Signup)
+	}
+	dataStore.Signups[weekKey] = []Signup{}
+	saveData(dataStore)
+}
+
 // Load data from JSON file
 func loadData() {
-	data, err := ioutil.ReadFile(DataFile)
+	dataFilePath := getDataFilePath()
+	data, err := os.ReadFile(dataFilePath)
 	if err != nil {
 		log.Printf("Error loading data: %v", err)
 		dataStore = &DataStore{
@@ -124,20 +190,26 @@ func loadData() {
 			Users:       make(map[string]User),
 		}
 	}
+
+	log.Printf("Loaded shared data from %s", dataFilePath)
 }
 
 // Save data to JSON file
 func saveData(data *DataStore) {
+	dataFilePath := getDataFilePath()
 	jsonData, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		log.Printf("Error marshaling data: %v", err)
 		return
 	}
 
-	err = ioutil.WriteFile(DataFile, jsonData, 0644)
+	err = os.WriteFile(dataFilePath, jsonData, 0644)
 	if err != nil {
-		log.Printf("Error saving data: %v", err)
+		log.Printf("Error saving data to %s: %v", dataFilePath, err)
+		return
 	}
+
+	log.Printf("Saved shared data to %s", dataFilePath)
 }
 
 // API Handlers
@@ -149,17 +221,10 @@ func healthHandler(c *gin.Context) {
 }
 
 func statusHandler(c *gin.Context) {
-	currentWeek := getCurrentWeekKey()
+	// Check and handle weekly reset
+	checkWeeklyReset()
 
-	// Reset if new week
-	if dataStore.CurrentWeek != currentWeek {
-		dataStore.CurrentWeek = currentWeek
-		if dataStore.Signups == nil {
-			dataStore.Signups = make(map[string][]Signup)
-		}
-		dataStore.Signups[currentWeek] = []Signup{}
-		saveData(dataStore)
-	}
+	currentWeek := getCurrentWeekKey()
 
 	weekSignups := dataStore.Signups[currentWeek]
 	if weekSignups == nil {
@@ -226,7 +291,7 @@ func registerHandler(c *gin.Context) {
 
 func signupHandler(c *gin.Context) {
 	if !isSignupTime() {
-		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "Signups only allowed on Monday at 8pm or later"})
+		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "Signups only allowed on Monday at 8pm or later. The list resets at 7pm every Monday."})
 		return
 	}
 
@@ -337,7 +402,7 @@ func userHandler(c *gin.Context) {
 func setupStaticFiles(r *gin.Engine) {
 	// Serve React build files in production
 	if os.Getenv("GIN_MODE") == "release" {
-		r.Static("/static", "./build/static")
+		r.Static("/assets", "./build/assets")
 		r.StaticFile("/", "./build/index.html")
 		r.NoRoute(func(c *gin.Context) {
 			c.File("./build/index.html")
@@ -348,9 +413,24 @@ func setupStaticFiles(r *gin.Engine) {
 	}
 }
 
+// Start background goroutine to check for weekly resets
+func startWeeklyResetChecker() {
+	go func() {
+		for {
+			// Check every 5 minutes
+			time.Sleep(5 * time.Minute)
+			checkWeeklyReset()
+		}
+	}()
+}
+
 func main() {
 	// Initialize data
 	initDataFile()
+
+	// Start weekly reset checker
+	startWeeklyResetChecker()
+	log.Println("Weekly reset checker started")
 
 	// Setup Gin router
 	r := gin.Default()
@@ -384,6 +464,8 @@ func main() {
 		port = "3001"
 	}
 
-	fmt.Printf("Football Mondays Go server running on http://localhost:%s\n", port)
-	log.Fatal(r.Run(":" + port))
+	// Bind to 0.0.0.0 for Railway deployment
+	addr := "0.0.0.0:" + port
+	fmt.Printf("Football Mondays Go server running on %s\n", addr)
+	log.Fatal(r.Run(addr))
 }
