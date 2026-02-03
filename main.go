@@ -488,6 +488,20 @@ func userHandler(c *gin.Context) {
 	})
 }
 
+func logoutHandler(c *gin.Context) {
+	// Clear the userId cookie
+	isProduction := os.Getenv("PORT") != "" || os.Getenv("RAILWAY_ENVIRONMENT") != ""
+	if isProduction {
+		c.SetSameSite(http.SameSiteNoneMode)
+		c.SetCookie("userId", "", -1, "/", "", true, true) // MaxAge -1 deletes the cookie
+	} else {
+		c.SetSameSite(http.SameSiteLaxMode)
+		c.SetCookie("userId", "", -1, "/", "", false, true)
+	}
+
+	c.JSON(http.StatusOK, SuccessResponse{Success: true})
+}
+
 // Admin handler to clear all users
 func adminClearUsersHandler(c *gin.Context) {
 	// Check admin secret from header or query param
@@ -624,6 +638,7 @@ func main() {
 		api.GET("/status", statusHandler)
 		api.POST("/register", registerHandler)
 		api.POST("/login", loginHandler)
+		api.POST("/logout", logoutHandler)
 		api.POST("/signup", signupHandler)
 		api.DELETE("/signup", removeSignupHandler)
 		api.GET("/user", userHandler)

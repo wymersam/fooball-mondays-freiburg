@@ -54,6 +54,7 @@ export interface ErrorMessageProps {
 export interface MainAppProps {
   currentUser: User;
   onError: (message: string) => void;
+  onLogout: () => void;
 }
 
 export interface PlayerListProps {

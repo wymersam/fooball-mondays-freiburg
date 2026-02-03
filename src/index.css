@@ -215,7 +215,9 @@ header h1 {
   padding: 1.25rem 2rem;
   background: var(--surface-elevated);
   border-bottom: 1px solid var(--border);
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   color: var(--text-primary);
   font-weight: 600;
   position: relative;
@@ -231,6 +233,25 @@ header h1 {
   height: 2px;
   background: linear-gradient(90deg, var(--primary), var(--accent));
   border-radius: 1px;
+}
+
+.btn-logout {
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  color: var(--danger);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  background: var(--danger);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 /* Ultra-Modern Auth Form */

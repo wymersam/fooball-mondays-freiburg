@@ -48,6 +48,11 @@ function App() {
     setTimeout(() => setError(""), 5000);
   };
 
+  const handleLogout = (): void => {
+    setCurrentUser(null);
+    setError("");
+  };
+
   if (loading) {
     return (
       <div className="container">
@@ -66,7 +71,11 @@ function App() {
           <p className="footer">created by Sammy :)</p>
         </>
       ) : (
-        <MainApp currentUser={currentUser} onError={showError} />
+        <MainApp
+          currentUser={currentUser}
+          onError={showError}
+          onLogout={handleLogout}
+        />
       )}
     </div>
   );

@@ -4,9 +4,10 @@ import PlayerLists from "./PlayerLists";
 import SignupButtons from "./SignupButtons";
 import Rules from "./Rules";
 import { apiService } from "../services/apiService";
+import { authService } from "../services/authService";
 import { MainAppProps, SignupStatus } from "../types";
 
-function MainApp({ currentUser, onError }: MainAppProps) {
+function MainApp({ currentUser, onError, onLogout }: MainAppProps) {
   const [status, setStatus] = useState<SignupStatus | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -50,6 +51,15 @@ function MainApp({ currentUser, onError }: MainAppProps) {
     }
   };
 
+  const handleLogout = async (): Promise<void> => {
+    try {
+      await authService.logout();
+      onLogout();
+    } catch (error: any) {
+      onError(error.message || "Logout failed");
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading current status...</div>;
   }
@@ -60,6 +70,9 @@ function MainApp({ currentUser, onError }: MainAppProps) {
         <span>
           Signed in as: <strong>{currentUser.username}</strong>
         </span>
+        <button className="btn-logout" onClick={handleLogout}>
+          Sign out
+        </button>
       </div>
 
       <StatusCard status={status} />
