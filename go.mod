@@ -9,7 +9,10 @@ require (
 	golang.org/x/crypto v0.47.0
 )
 
-require github.com/joho/godotenv v1.5.1 // indirect
+require (
+	github.com/gorilla/websocket v1.5.3 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
+)
 
 require (
 	github.com/bytedance/gopkg v0.1.3 // indirect

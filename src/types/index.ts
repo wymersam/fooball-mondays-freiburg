@@ -11,6 +11,14 @@ export interface User {
   username: string;
 }
 
+export interface ChatMessage {
+  id: string;
+  username: string;
+  message: string;
+  timestamp: string | Date;
+  weekKey: string;
+}
+
 export interface SignupStatus {
   currentWeek: string;
   canSignup: boolean;

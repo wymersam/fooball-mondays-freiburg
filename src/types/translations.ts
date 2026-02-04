@@ -27,6 +27,10 @@ export interface Translations {
   signedInAs: string;
   signOut: string;
 
+  // Tabs
+  signup: string;
+  chat: string;
+
   // Status card
   nextWeeksGame: string;
   signupsOpen: string;
@@ -94,6 +98,8 @@ export const translations: Record<Language, Translations> = {
     haveAccount: "Already have an account? Sign in",
     signedInAs: "Signed in as:",
     signOut: "Sign out",
+    signup: "Signup",
+    chat: "Chat",
     nextWeeksGame: "⚽ Next week's game",
     signupsOpen: "Sign-ups are OPEN!",
     signupsClosed: "Sign-ups Closed",
@@ -148,6 +154,8 @@ export const translations: Record<Language, Translations> = {
     haveAccount: "¿Ya tienes cuenta? Inicia sesión",
     signedInAs: "Conectado como:",
     signOut: "Cerrar sesión",
+    signup: "Inscripción",
+    chat: "Chat",
     nextWeeksGame: "⚽ Partido de la próxima semana",
     signupsOpen: "¡Las inscripciones están ABIERTAS!",
     signupsClosed: "Inscripciones Cerradas",
@@ -205,6 +213,8 @@ export const translations: Record<Language, Translations> = {
     haveAccount: "Hai già un account? Accedi",
     signedInAs: "Connesso come:",
     signOut: "Disconnetti",
+    signup: "Iscrizione",
+    chat: "Chat",
     nextWeeksGame: "⚽ Partita della prossima settimana",
     signupsOpen: "Le iscrizioni sono APERTE!",
     signupsClosed: "Iscrizioni Chiuse",
@@ -261,6 +271,8 @@ export const translations: Record<Language, Translations> = {
     haveAccount: "هل لديك حساب بالفعل؟ تسجيل الدخول",
     signedInAs: ":مسجل الدخول باسم",
     signOut: "تسجيل الخروج",
+    signup: "التسجيل",
+    chat: "الدردشة",
     nextWeeksGame: "مباراة الأسبوع المقبل ⚽",
     signupsOpen: "!التسجيلات مفتوحة",
     signupsClosed: "التسجيلات مغلقة",
@@ -318,6 +330,8 @@ export const translations: Record<Language, Translations> = {
     haveAccount: "Hast du bereits ein Konto? Anmelden",
     signedInAs: "Angemeldet als:",
     signOut: "Abmelden",
+    signup: "Anmeldung",
+    chat: "Chat",
     nextWeeksGame: "⚽ Spiel nächste Woche",
     signupsOpen: "Anmeldungen sind OFFEN!",
     signupsClosed: "Anmeldungen Geschlossen",
@@ -375,6 +389,8 @@ export const translations: Record<Language, Translations> = {
     haveAccount: "Já tem uma conta? Entre",
     signedInAs: "Conectado como:",
     signOut: "Sair",
+    signup: "Inscrição",
+    chat: "Chat",
     nextWeeksGame: "⚽ Jogo da próxima semana",
     signupsOpen: "Inscrições ABERTAS!",
     signupsClosed: "Inscrições Fechadas",

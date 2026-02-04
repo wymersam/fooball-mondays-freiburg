@@ -3,6 +3,7 @@ import StatusCard from "./StatusCard";
 import PlayerLists from "./PlayerLists";
 import SignupButtons from "./SignupButtons";
 import Rules from "./Rules";
+import Chat from "./Chat";
 import { apiService } from "../services/apiService";
 import { authService } from "../services/authService";
 import { MainAppProps, SignupStatus } from "../types";
@@ -12,6 +13,7 @@ function MainApp({ currentUser, onError, onLogout }: MainAppProps) {
   const { t } = useLanguage();
   const [status, setStatus] = useState<SignupStatus | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<"signup" | "chat">("signup");
 
   useEffect(() => {
     loadStatus();
@@ -79,15 +81,38 @@ function MainApp({ currentUser, onError, onLogout }: MainAppProps) {
 
       <StatusCard status={status} />
 
-      <SignupButtons
-        status={status}
-        onSignup={handleSignup}
-        onRemoveSignup={handleRemoveSignup}
-      />
+      <div className="tabs">
+        <button
+          className={`tab-button ${activeTab === "signup" ? "active" : ""}`}
+          onClick={() => setActiveTab("signup")}
+        >
+          {t.signup || "Signup"}
+        </button>
+        <button
+          className={`tab-button ${activeTab === "chat" ? "active" : ""}`}
+          onClick={() => setActiveTab("chat")}
+        >
+          {t.chat || "Chat"}
+        </button>
+      </div>
 
-      <PlayerLists status={status} currentUser={currentUser} />
+      <div className="tab-content">
+        {activeTab === "signup" && (
+          <>
+            <SignupButtons
+              status={status}
+              onSignup={handleSignup}
+              onRemoveSignup={handleRemoveSignup}
+            />
+            <PlayerLists status={status} currentUser={currentUser} />
+            <Rules />
+          </>
+        )}
 
-      <Rules />
+        {activeTab === "chat" && (
+          <Chat currentUser={currentUser} isActive={true} />
+        )}
+      </div>
     </>
   );
 }

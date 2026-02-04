@@ -8,11 +8,13 @@ import (
 	"net/smtp"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -33,10 +35,35 @@ type User struct {
 	LastIP       string    `json:"lastIp,omitempty"`
 }
 
+type ChatMessage struct {
+	ID        string    `json:"id"`
+	Username  string    `json:"username"`
+	Message   string    `json:"message"`
+	Timestamp time.Time `json:"timestamp"`
+	WeekKey   string    `json:"weekKey"`
+}
+
 type DataStore struct {
-	CurrentWeek string              `json:"currentWeek"`
-	Signups     map[string][]Signup `json:"signups"`
-	Users       map[string]User     `json:"users"`
+	CurrentWeek  string                   `json:"currentWeek"`
+	Signups      map[string][]Signup      `json:"signups"`
+	Users        map[string]User          `json:"users"`
+	ChatMessages map[string][]ChatMessage `json:"chatMessages"`
+}
+
+// WebSocket structures
+type Client struct {
+	conn     *websocket.Conn
+	username string
+	hub      *Hub
+	send     chan []byte
+}
+
+type Hub struct {
+	clients    map[*Client]bool
+	broadcast  chan []byte
+	register   chan *Client
+	unregister chan *Client
+	mutex      sync.RWMutex
 }
 
 type SignupStatus struct {
@@ -81,6 +108,15 @@ const DataFile = "signups.json"
 
 var dataStore *DataStore
 
+// WebSocket upgrader and hub
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true // Allow connections from any origin in development
+	},
+}
+
+var hub *Hub
+
 // Get data file path (allows override via environment variable)
 func getDataFilePath() string {
 	if path := os.Getenv("DATA_FILE"); path != "" {
@@ -99,9 +135,10 @@ func initDataFile() {
 		}
 
 		initialData := DataStore{
-			CurrentWeek: getCurrentWeekKey(),
-			Signups:     make(map[string][]Signup),
-			Users:       make(map[string]User),
+			CurrentWeek:  getCurrentWeekKey(),
+			Signups:      make(map[string][]Signup),
+			Users:        make(map[string]User),
+			ChatMessages: make(map[string][]ChatMessage),
 		}
 		saveData(&initialData)
 	}
@@ -187,9 +224,10 @@ func loadData() {
 	if err != nil {
 		log.Printf("Error loading data: %v", err)
 		dataStore = &DataStore{
-			CurrentWeek: getCurrentWeekKey(),
-			Signups:     make(map[string][]Signup),
-			Users:       make(map[string]User),
+			CurrentWeek:  getCurrentWeekKey(),
+			Signups:      make(map[string][]Signup),
+			Users:        make(map[string]User),
+			ChatMessages: make(map[string][]ChatMessage),
 		}
 		return
 	}
@@ -198,9 +236,10 @@ func loadData() {
 	if err != nil {
 		log.Printf("Error parsing data: %v", err)
 		dataStore = &DataStore{
-			CurrentWeek: getCurrentWeekKey(),
-			Signups:     make(map[string][]Signup),
-			Users:       make(map[string]User),
+			CurrentWeek:  getCurrentWeekKey(),
+			Signups:      make(map[string][]Signup),
+			Users:        make(map[string]User),
+			ChatMessages: make(map[string][]ChatMessage),
 		}
 	}
 
@@ -684,6 +723,188 @@ func startWeeklyResetChecker() {
 	}()
 }
 
+// WebSocket Hub implementation
+func newHub() *Hub {
+	return &Hub{
+		clients:    make(map[*Client]bool),
+		broadcast:  make(chan []byte),
+		register:   make(chan *Client),
+		unregister: make(chan *Client),
+	}
+}
+
+func (h *Hub) run() {
+	for {
+		select {
+		case client := <-h.register:
+			h.mutex.Lock()
+			h.clients[client] = true
+			h.mutex.Unlock()
+			log.Printf("WebSocket client connected: %s", client.username)
+
+		case client := <-h.unregister:
+			h.mutex.Lock()
+			if _, ok := h.clients[client]; ok {
+				delete(h.clients, client)
+				close(client.send)
+				log.Printf("WebSocket client disconnected: %s", client.username)
+			}
+			h.mutex.Unlock()
+
+		case message := <-h.broadcast:
+			h.mutex.RLock()
+			for client := range h.clients {
+				select {
+				case client.send <- message:
+				default:
+					close(client.send)
+					delete(h.clients, client)
+				}
+			}
+			h.mutex.RUnlock()
+		}
+	}
+}
+
+// WebSocket client methods
+func (c *Client) readPump() {
+	defer func() {
+		c.hub.unregister <- c
+		c.conn.Close()
+	}()
+
+	c.conn.SetReadLimit(512)
+	c.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+	c.conn.SetPongHandler(func(string) error {
+		c.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+		return nil
+	})
+
+	for {
+		_, messageBytes, err := c.conn.ReadMessage()
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("WebSocket error: %v", err)
+			}
+			break
+		}
+
+		var incomingMessage struct {
+			Message string `json:"message"`
+		}
+		if err := json.Unmarshal(messageBytes, &incomingMessage); err != nil {
+			log.Printf("Error parsing message: %v", err)
+			continue
+		}
+
+		// Create chat message
+		chatMessage := ChatMessage{
+			ID:        uuid.New().String(),
+			Username:  c.username,
+			Message:   incomingMessage.Message,
+			Timestamp: time.Now(),
+			WeekKey:   getCurrentWeekKey(),
+		}
+
+		// Save to datastore
+		currentWeek := getCurrentWeekKey()
+		if dataStore.ChatMessages == nil {
+			dataStore.ChatMessages = make(map[string][]ChatMessage)
+		}
+		dataStore.ChatMessages[currentWeek] = append(dataStore.ChatMessages[currentWeek], chatMessage)
+		saveData(dataStore)
+
+		// Broadcast to all clients
+		messageJSON, _ := json.Marshal(chatMessage)
+		select {
+		case c.hub.broadcast <- messageJSON:
+		default:
+			close(c.send)
+			delete(c.hub.clients, c)
+		}
+	}
+}
+
+func (c *Client) writePump() {
+	ticker := time.NewTicker(54 * time.Second)
+	defer func() {
+		ticker.Stop()
+		c.conn.Close()
+	}()
+
+	for {
+		select {
+		case message, ok := <-c.send:
+			c.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+			if !ok {
+				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				return
+			}
+
+			w, err := c.conn.NextWriter(websocket.TextMessage)
+			if err != nil {
+				return
+			}
+			w.Write(message)
+
+			if err := w.Close(); err != nil {
+				return
+			}
+
+		case <-ticker.C:
+			c.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				return
+			}
+		}
+	}
+}
+
+// Chat API handlers
+func chatHistoryHandler(c *gin.Context) {
+	currentWeek := getCurrentWeekKey()
+
+	var messages []ChatMessage
+	if dataStore.ChatMessages != nil {
+		if weekMessages, exists := dataStore.ChatMessages[currentWeek]; exists {
+			messages = weekMessages
+		}
+	}
+
+	if messages == nil {
+		messages = []ChatMessage{}
+	}
+
+	c.JSON(http.StatusOK, gin.H{"messages": messages})
+}
+
+func websocketHandler(c *gin.Context) {
+	// Get username from query parameter (you might want to use JWT auth here)
+	username := c.Query("username")
+	if username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Username required"})
+		return
+	}
+
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		log.Println("WebSocket upgrade error:", err)
+		return
+	}
+
+	client := &Client{
+		conn:     conn,
+		username: username,
+		hub:      hub,
+		send:     make(chan []byte, 256),
+	}
+
+	client.hub.register <- client
+
+	go client.writePump()
+	go client.readPump()
+}
+
 func main() {
 	// Load .env file if it exists (for local development)
 	if err := godotenv.Load(); err != nil {
@@ -694,6 +915,10 @@ func main() {
 
 	// Initialize data
 	initDataFile()
+
+	// Initialize WebSocket hub
+	hub = newHub()
+	go hub.run()
 
 	// Start weekly reset checker
 	startWeeklyResetChecker()
@@ -741,6 +966,9 @@ func main() {
 		api.POST("/signup", signupHandler)
 		api.DELETE("/signup", removeSignupHandler)
 		api.GET("/user", userHandler)
+		// Chat routes
+		api.GET("/chat/history", chatHistoryHandler)
+		api.GET("/chat/ws", websocketHandler)
 	}
 
 	// Admin routes
