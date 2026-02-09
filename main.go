@@ -326,8 +326,8 @@ func checkAndNotifyPromotions(currentWeek string, oldSignups, newSignups []Signu
 		newPosition := i + 1
 		oldPosition, existed := oldPositions[signup.UserID]
 
-		// If they moved from reserve (>10) to starting XI (<=10)
-		if existed && oldPosition > 10 && newPosition <= 10 {
+		// If they moved from reserve (>20) to starting XI (<=20)
+		if existed && oldPosition > 20 && newPosition <= 20 {
 			// Get user details to send email notification
 			user, exists := dataStore.Users[signup.UserID]
 			if exists && user.Email != "" {
@@ -365,9 +365,9 @@ func statusHandler(c *gin.Context) {
 
 	mainList := weekSignups
 	reserveList := []Signup{}
-	if len(weekSignups) > 10 {
-		mainList = weekSignups[:10]
-		reserveList = weekSignups[10:]
+	if len(weekSignups) > 20 {
+		mainList = weekSignups[:20]
+		reserveList = weekSignups[20:]
 	}
 
 	userID, err := c.Cookie("userId")
