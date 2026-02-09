@@ -166,14 +166,18 @@ func shouldResetSignups() bool {
 	return weekday == time.Monday && hour >= 19
 }
 
-// Check if it's Monday 8pm or later
+// Check if signups are allowed (anytime except Monday 7pm-8pm)
 func isSignupTime() bool {
 	now := time.Now()
 	weekday := now.Weekday()
 	hour := now.Hour()
 
-	// Allow signup on Monday at 8pm or later, or any day after Monday
-	return (weekday == time.Monday && hour >= 20) || weekday > time.Monday
+	// Block signup only during Monday 7pm-8pm reset window
+	if weekday == time.Monday && hour == 19 {
+		return false
+	}
+	
+	return true
 }
 
 // Check and handle weekly reset at 7pm Monday
@@ -505,7 +509,7 @@ func loginHandler(c *gin.Context) {
 
 func signupHandler(c *gin.Context) {
 	if !isSignupTime() {
-		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "Signups only allowed on Monday at 8pm or later. The list resets at 7pm every Monday."})
+		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "Signups are temporarily blocked during the reset window (Monday 7pm-8pm). Please try again after 8pm."})
 		return
 	}
 
