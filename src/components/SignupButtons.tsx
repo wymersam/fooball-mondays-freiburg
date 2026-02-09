@@ -24,7 +24,7 @@ function SignupButtons({
         status.canSignup && (
           <button className="btn btn-success" onClick={onSignup}>
             <span className="btn-icon">⚽</span>
-            {status.mainList.length >= 10 ? t.joinReserveList : t.signMeUp}
+            {status.mainList.length >= 20 ? t.joinReserveList : t.signMeUp}
           </button>
         )
       )}

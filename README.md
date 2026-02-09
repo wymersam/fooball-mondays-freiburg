@@ -5,7 +5,7 @@ A simple web application for managing weekly football sign-ups with React/TypeSc
 ## Features
 
 - Weekly football sign-up management
-- First 10 people can play, others go to reserve list
+- First 20 people can play, others go to reserve list
 - Sign-ups only allowed on Monday 8pm or later
 - Simple username-based authentication
 - Real-time status updates
@@ -85,7 +85,7 @@ This app supports 6 languages:
 ## Rules Implemented
 
 - ✅ Sign-ups only open Monday 8 PM or later
-- ✅ First 10 people get main spots
+- ✅ First 20 people get main spots
 - ✅ Additional people go to reserve list
 - ✅ Users can only sign themselves up
 - ✅ One sign-up per person per week

@@ -176,7 +176,7 @@ func isSignupTime() bool {
 	if weekday == time.Monday && hour == 19 {
 		return false
 	}
-	
+
 	return true
 }
 

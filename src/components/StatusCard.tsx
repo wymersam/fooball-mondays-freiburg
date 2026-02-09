@@ -41,7 +41,7 @@ function StatusCard({ status }: StatusCardProps) {
         </div>
         <div className="stat">
           <span className="stat-number">
-            {Math.max(0, 10 - status.mainList.length)}
+            {Math.max(0, 20 - status.mainList.length)}
           </span>
           <span className="stat-label">{t.spotsLeft}</span>
         </div>

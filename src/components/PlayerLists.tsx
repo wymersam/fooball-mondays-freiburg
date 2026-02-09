@@ -12,7 +12,7 @@ function PlayerLists({ status, currentUser }: PlayerListsProps) {
       <div className="list-section main-section">
         <div className="list-header">
           <h3 className="list-title">{t.startingXI}</h3>
-          <span className="list-count">{status.mainList.length}/10</span>
+          <span className="list-count">{status.mainList.length}/20</span>
         </div>
         <PlayerList
           players={status.mainList}
@@ -21,7 +21,7 @@ function PlayerLists({ status, currentUser }: PlayerListsProps) {
         />
       </div>
 
-      {(status.reserveList.length > 0 || status.mainList.length >= 10) && (
+      {(status.reserveList.length > 0 || status.mainList.length >= 20) && (
         <div className="list-section reserve-section">
           <div className="list-header">
             <h3 className="list-title">{t.reserveList}</h3>
