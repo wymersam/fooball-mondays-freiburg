@@ -365,8 +365,8 @@ func statusHandler(c *gin.Context) {
 
 	currentWeek := getCurrentWeekKey()
 
-	weekSignups := dataStore.Signups[currentWeek]
-	if weekSignups == nil {
+	weekSignups, err := getSignupsForWeek(db, currentWeek)
+	if err != nil {
 		weekSignups = []Signup{}
 	}
 
@@ -529,32 +529,35 @@ func signupHandler(c *gin.Context) {
 	}
 
 	currentWeek := getCurrentWeekKey()
-	if dataStore.Signups[currentWeek] == nil {
-		dataStore.Signups[currentWeek] = []Signup{}
-	}
 
-	// Check if user already signed up
-	for _, signup := range dataStore.Signups[currentWeek] {
+	// Check if user already signed up (SQLite)
+	signups, err := getSignupsForWeek(db, currentWeek)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "Database error"})
+		return
+	}
+	for _, signup := range signups {
 		if signup.UserID == userID {
 			c.JSON(http.StatusBadRequest, ErrorResponse{Error: "You have already signed up for this week"})
 			return
 		}
 	}
 
-	// Add to signup list
+	// Add to signup list (SQLite)
 	newSignup := Signup{
 		UserID:     userID,
 		Username:   user.Username,
 		SignupTime: time.Now().In(freiburgLocation),
-		Position:   len(dataStore.Signups[currentWeek]) + 1,
+		Position:   len(signups) + 1,
 	}
-
-	dataStore.Signups[currentWeek] = append(dataStore.Signups[currentWeek], newSignup)
-	saveData(dataStore)
+	if err := insertSignup(db, newSignup, currentWeek); err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "Failed to save signup"})
+		return
+	}
 
 	c.JSON(http.StatusOK, SuccessResponse{
 		Success:  true,
-		Position: len(dataStore.Signups[currentWeek]),
+		Position: newSignup.Position,
 	})
 }
 
@@ -566,44 +569,41 @@ func removeSignupHandler(c *gin.Context) {
 	}
 
 	currentWeek := getCurrentWeekKey()
-	if dataStore.Signups[currentWeek] == nil {
-		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "No signups for this week"})
+
+	// Get current signups from DB
+	signups, err := getSignupsForWeek(db, currentWeek)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "Database error"})
 		return
 	}
 
 	// Find and remove the signup
-	signupIndex := -1
-	for i, signup := range dataStore.Signups[currentWeek] {
+	found := false
+	for _, signup := range signups {
 		if signup.UserID == userID {
-			signupIndex = i
+			found = true
 			break
 		}
 	}
-
-	if signupIndex == -1 {
+	if !found {
 		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "You are not signed up for this week"})
 		return
 	}
 
-	// Store old signups before removal for promotion detection
-	oldSignups := make([]Signup, len(dataStore.Signups[currentWeek]))
-	copy(oldSignups, dataStore.Signups[currentWeek])
-
-	// Remove the signup
-	dataStore.Signups[currentWeek] = append(
-		dataStore.Signups[currentWeek][:signupIndex],
-		dataStore.Signups[currentWeek][signupIndex+1:]...,
-	)
-
-	// Update positions
-	for i := range dataStore.Signups[currentWeek] {
-		dataStore.Signups[currentWeek][i].Position = i + 1
+	// Remove from DB
+	if err := removeSignup(db, userID, currentWeek); err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "Failed to remove signup"})
+		return
 	}
 
-	// Check and notify promotions
-	checkAndNotifyPromotions(currentWeek, oldSignups, dataStore.Signups[currentWeek])
+	// Re-fetch and update positions
+	updatedSignups, err := getSignupsForWeek(db, currentWeek)
+	if err == nil {
+		for i, s := range updatedSignups {
+			db.Exec(`UPDATE signups SET position = ? WHERE user_id = ? AND week_key = ?`, i+1, s.UserID, currentWeek)
+		}
+	}
 
-	saveData(dataStore)
 	c.JSON(http.StatusOK, SuccessResponse{Success: true})
 }
 
@@ -690,11 +690,19 @@ func adminClearSignupsHandler(c *gin.Context) {
 		return
 	}
 
-	// Clear signups for current week
+	// Clear signups for current week (SQLite)
 	currentWeek := getCurrentWeekKey()
-	signupCount := len(dataStore.Signups[currentWeek])
-	dataStore.Signups[currentWeek] = []Signup{}
-	saveData(dataStore)
+	signups, err := getSignupsForWeek(db, currentWeek)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "Database error"})
+		return
+	}
+
+	signupCount := len(signups)
+	if err := clearSignupsForWeek(db, currentWeek); err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "Failed to clear signups"})
+		return
+	}
 
 	log.Printf("Admin cleared %d signups for week %s", signupCount, currentWeek)
 	c.JSON(http.StatusOK, gin.H{
@@ -920,10 +928,10 @@ func main() {
 		log.Println("Loaded environment variables from .env file")
 	}
 
-	// Initialize data
-	initDataFile()
+	// Initialise SQLite database
+	initDB()
 
-	// Initialize WebSocket hub
+	// Initialise WebSocket hub
 	hub = newHub()
 	go hub.run()
 
