@@ -117,6 +117,16 @@ var upgrader = websocket.Upgrader{
 
 var hub *Hub
 
+var freiburgLocation *time.Location
+
+func init() {
+	var err error
+	freiburgLocation, err = time.LoadLocation("Europe/Berlin")
+	if err != nil {
+		log.Fatalf("Failed to load Europe/Berlin timezone: %v", err)
+	}
+}
+
 // Get data file path (allows override via environment variable)
 func getDataFilePath() string {
 	if path := os.Getenv("DATA_FILE"); path != "" {
@@ -147,7 +157,7 @@ func initDataFile() {
 
 // Get current week key (Monday of current week)
 func getCurrentWeekKey() string {
-	now := time.Now()
+	now := time.Now().In(freiburgLocation)
 	// Calculate Monday of this week
 	monday := now.AddDate(0, 0, -int(now.Weekday())+1)
 	if now.Weekday() == time.Sunday {
@@ -158,7 +168,7 @@ func getCurrentWeekKey() string {
 
 // Check if signups should be reset (Monday 7pm or later)
 func shouldResetSignups() bool {
-	now := time.Now()
+	now := time.Now().In(freiburgLocation)
 	weekday := now.Weekday()
 	hour := now.Hour()
 
@@ -168,7 +178,7 @@ func shouldResetSignups() bool {
 
 // Check if signups are allowed (anytime except Monday 7pm-8pm)
 func isSignupTime() bool {
-	now := time.Now()
+	now := time.Now().In(freiburgLocation)
 	weekday := now.Weekday()
 	hour := now.Hour()
 
@@ -184,21 +194,14 @@ func isSignupTime() bool {
 func checkWeeklyReset() {
 	currentWeek := getCurrentWeekKey()
 
-	// If we're in a new week, reset automatically
-	if dataStore.CurrentWeek != currentWeek {
-		log.Printf("New week detected: %s (was %s)", currentWeek, dataStore.CurrentWeek)
-		resetSignupsForWeek(currentWeek)
-		return
-	}
-
 	// If it's Monday 7pm or later and we haven't reset yet for this week
 	if shouldResetSignups() {
 		// Check if we've already reset by looking at signup times
 		weekSignups := dataStore.Signups[currentWeek]
 		if len(weekSignups) > 0 {
 			// If there are signups and any are from before today 7pm, reset
-			now := time.Now()
-			resetTime := time.Date(now.Year(), now.Month(), now.Day(), 19, 0, 0, 0, now.Location())
+			now := time.Now().In(freiburgLocation)
+			resetTime := time.Date(now.Year(), now.Month(), now.Day(), 19, 0, 0, 0, freiburgLocation)
 
 			for _, signup := range weekSignups {
 				if signup.SignupTime.Before(resetTime) {
@@ -352,7 +355,7 @@ func checkAndNotifyPromotions(currentWeek string, oldSignups, newSignups []Signu
 func healthHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":    "OK",
-		"timestamp": time.Now().Format(time.RFC3339),
+		"timestamp": time.Now().In(freiburgLocation).Format(time.RFC3339),
 	})
 }
 
@@ -434,7 +437,7 @@ func registerHandler(c *gin.Context) {
 		Username:     req.Username,
 		PasswordHash: string(hashedPassword),
 		Email:        req.Email,
-		CreatedAt:    time.Now(),
+		CreatedAt:    time.Now().In(freiburgLocation),
 		LastIP:       clientIP,
 	}
 
@@ -542,7 +545,7 @@ func signupHandler(c *gin.Context) {
 	newSignup := Signup{
 		UserID:     userID,
 		Username:   user.Username,
-		SignupTime: time.Now(),
+		SignupTime: time.Now().In(freiburgLocation),
 		Position:   len(dataStore.Signups[currentWeek]) + 1,
 	}
 
@@ -778,9 +781,9 @@ func (c *Client) readPump() {
 	}()
 
 	c.conn.SetReadLimit(512)
-	c.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+	c.conn.SetReadDeadline(time.Now().In(freiburgLocation).Add(60 * time.Second))
 	c.conn.SetPongHandler(func(string) error {
-		c.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+		c.conn.SetReadDeadline(time.Now().In(freiburgLocation).Add(60 * time.Second))
 		return nil
 	})
 
@@ -806,7 +809,7 @@ func (c *Client) readPump() {
 			ID:        uuid.New().String(),
 			Username:  c.username,
 			Message:   incomingMessage.Message,
-			Timestamp: time.Now(),
+			Timestamp: time.Now().In(freiburgLocation),
 			WeekKey:   getCurrentWeekKey(),
 		}
 
@@ -839,7 +842,7 @@ func (c *Client) writePump() {
 	for {
 		select {
 		case message, ok := <-c.send:
-			c.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+			c.conn.SetWriteDeadline(time.Now().In(freiburgLocation).Add(10 * time.Second))
 			if !ok {
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
@@ -856,7 +859,7 @@ func (c *Client) writePump() {
 			}
 
 		case <-ticker.C:
-			c.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+			c.conn.SetWriteDeadline(time.Now().In(freiburgLocation).Add(10 * time.Second))
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}
