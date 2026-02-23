@@ -402,9 +402,9 @@ export const languageNames: Record<Language, string> = {
 
 export const languageFlags: Record<Language, string> = {
   en: "🇬🇧",
-  es: "🇪🇸",
+  es: "🇲🇽",
   it: "🇮🇹",
-  ar: "🇸🇦",
+  ar: "🇪🇬",
   de: "🇩🇪",
   pt: "🇧🇷",
 };
