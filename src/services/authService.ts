@@ -18,15 +18,11 @@ class AuthService {
     return { username: data.username };
   }
 
-  async register(
-    username: string,
-    password: string,
-    email?: string,
-  ): Promise<User> {
+  async register(username: string): Promise<User> {
     const response = await fetch(`${API_BASE}/api/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password, email: email || "" }),
+      body: JSON.stringify({ username }),
       credentials: "include",
     });
 
@@ -40,11 +36,11 @@ class AuthService {
     return { username: data.username };
   }
 
-  async login(username: string, password: string): Promise<User> {
+  async login(username: string): Promise<User> {
     const response = await fetch(`${API_BASE}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username }),
       credentials: "include",
     });
 

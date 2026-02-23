@@ -414,52 +414,12 @@ header h1 {
 
 /* Ultra-Modern Form Elements */
 input[type="text"],
-input[type="password"],
-input[type="email"] {
-  padding: 1rem 1.25rem;
-  border: 2px solid rgba(255, 0, 128, 0.2);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--text-primary);
-  font-size: 1rem;
-  transition: all var(--transition-normal);
-  width: 100%;
-  position: relative;
-  font-weight: 500;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 
 input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="email"]:focus {
-  outline: none;
-  border-color: var(--primary);
-  background: var(--surface-elevated);
-  box-shadow:
-    0 0 0 4px var(--surface-accent),
-    var(--shadow-glow);
-  transform: translateY(-1px);
-}
 
 input[type="text"]:disabled,
-input[type="password"]:disabled,
-input[type="email"]:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
 
 input[type="text"].loading,
-input[type="password"].loading,
-input[type="email"].loading {
-  background: linear-gradient(
-    90deg,
-    var(--surface),
-    var(--surface-elevated),
-    var(--surface)
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
 
 /* Sophisticated Button System */
 .btn {

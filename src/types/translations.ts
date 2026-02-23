@@ -11,11 +11,6 @@ export interface Translations {
   createAccountPrompt: string;
   username: string;
   usernamePlaceholder: string;
-  password: string;
-  passwordPlaceholder: string;
-  email: string;
-  emailPlaceholder: string;
-  emailHint: string;
   signIn: string;
   signingIn: string;
   createAccount: string;
@@ -85,11 +80,6 @@ export const translations: Record<Language, Translations> = {
     createAccountPrompt: "Create a new account",
     username: "Username",
     usernamePlaceholder: "e.g. john_doe",
-    password: "Password",
-    passwordPlaceholder: "At least 4 characters",
-    email: "Email (optional)",
-    emailPlaceholder: "your.email@example.com",
-    emailHint: "Get notified when promoted to Starting XI",
     signIn: "Sign in",
     signingIn: "Signing in...",
     createAccount: "Create Account",
@@ -141,11 +131,6 @@ export const translations: Record<Language, Translations> = {
     createAccountPrompt: "Crea una nueva cuenta",
     username: "Nombre de usuario",
     usernamePlaceholder: "ej. juan_perez",
-    password: "Contraseña",
-    passwordPlaceholder: "Al menos 4 caracteres",
-    email: "Correo electrónico (opcional)",
-    emailPlaceholder: "tu.correo@ejemplo.com",
-    emailHint: "Recibe notificaciones cuando seas promovido al Once Inicial",
     signIn: "Iniciar sesión",
     signingIn: "Iniciando sesión...",
     createAccount: "Crear Cuenta",
@@ -199,12 +184,6 @@ export const translations: Record<Language, Translations> = {
     createAccountPrompt: "Crea un nuovo account",
     username: "Nome utente",
     usernamePlaceholder: "es. mario_rossi",
-    password: "Password",
-    passwordPlaceholder: "Almeno 4 caratteri",
-    email: "Email (facoltativa)",
-    emailPlaceholder: "tua.email@esempio.com",
-    emailHint:
-      "Ricevi notifiche quando vieni promosso alla Formazione Titolare",
     signIn: "Accedi",
     signingIn: "Accesso in corso...",
     createAccount: "Crea Account",
@@ -258,11 +237,6 @@ export const translations: Record<Language, Translations> = {
     createAccountPrompt: "إنشاء حساب جديد",
     username: "اسم المستخدم",
     usernamePlaceholder: "مثلاً أحمد_محمد",
-    password: "كلمة المرور",
-    passwordPlaceholder: "4 أحرف على الأقل",
-    email: "(البريد الإلكتروني (اختياري",
-    emailPlaceholder: "your.email@example.com",
-    emailHint: "احصل على إشعارات عند الترقية إلى التشكيلة الأساسية",
     signIn: "تسجيل الدخول",
     signingIn: "...جاري تسجيل الدخول",
     createAccount: "إنشاء حساب",
@@ -316,12 +290,6 @@ export const translations: Record<Language, Translations> = {
     createAccountPrompt: "Erstelle ein neues Konto",
     username: "Benutzername",
     usernamePlaceholder: "z.B. hans_mueller",
-    password: "Passwort",
-    passwordPlaceholder: "Mindestens 4 Zeichen",
-    email: "E-Mail (optional)",
-    emailPlaceholder: "deine.email@beispiel.de",
-    emailHint:
-      "Erhalte Benachrichtigungen bei Beförderung zur Startaufstellung",
     signIn: "Anmelden",
     signingIn: "Anmeldung läuft...",
     createAccount: "Konto Erstellen",
@@ -376,11 +344,6 @@ export const translations: Record<Language, Translations> = {
     createAccountPrompt: "Crie uma nova conta",
     username: "Nome de usuário",
     usernamePlaceholder: "ex. joao_silva",
-    password: "Senha",
-    passwordPlaceholder: "Pelo menos 4 caracteres",
-    email: "E-mail (opcional)",
-    emailPlaceholder: "seu.email@exemplo.com",
-    emailHint: "Receba notificações quando for promovido ao Time Titular",
     signIn: "Entrar",
     signingIn: "Entrando...",
     createAccount: "Criar Conta",

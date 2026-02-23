@@ -22,8 +22,6 @@ func initDB() {
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
 		id TEXT PRIMARY KEY,
 		username TEXT UNIQUE NOT NULL,
-		password_hash TEXT NOT NULL,
-		email TEXT,
 		created_at DATETIME,
 		last_ip TEXT
 	)`)

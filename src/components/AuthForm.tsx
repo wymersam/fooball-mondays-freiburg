@@ -5,26 +5,19 @@ import { useLanguage } from "../context/LanguageContext";
 function AuthForm({ onLogin }: AuthFormProps) {
   const { t } = useLanguage();
   const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!username.trim() || username.trim().length < 2 || password.length < 4) {
-      return;
-    }
-
-    // For registration, email is optional but validate if provided
-    if (!isLogin && email && !email.includes("@")) {
+    if (!username.trim() || username.trim().length < 2) {
       return;
     }
 
     setIsSubmitting(true);
     try {
-      await onLogin(username.trim(), password, isLogin, email.trim());
+      await onLogin(username.trim(), isLogin);
     } finally {
       setIsSubmitting(false);
     }
@@ -32,14 +25,6 @@ function AuthForm({ onLogin }: AuthFormProps) {
 
   const handleUsernameChange = (e: ChangeEvent) => {
     setUsername((e.target as HTMLInputElement).value);
-  };
-
-  const handlePasswordChange = (e: ChangeEvent) => {
-    setPassword((e.target as HTMLInputElement).value);
-  };
-
-  const handleEmailChange = (e: ChangeEvent) => {
-    setEmail((e.target as HTMLInputElement).value);
   };
 
   return (
@@ -63,43 +48,11 @@ function AuthForm({ onLogin }: AuthFormProps) {
             className={isSubmitting ? "loading" : ""}
           />
         </div>
-        <div className="input-group">
-          <label htmlFor="password">{t.password}</label>
-          <input
-            id="password"
-            type="password"
-            placeholder={t.passwordPlaceholder}
-            value={password}
-            onChange={handlePasswordChange}
-            minLength={4}
-            required
-            disabled={isSubmitting}
-            className={isSubmitting ? "loading" : ""}
-          />
-        </div>
-        {!isLogin && (
-          <div className="input-group">
-            <label htmlFor="email">{t.email}</label>
-            <input
-              id="email"
-              type="email"
-              placeholder={t.emailPlaceholder}
-              value={email}
-              onChange={handleEmailChange}
-              disabled={isSubmitting}
-              className={isSubmitting ? "loading" : ""}
-            />
-            <small className="input-hint">{t.emailHint}</small>
-          </div>
-        )}
         <button
           type="submit"
           className="btn-primary"
           disabled={
-            isSubmitting ||
-            !username.trim() ||
-            username.trim().length < 2 ||
-            password.length < 4
+            isSubmitting || !username.trim() || username.trim().length < 2
           }
         >
           {isSubmitting ? (
