@@ -1,0 +1,56 @@
+package models
+
+import (
+	"time"
+)
+
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type RegisterRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+}
+
+type RegisterResponse struct {
+	Success  bool   `json:"success"`
+	Username string `json:"username"`
+}
+
+type Signup struct {
+	UserID     string    `json:"userId"`
+	Username   string    `json:"username"`
+	SignupTime time.Time `json:"signupTime"`
+	Position   int       `json:"position"`
+}
+
+type SuccessResponse struct {
+	Success  bool `json:"success"`
+	Position int  `json:"position,omitempty"`
+}
+
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
+type User struct {
+	Username  string    `json:"username"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+type SignupStatus struct {
+	CurrentWeek  string   `json:"currentWeek"`
+	CanSignup    bool     `json:"canSignup"`
+	MainList     []Signup `json:"mainList"`
+	ReserveList  []Signup `json:"reserveList"`
+	UserSignedUp bool     `json:"userSignedUp"`
+}
+
+type DataStore struct {
+	CurrentWeek string              `json:"currentWeek"`
+	Signups     map[string][]Signup `json:"signups"`
+	Users       map[string]User     `json:"users"`
+}

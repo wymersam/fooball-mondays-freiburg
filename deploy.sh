@@ -3,7 +3,7 @@
 # Production deployment script for Football Mondays
 # Ensures shared state persistence across deployments
 
-echo "🏈 Football Mondays Deployment Script"
+echo "Football Mondays Deployment Script"
 
 # Create data directory if it doesn't exist
 mkdir -p /app/data
