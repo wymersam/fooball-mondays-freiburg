@@ -114,9 +114,6 @@ vendor/
 # Go module download cache
 go.sum.backup
 
-# Application data
-signups.json
-
 # Temporary files
 *.tmp
 *.temp

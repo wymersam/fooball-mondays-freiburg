@@ -1,46 +1,28 @@
 package handlers
 
 import (
+	"database/sql"
+	"football-mondays/db"
 	"football-mondays/models"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
-func LoginHandler(dataStore *models.DataStore, saveData func(*models.DataStore), setUserCookie func(*gin.Context, string)) gin.HandlerFunc {
+// LoginHandler handles user login by username
+func LoginHandler(dbConn *sql.DB, setUserCookie func(*gin.Context, string)) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req models.LoginRequest
-		if err := c.ShouldBindJSON(&req); err != nil {
+		if err := c.ShouldBindJSON(&req); err != nil || req.Username == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format"})
 			return
 		}
-		var foundUserID string
-		var foundUser models.User
-		for userID, user := range dataStore.Users {
-			if user.Username == req.Username {
-				foundUserID = userID
-				foundUser = user
-				break
-			}
-		}
-		if foundUserID == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
+		user, _ := db.GetUserByUsername(dbConn, req.Username)
+		if user == nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username"})
 			return
 		}
-		dataStore.Users[foundUserID] = foundUser
-		saveData(dataStore)
-		isProduction := os.Getenv("PORT") != "" || os.Getenv("RAILWAY_ENVIRONMENT") != ""
-		if isProduction {
-			c.SetSameSite(http.SameSiteNoneMode)
-			c.SetCookie("userId", foundUserID, 30*24*60*60, "/", "", true, true)
-		} else {
-			c.SetSameSite(http.SameSiteLaxMode)
-			c.SetCookie("userId", foundUserID, 30*24*60*60, "/", "", false, true)
-		}
-		c.JSON(http.StatusOK, models.RegisterResponse{
-			Success:  true,
-			Username: foundUser.Username,
-		})
+		setUserCookie(c, user.UserID)
+		c.JSON(http.StatusOK, gin.H{"success": true, "username": user.Username})
 	}
 }

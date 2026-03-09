@@ -17,7 +17,6 @@ function MainApp({ currentUser, onError }: MainAppProps) {
     // Poll for updates every 30 seconds
     const interval = setInterval(loadStatus, 30000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser.username]);
 
   const loadStatus = async (): Promise<void> => {
@@ -33,9 +32,7 @@ function MainApp({ currentUser, onError }: MainAppProps) {
 
   const handleSignup = async (): Promise<void> => {
     try {
-      // ...existing code...
       await apiService.signup();
-      // ...existing code...
       await loadStatus();
     } catch (error: any) {
       onError(error.message || "Signup failed");

@@ -1,24 +1,25 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
+	_ "github.com/lib/pq"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 
+	"football-mondays/db"
 	"football-mondays/handlers"
-	"football-mondays/models"
 	"football-mondays/storage"
 	"football-mondays/utils"
 )
-
-var dataStore *models.DataStore
 
 func generateUUID() string {
 	return uuid.New().String()
@@ -52,16 +53,15 @@ func setupStaticFiles(r *gin.Engine) {
 }
 
 // Start background goroutine to check for weekly resets
-func startWeeklyResetChecker() {
+func startWeeklyResetChecker(dbConn *sql.DB) {
 	go func() {
 		for {
 			// Check every 5 minutes
 			time.Sleep(5 * time.Minute)
-			storage.CheckWeeklyReset(dataStore)
+			storage.CheckWeeklyReset(dbConn)
 		}
 	}()
 }
-
 func main() {
 	// Load .env file if it exists (for local development)
 	if err := godotenv.Load(); err != nil {
@@ -70,15 +70,24 @@ func main() {
 		log.Println("Loaded environment variables from .env file")
 	}
 
-	// Print all environment variables for debugging
-	utils.PrintAllEnvVars()
+	// Initialize PostgreSQL database
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		log.Fatal("DATABASE_URL environment variable is not set")
+	}
+	sqlDB, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		log.Fatalf("Failed to open database: %v", err)
+	}
+	defer sqlDB.Close()
 
-	// Initialize dataStore and data
-	dataStore = &models.DataStore{}
-	storage.InitDataFile(dataStore)
+	// Create tables if they don't exist
+	if err := db.CreateTables(sqlDB); err != nil {
+		log.Fatalf("Failed to create tables: %v", err)
+	}
 
 	// Start weekly reset checker
-	startWeeklyResetChecker()
+	startWeeklyResetChecker(sqlDB)
 	log.Println("Weekly reset checker started")
 
 	// Setup Gin router
@@ -120,11 +129,11 @@ func main() {
 	api := r.Group("/api")
 	{
 		api.GET("/health", handlers.HealthHandler)
-		api.GET("/status", handlers.StatusHandler(dataStore, utils.GetCurrentWeekKey, utils.IsSignupTime, func() { storage.CheckWeeklyReset(dataStore) }, func() { storage.InitDataFile(dataStore) }))
-		api.POST("/register", handlers.RegisterHandler(dataStore, generateUUID, storage.SaveData, setUserCookie, func() { storage.EnsureDataStore(dataStore) }))
-		api.POST("/login", handlers.LoginHandler(dataStore, storage.SaveData, setUserCookie))
-		api.POST("/signup", handlers.SignupHandler(dataStore, utils.GetCurrentWeekKey, utils.IsSignupTime, storage.SaveData))
-		api.DELETE("/signup", handlers.RemoveSignupHandler(dataStore, utils.GetCurrentWeekKey, storage.SaveData))
+		api.GET("/status", handlers.StatusHandler(sqlDB, utils.GetCurrentWeekKey, utils.IsSignupTime))
+		api.POST("/register", handlers.RegisterHandler(sqlDB, generateUUID, setUserCookie))
+		api.POST("/login", handlers.LoginHandler(sqlDB, setUserCookie))
+		api.POST("/signup", handlers.SignupHandler(sqlDB, utils.GetCurrentWeekKey, utils.IsSignupTime))
+		api.DELETE("/signup", handlers.RemoveSignupHandler(sqlDB, utils.GetCurrentWeekKey))
 	}
 
 	// Setup static file serving

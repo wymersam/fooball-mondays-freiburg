@@ -6,28 +6,32 @@ function PlayerLists({ status, currentUser }: PlayerListsProps) {
   const { t } = useLanguage();
   if (!status) return null;
 
+  // Fallback to empty arrays if undefined/null
+  const mainList = status.mainList || [];
+  const reserveList = status.reserveList || [];
+
   return (
     <div className="lists-container">
       <div className="list-section main-section">
         <div className="list-header">
           <h3 className="list-title">{t.startingXI}</h3>
-          <span className="list-count">{status.mainList.length}/10</span>
+          <span className="list-count">{mainList.length}/10</span>
         </div>
         <PlayerList
-          players={status.mainList}
+          players={mainList}
           currentUser={currentUser}
           isMainList={true}
         />
       </div>
 
-      {(status.reserveList.length > 0 || status.mainList.length >= 10) && (
+      {(reserveList.length > 0 || mainList.length >= 10) && (
         <div className="list-section reserve-section">
           <div className="list-header">
             <h3 className="list-title">{t.reserveList}</h3>
-            <span className="list-count">{status.reserveList.length}</span>
+            <span className="list-count">{reserveList.length}</span>
           </div>
           <PlayerList
-            players={status.reserveList}
+            players={reserveList}
             currentUser={currentUser}
             isMainList={false}
           />

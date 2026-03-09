@@ -1,26 +1,19 @@
 package handlers
 
 import (
+	"database/sql"
+	"football-mondays/db"
 	"football-mondays/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func StatusHandler(dataStore *models.DataStore, getCurrentWeekKey func() string, isSignupTime func() bool, checkWeeklyReset func(), initDataFile func()) gin.HandlerFunc {
+// StatusHandler returns the current signup status for the week, including the main and reserve lists
+func StatusHandler(dbConn *sql.DB, getCurrentWeekKey func() string, isSignupTime func() bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		checkWeeklyReset()
-		if dataStore == nil {
-			initDataFile()
-		}
 		currentWeek := getCurrentWeekKey()
-		weekSignups := []models.Signup{}
-		if dataStore != nil && dataStore.Signups != nil {
-			weekSignups = dataStore.Signups[currentWeek]
-			if weekSignups == nil {
-				weekSignups = []models.Signup{}
-			}
-		}
+		weekSignups, _ := db.GetSignupsForWeek(dbConn, currentWeek)
 		mainList := weekSignups
 		reserveList := []models.Signup{}
 		if len(weekSignups) > 10 {

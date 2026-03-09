@@ -36,10 +36,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   const isRTL = language === "ar";
 
   useEffect(() => {
-    // Save to localStorage
     localStorage.setItem("language", language);
 
-    // Update HTML lang attribute
     document.documentElement.lang = language;
 
     // Update HTML dir attribute for RTL languages

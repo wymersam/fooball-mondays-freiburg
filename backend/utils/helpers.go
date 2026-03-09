@@ -7,23 +7,6 @@ import (
 	"time"
 )
 
-const DataFile = "signups.json"
-
-// Debug: Print all environment variables at startup
-func PrintAllEnvVars() {
-	for _, env := range os.Environ() {
-		log.Println("ENV:", env)
-	}
-}
-
-// GetDataFilePath returns the path to the data file, allowing override via environment variable
-func GetDataFilePath() string {
-	if path := os.Getenv("DATA_FILE"); path != "" {
-		return path
-	}
-	return DataFile
-}
-
 // Get current week key (Monday of current week)
 func GetCurrentWeekKey() string {
 	loc, err := time.LoadLocation("Europe/Berlin")

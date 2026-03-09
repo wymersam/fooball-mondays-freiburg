@@ -10,15 +10,7 @@ A simple web application for managing weekly football sign-ups with React/TypeSc
 - Simple username-based authentication
 - Real-time status updates
 
-## Features
-
-### Email Notifications
-
-- Reserve players get notified by email when promoted to starting XI
-- Optional email during registration
-- Powered by Resend (100 free emails/day)
-
-### Language Support
+## Language Support
 
 This app supports 6 languages:
 
@@ -33,8 +25,7 @@ This app supports 6 languages:
 
 - **Frontend**: React 19 with TypeScript, Vite
 - **Backend**: Go 1.24 with Gin framework
-- **Email**: Resend API (free tier)
-- **Data**: JSON file storage
+- **Data**: SQLite database (persistent)
 - **Styling**: CSS with RTL support
 
 ## Setup
@@ -42,36 +33,30 @@ This app supports 6 languages:
 1. **Install Dependencies**:
 
    ```bash
+   # Frontend
+   cd frontend
    npm install
+
+   # Backend
+   cd ../backend
    go mod download
    ```
 
-2. **Configure Email (Optional)**:
+2. **Start the Backend**:
 
    ```bash
-   # Copy the example environment file
-   cp .env.example .env
-
-   # Edit .env and add your Resend API key
-   # Get free API key at: https://resend.com/api-keys
-   # Free tier: 100 emails/day, 3000/month
-   ```
-
-   The app will work without an API key but won't send actual emails (will just log them).
-
-3. **Start the Server**:
-
-   ```bash
-   npm start
+   cd backend
+   go run main.go
    ```
 
    Or for development with auto-restart:
 
    ```bash
+   cd frontend
    npm run dev
    ```
 
-4. **Access the App**:
+3. **Access the App**:
    Open your browser to `http://localhost:3000`
 
 ## API Endpoints
@@ -91,30 +76,8 @@ This app supports 6 languages:
 - ✅ One sign-up per person per week
 - ✅ Automatic weekly reset
 
-## Development
+## Development Notes
 
-The app uses:
-
-- **Backend**: Node.js with Express
-- **Frontend**: Vanilla HTML/CSS/JavaScript
-- **Storage**: JSON file (no database needed)
-- **Authentication**: Simple cookie-based system
-
-To modify the app:
-
-- Edit `server.js` for backend logic
-- Edit files in `public/` for frontend changes
-- No build step required - just refresh the browser
-
-## Deployment
-
-For production deployment:
-
-1. Set `PORT` environment variable
-2. Consider using PM2 or similar process manager
-3. Set up reverse proxy (nginx) if needed
-4. Ensure `signups.json` file is writable by the application
-
-## License
-
-ISC
+- **Backend**: Go with Gin, persistent SQLite database (no more JSON file)
+- **Frontend**: React/TypeScript (Vite)
+- **Authentication**: Cookie-based, with frontend using localStorage for session and language

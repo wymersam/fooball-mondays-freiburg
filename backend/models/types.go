@@ -37,6 +37,7 @@ type ErrorResponse struct {
 }
 
 type User struct {
+	UserID    string    `json:"userId"`
 	Username  string    `json:"username"`
 	CreatedAt time.Time `json:"createdAt"`
 }
@@ -47,10 +48,4 @@ type SignupStatus struct {
 	MainList     []Signup `json:"mainList"`
 	ReserveList  []Signup `json:"reserveList"`
 	UserSignedUp bool     `json:"userSignedUp"`
-}
-
-type DataStore struct {
-	CurrentWeek string              `json:"currentWeek"`
-	Signups     map[string][]Signup `json:"signups"`
-	Users       map[string]User     `json:"users"`
 }

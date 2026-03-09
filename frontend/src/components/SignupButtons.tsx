@@ -9,6 +9,9 @@ function SignupButtons({
   const { t } = useLanguage();
   if (!status) return null;
 
+  // Fallback to empty array if undefined/null
+  const mainList = status.mainList || [];
+
   const showButtons = true;
 
   if (!showButtons) return null;
@@ -22,7 +25,7 @@ function SignupButtons({
       ) : (
         status.canSignup && (
           <button className="btn btn-primary" onClick={onSignup}>
-            {status.mainList.length >= 10 ? t.joinReserveList : t.signMeUp}
+            {mainList.length >= 10 ? t.joinReserveList : t.signMeUp}
           </button>
         )
       )}

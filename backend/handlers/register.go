@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"database/sql"
+	"football-mondays/db"
 	"football-mondays/models"
 	"net/http"
 	"time"
@@ -8,34 +10,29 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterHandler(dataStore *models.DataStore, generateUUID func() string, saveData func(*models.DataStore), setUserCookie func(*gin.Context, string), ensureDataStore func()) gin.HandlerFunc {
+// RegisterHandler handles user registration by username
+func RegisterHandler(dbConn *sql.DB, generateUUID func() string, setUserCookie func(*gin.Context, string)) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req models.RegisterRequest
 		if err := c.ShouldBindJSON(&req); err != nil || req.Username == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format or missing username"})
 			return
 		}
-		ensureDataStore()
-		if dataStore.Users == nil {
-			dataStore.Users = make(map[string]models.User)
-		}
-		var foundUserID string
-		for userID, user := range dataStore.Users {
-			if user.Username == req.Username {
-				foundUserID = userID
-				break
-			}
-		}
-		if foundUserID == "" {
-			newUserID := generateUUID()
-			dataStore.Users[newUserID] = models.User{
+		// Check if user exists
+		user, _ := db.GetUserByUsername(dbConn, req.Username)
+		var userID string
+		if user == nil {
+			userID = generateUUID()
+			newUser := models.User{
+				UserID:    userID,
 				Username:  req.Username,
 				CreatedAt: time.Now(),
 			}
-			foundUserID = newUserID
-			saveData(dataStore)
+			_ = db.InsertUser(dbConn, newUser)
+		} else {
+			userID = user.UserID
 		}
-		setUserCookie(c, foundUserID)
+		setUserCookie(c, userID)
 		c.JSON(http.StatusOK, models.RegisterResponse{
 			Success:  true,
 			Username: req.Username,

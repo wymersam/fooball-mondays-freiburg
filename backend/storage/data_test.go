@@ -1,27 +1,48 @@
 package storage
 
 import (
+	"database/sql"
+	"football-mondays/db"
 	"football-mondays/models"
 	"testing"
 	"time"
 )
 
 func TestWeeklyReset(t *testing.T) {
-	// Setup a fake dataStore with a signup from last week
-	ds := &models.DataStore{
-		CurrentWeek: "2024-02-26",
-		Signups: map[string][]models.Signup{
-			"2024-02-26": {{UserID: "1", Username: "foo", SignupTime: time.Date(2024, 2, 26, 19, 0, 0, 0, time.UTC), Position: 1}},
-		},
-		Users: map[string]models.User{"1": {Username: "foo", CreatedAt: time.Now()}},
+	// Open in-memory SQLite DB
+	sqlDB, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatalf("Failed to open in-memory DB: %v", err)
+	}
+	defer sqlDB.Close()
+
+	// Create tables
+	if err := db.CreateTables(sqlDB); err != nil {
+		t.Fatalf("Failed to create tables: %v", err)
 	}
 
-	CheckWeeklyReset(ds)
-
-	if ds.CurrentWeek != "2024-03-04" {
-		t.Errorf("CurrentWeek not updated: got %v, want %v", ds.CurrentWeek, "2024-03-04")
+	// Insert a signup for last week
+	lastWeek := "2024-02-26"
+	signupTime := time.Date(2024, 2, 26, 19, 0, 0, 0, time.UTC)
+	signup := models.Signup{
+		UserID:     "1",
+		Username:   "foo",
+		SignupTime: signupTime,
+		Position:   1,
 	}
-	if len(ds.Signups[ds.CurrentWeek]) != 0 {
+	if err := db.InsertSignup(sqlDB, signup, lastWeek); err != nil {
+		t.Fatalf("Failed to insert signup: %v", err)
+	}
+
+	// Call the reset logic
+	CheckWeeklyReset(sqlDB)
+
+	// Check that signups for last week are cleared
+	signups, err := db.GetSignupsForWeek(sqlDB, lastWeek)
+	if err != nil {
+		t.Fatalf("Failed to get signups: %v", err)
+	}
+	if len(signups) != 0 {
 		t.Errorf("Signups not reset for new week")
 	}
 }

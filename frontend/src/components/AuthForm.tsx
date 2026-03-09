@@ -17,7 +17,7 @@ function AuthForm({ onLogin }: AuthFormProps) {
     setIsSubmitting(true);
     try {
       await onLogin(username.trim());
-      // Save to localStorage on successful login
+
       localStorage.setItem(
         "currentUser",
         JSON.stringify({ username: username.trim() }),

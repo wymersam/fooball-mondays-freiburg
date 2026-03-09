@@ -5,6 +5,10 @@ function StatusCard({ status }: StatusCardProps) {
   const { t } = useLanguage();
   if (!status) return null;
 
+  // Fallback to empty arrays if undefined/null
+  const mainList = status.mainList || [];
+  const reserveList = status.reserveList || [];
+
   const weekDate = new Date(status.currentWeek);
   weekDate.setDate(weekDate.getDate() + 7);
   const formattedDate = weekDate.toLocaleDateString("en-GB", {
@@ -29,16 +33,16 @@ function StatusCard({ status }: StatusCardProps) {
 
       <div className="game-stats">
         <div className="stat">
-          <span className="stat-number">{status.mainList.length}</span>
+          <span className="stat-number">{mainList.length}</span>
           <span className="stat-label">{t.playing}</span>
         </div>
         <div className="stat">
-          <span className="stat-number">{status.reserveList.length}</span>
+          <span className="stat-number">{reserveList.length}</span>
           <span className="stat-label">{t.reserve}</span>
         </div>
         <div className="stat">
           <span className="stat-number">
-            {Math.max(0, 10 - status.mainList.length)}
+            {Math.max(0, 10 - mainList.length)}
           </span>
           <span className="stat-label">{t.spotsLeft}</span>
         </div>
