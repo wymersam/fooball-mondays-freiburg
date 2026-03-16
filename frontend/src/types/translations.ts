@@ -66,7 +66,7 @@ export const translations: Record<Language, Translations> = {
     signedUpAt: "Signed up:",
     gameRules: "📋 Game Rules",
     signupWindow: "Sign-up Window",
-    signupWindowDesc: "List resets Monday 7:00 PM, signups open at 8:00 PM",
+    signupWindowDesc: "List resets Monday 7:00 PM, signups open at 8:30 PM",
     playingSpots: "Playing Spots",
     playingSpotsDesc: "First 10 people get to play",
     reserveListRule: "Reserve List",
@@ -105,7 +105,7 @@ export const translations: Record<Language, Translations> = {
     gameRules: "📋 Reglas del Juego",
     signupWindow: "Ventana de Inscripción",
     signupWindowDesc:
-      "La lista se reinicia el lunes a las 19:00, inscripciones abren a las 20:00",
+      "La lista se reinicia el lunes a las 19:00, inscripciones abren a las 20:30",
     playingSpots: "Lugares para Jugar",
     playingSpotsDesc: "Las primeras 10 personas pueden jugar",
     reserveListRule: "Lista de Reserva",
@@ -144,7 +144,7 @@ export const translations: Record<Language, Translations> = {
     gameRules: "📋 Regole del Gioco",
     signupWindow: "Finestra di Iscrizione",
     signupWindowDesc:
-      "L'elenco si azzera lunedì alle 19:00, iscrizioni aperte alle 20:00",
+      "L'elenco si azzera lunedì alle 19:00, iscrizioni aperte alle 20:30",
     playingSpots: "Posti per Giocare",
     playingSpotsDesc: "Le prime 10 persone possono giocare",
     reserveListRule: "Lista di Riserva",
@@ -183,7 +183,7 @@ export const translations: Record<Language, Translations> = {
     gameRules: "قواعد اللعبة 📋",
     signupWindow: "نافذة التسجيل",
     signupWindowDesc:
-      "تتم إعادة تعيين القائمة يوم الاثنين الساعة 19:00، التسجيلات تفتح الساعة 20:00",
+      "تتم إعادة تعيين القائمة يوم الاثنين الساعة 19:00، التسجيلات تفتح الساعة 20:30",
     playingSpots: "أماكن اللعب",
     playingSpotsDesc: "أول 10 أشخاص يمكنهم اللعب",
     reserveListRule: "القائمة الاحتياطية",
@@ -222,7 +222,7 @@ export const translations: Record<Language, Translations> = {
     gameRules: "📋 Spielregeln",
     signupWindow: "Anmeldefenster",
     signupWindowDesc:
-      "Liste wird Montag 19:00 Uhr zurückgesetzt, Anmeldungen öffnen um 20:00 Uhr",
+      "Liste wird Montag 19:00 Uhr zurückgesetzt, Anmeldungen öffnen um 20:30 Uhr",
     playingSpots: "Spielplätze",
     playingSpotsDesc: "Die ersten 10 Personen können spielen",
     reserveListRule: "Reserveliste",
@@ -262,7 +262,7 @@ export const translations: Record<Language, Translations> = {
     gameRules: "📋 Regras do Jogo",
     signupWindow: "Janela de Inscrição",
     signupWindowDesc:
-      "A lista reinicia segunda-feira às 19:00, inscrições abrem às 20:00",
+      "A lista reinicia segunda-feira às 19:00, inscrições abrem às 20:30",
     playingSpots: "Vagas para Jogar",
     playingSpotsDesc: "As primeiras 10 pessoas podem jogar",
     reserveListRule: "Lista de Reservas",

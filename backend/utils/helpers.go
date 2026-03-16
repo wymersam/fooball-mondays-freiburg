@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -30,25 +31,37 @@ func IsSignupTime() bool {
 	}
 	now := time.Now().In(loc)
 
-	// Get block day and hour from env, fallback to Monday 18 (6-7pm)
+	// Get block day and time from env, fallback to Monday 18:00 (6-7pm)
 	blockDay := os.Getenv("SIGNUP_BLOCK_DAY")
 	if blockDay == "" {
 		blockDay = "Monday"
 	}
-	blockHourStr := os.Getenv("SIGNUP_BLOCK_HOUR")
-	blockHour := 18
-	if blockHourStr != "" {
-		if h, err := strconv.Atoi(blockHourStr); err == nil {
-			blockHour = h
+	blockTimeStr := os.Getenv("SIGNUP_BLOCK_HOUR")
+	blockHour := 19
+	blockMinute := 0
+	if blockTimeStr != "" {
+		// Support both "HH" and "HH:MM" formats
+		if strings.Contains(blockTimeStr, ":") {
+			parts := strings.SplitN(blockTimeStr, ":", 2)
+			if h, err := strconv.Atoi(parts[0]); err == nil {
+				blockHour = h
+			}
+			if m, err := strconv.Atoi(parts[1]); err == nil {
+				blockMinute = m
+			}
+		} else {
+			if h, err := strconv.Atoi(blockTimeStr); err == nil {
+				blockHour = h
+			}
 		}
 	}
 
-	// Compare current day/hour to block window
+	// Compare current day/time to block window (90 minutes from block time)
 	weekdayStr := now.Weekday().String()
-	hour := now.Hour()
-	// Debug log
-	log.Printf("IsSignupTime debug: now=%s %02d, env blockDay=%s, blockHour=%d", weekdayStr, hour, blockDay, blockHour)
-	if weekdayStr == blockDay && hour == blockHour {
+	blockStart := time.Date(now.Year(), now.Month(), now.Day(), blockHour, blockMinute, 0, 0, loc)
+	blockEnd := blockStart.Add(90 * time.Minute)
+	log.Printf("IsSignupTime debug: now=%s %02d:%02d, env blockDay=%s, blockTime=%02d:%02d", weekdayStr, now.Hour(), now.Minute(), blockDay, blockHour, blockMinute)
+	if weekdayStr == blockDay && !now.Before(blockStart) && now.Before(blockEnd) {
 		log.Println("Signup is currently blocked!")
 		return false
 	}
