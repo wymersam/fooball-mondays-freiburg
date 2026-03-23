@@ -10,14 +10,25 @@ import (
 	"time"
 )
 
+// lastResetWeekKey tracks the week key for which we last performed a reset,
+// so the reset only fires once per week even if CheckWeeklyReset is called repeatedly.
+var lastResetWeekKey string
+
 // CheckWeeklyReset checks if it's the configured reset day/time (Europe/Berlin) and resets signups for the week if needed.
 // Configurable via SIGNUP_BLOCK_DAY (default: Monday) and SIGNUP_BLOCK_HOUR (default: 19:00, supports HH or HH:MM).
+// The reset only fires once per week: at or after the reset time on the configured day.
 func CheckWeeklyReset(dbConn *sql.DB) {
 	loc, err := time.LoadLocation("Europe/Berlin")
 	if err != nil {
 		loc = time.Local
 	}
 	now := time.Now().In(loc)
+
+	// Calculate the Monday of the *previous* week as the week key for signups to clear.
+	// Signups are stored under the Monday key of the week they were made.
+	// We want to clear whatever week was active before this reset fires.
+	// Since the reset fires Monday evening, the signups to clear are from the current week key
+	// (people signed up Mon morning through the week, now it's Mon 7pm and they reset for next week).
 	currentWeek := now.AddDate(0, 0, -int(now.Weekday())+1)
 	if now.Weekday() == time.Sunday {
 		currentWeek = currentWeek.AddDate(0, 0, -7)
@@ -48,19 +59,19 @@ func CheckWeeklyReset(dbConn *sql.DB) {
 		}
 	}
 
-	// If it's the configured reset day and at/after the reset time, clear signups for the week
 	weekdayStr := now.Weekday().String()
 	resetTime := time.Date(now.Year(), now.Month(), now.Day(), blockHour, blockMinute, 0, 0, loc)
-	if weekdayStr == blockDay && !now.Before(resetTime) {
-		signups, _ := db.GetSignupsForWeek(dbConn, currentWeekKey)
-		if len(signups) > 0 {
-			for _, signup := range signups {
-				if signup.SignupTime.In(loc).Before(resetTime) {
-					log.Printf("Resetting signups for week %s at %s %02d:%02d (Europe/Berlin)", currentWeekKey, blockDay, blockHour, blockMinute)
-					_ = db.ClearSignupsForWeek(dbConn, currentWeekKey)
-					break
-				}
-			}
-		}
+
+	// Only reset if:
+	// 1. It's the configured reset day (e.g. Monday)
+	// 2. The current time is at or after the reset time (e.g. 7pm)
+	// 3. We haven't already reset for this week
+	if weekdayStr == blockDay && !now.Before(resetTime) && lastResetWeekKey != currentWeekKey {
+		// Clear the previous week's signups (the ones for today's game that just ended),
+		// so new signups under currentWeekKey are for the following week's game.
+		prevWeekKey := currentWeek.AddDate(0, 0, -7).Format("2006-01-02")
+		log.Printf("Resetting signups for week %s (clearing %s) at %s %02d:%02d (Europe/Berlin)", currentWeekKey, prevWeekKey, blockDay, blockHour, blockMinute)
+		_ = db.ClearSignupsForWeek(dbConn, prevWeekKey)
+		lastResetWeekKey = currentWeekKey
 	}
 }

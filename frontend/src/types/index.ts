@@ -17,6 +17,7 @@ export interface SignupStatus {
   mainList: Signup[];
   reserveList: Signup[];
   userSignedUp: boolean;
+  nextReset: string;
 }
 
 export interface RegisterResponse {

@@ -1,5 +1,25 @@
+import { useState, useEffect } from "react";
 import { StatusCardProps } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+
+function useCountdown(targetISO: string) {
+  const calculate = () => {
+    const diff = new Date(targetISO).getTime() - Date.now();
+    if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    return {
+      days: Math.floor(diff / 86400000),
+      hours: Math.floor((diff % 86400000) / 3600000),
+      minutes: Math.floor((diff % 3600000) / 60000),
+      seconds: Math.floor((diff % 60000) / 1000),
+    };
+  };
+  const [timeLeft, setTimeLeft] = useState(calculate);
+  useEffect(() => {
+    const id = setInterval(() => setTimeLeft(calculate()), 1000);
+    return () => clearInterval(id);
+  }, [targetISO]);
+  return timeLeft;
+}
 
 function StatusCard({ status }: StatusCardProps) {
   const { t } = useLanguage();
@@ -17,12 +37,20 @@ function StatusCard({ status }: StatusCardProps) {
     year: "numeric",
   });
 
+  const countdown = useCountdown(status.nextReset);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const countdownStr =
+    countdown.days > 0
+      ? `${countdown.days}d ${pad(countdown.hours)}h ${pad(countdown.minutes)}m ${pad(countdown.seconds)}s`
+      : `${pad(countdown.hours)}h ${pad(countdown.minutes)}m ${pad(countdown.seconds)}s`;
+
   return (
     <div className="status-card">
       <div className="status-header">
         <h2>
           {t.nextGame}: {formattedDate}
         </h2>
+        <p className="reset-countdown">🔄 Resets in: {countdownStr}</p>
       </div>
 
       <div className={`signup-status ${status.canSignup ? "open" : "closed"}`}>

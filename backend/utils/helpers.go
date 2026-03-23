@@ -8,17 +8,48 @@ import (
 	"time"
 )
 
-// Get current week key (Monday of current week)
+// Get current week key (Monday of the active signup week).
+// Before the reset time on the reset day, signups still belong to the previous week's game,
+// so we return last Monday's key. After the reset, we return this Monday's key.
 func GetCurrentWeekKey() string {
 	loc, err := time.LoadLocation("Europe/Berlin")
 	if err != nil {
 		loc = time.Local
 	}
 	now := time.Now().In(loc)
-	// Calculate Monday of this week
+
+	blockDay := os.Getenv("SIGNUP_BLOCK_DAY")
+	if blockDay == "" {
+		blockDay = "Monday"
+	}
+	blockHour := 19
+	blockMinute := 0
+	if blockTimeStr := os.Getenv("SIGNUP_BLOCK_HOUR"); blockTimeStr != "" {
+		if strings.Contains(blockTimeStr, ":") {
+			parts := strings.SplitN(blockTimeStr, ":", 2)
+			if h, err := strconv.Atoi(parts[0]); err == nil {
+				blockHour = h
+			}
+			if m, err := strconv.Atoi(parts[1]); err == nil {
+				blockMinute = m
+			}
+		} else {
+			if h, err := strconv.Atoi(blockTimeStr); err == nil {
+				blockHour = h
+			}
+		}
+	}
+
 	monday := now.AddDate(0, 0, -int(now.Weekday())+1)
 	if now.Weekday() == time.Sunday {
 		monday = monday.AddDate(0, 0, -7)
+	}
+	// Before the reset time on reset day, the active signups are from the previous week
+	if now.Weekday().String() == blockDay {
+		resetTime := time.Date(now.Year(), now.Month(), now.Day(), blockHour, blockMinute, 0, 0, loc)
+		if now.Before(resetTime) {
+			monday = monday.AddDate(0, 0, -7)
+		}
 	}
 	return monday.Format("2006-01-02")
 }

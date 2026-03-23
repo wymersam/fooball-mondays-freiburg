@@ -43,9 +43,10 @@ type User struct {
 }
 
 type SignupStatus struct {
-	CurrentWeek  string   `json:"currentWeek"`
-	CanSignup    bool     `json:"canSignup"`
-	MainList     []Signup `json:"mainList"`
-	ReserveList  []Signup `json:"reserveList"`
-	UserSignedUp bool     `json:"userSignedUp"`
+	CurrentWeek  string    `json:"currentWeek"`
+	CanSignup    bool      `json:"canSignup"`
+	MainList     []Signup  `json:"mainList"`
+	ReserveList  []Signup  `json:"reserveList"`
+	UserSignedUp bool      `json:"userSignedUp"`
+	NextReset    time.Time `json:"nextReset"`
 }
