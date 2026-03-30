@@ -31,8 +31,6 @@ function StatusCard({ status, language }: StatusCardProps) {
 
   let locale: string;
 
-  console.log("Current language:", language); // Debug log to check the language value
-
   switch (language) {
     case "en":
       locale = "en-US";
@@ -55,8 +53,6 @@ function StatusCard({ status, language }: StatusCardProps) {
     default:
       locale = "en-US";
   }
-
-  console.log("Using locale:", locale); // Debug log to check the locale value
 
   const weekDate = new Date(status.currentWeek);
   weekDate.setDate(weekDate.getDate() + 7);
