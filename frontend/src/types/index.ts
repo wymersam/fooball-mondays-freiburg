@@ -61,6 +61,7 @@ export interface PlayerListsProps {
 
 export interface StatusCardProps {
   status: SignupStatus | null;
+  language: string;
 }
 
 export interface SignupButtonsProps {

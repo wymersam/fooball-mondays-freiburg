@@ -58,7 +58,7 @@ function MainApp({ currentUser, onError }: MainAppProps) {
 
   return (
     <>
-      <StatusCard status={status} />
+      <StatusCard status={status} language={useLanguage().language} />
       <SignupButtons
         status={status}
         onSignup={handleSignup}

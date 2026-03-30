@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { StatusCardProps } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -21,7 +21,7 @@ function useCountdown(targetISO: string) {
   return timeLeft;
 }
 
-function StatusCard({ status }: StatusCardProps) {
+function StatusCard({ status, language }: StatusCardProps) {
   const { t } = useLanguage();
   if (!status) return null;
 
@@ -29,7 +29,31 @@ function StatusCard({ status }: StatusCardProps) {
   const mainList = status.mainList || [];
   const reserveList = status.reserveList || [];
 
-  const locale = navigator.language || "en-GB";
+  let locale: string;
+
+  switch (language) {
+    case "en":
+      locale = "en-US";
+      break;
+    case "es":
+      locale = "es-ES";
+      break;
+    case "it":
+      locale = "it-IT";
+      break;
+    case "ar":
+      locale = "ar-SA";
+      break;
+    case "de":
+      locale = "de-DE";
+      break;
+    case "pt":
+      locale = "pt-PT";
+      break;
+    default:
+      locale = "en-US";
+  }
+
   const weekDate = new Date(status.currentWeek);
   weekDate.setDate(weekDate.getDate() + 7);
 
