@@ -29,9 +29,11 @@ function StatusCard({ status }: StatusCardProps) {
   const mainList = status.mainList || [];
   const reserveList = status.reserveList || [];
 
+  const locale = navigator.language || "en-GB";
   const weekDate = new Date(status.currentWeek);
   weekDate.setDate(weekDate.getDate() + 7);
-  const formattedDate = weekDate.toLocaleDateString("en-GB", {
+
+  const formattedDate = weekDate.toLocaleDateString(locale, {
     day: "numeric",
     month: "long",
     year: "numeric",
