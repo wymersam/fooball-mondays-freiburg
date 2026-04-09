@@ -76,7 +76,7 @@ function StatusCard({ status, language }: StatusCardProps) {
         <h2>
           {t.nextGame}: {formattedDate}
         </h2>
-        <p className="reset-countdown">🔄 Resets in: {countdownStr}</p>
+        <p className="reset-countdown">Resets in: {countdownStr}</p>
       </div>
 
       <div className={`signup-status ${status.canSignup ? "open" : "closed"}`}>
