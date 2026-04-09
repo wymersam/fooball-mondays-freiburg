@@ -96,7 +96,7 @@ function StatusCard({ status, language }: StatusCardProps) {
         </div>
         <div className="stat">
           <span className="stat-number">
-            {Math.max(0, 10 - mainList.length)}
+            {Math.max(0, 12 - mainList.length)}
           </span>
           <span className="stat-label">{t.spotsLeft}</span>
         </div>

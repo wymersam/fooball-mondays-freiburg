@@ -17,9 +17,9 @@ func StatusHandler(dbConn *sql.DB, getCurrentWeekKey func() string, isSignupTime
 		weekSignups, _ := db.GetSignupsForWeek(dbConn, currentWeek)
 		mainList := weekSignups
 		reserveList := []models.Signup{}
-		if len(weekSignups) > 10 {
-			mainList = weekSignups[:10]
-			reserveList = weekSignups[10:]
+		if len(weekSignups) > 12 {
+			mainList = weekSignups[:12]
+			reserveList = weekSignups[12:]
 		}
 		username := c.Query("currentUser")
 		userSignedUp := false
