@@ -1,9 +1,48 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: ["icon.svg"],
+      manifest: {
+        name: "Football Mondays Freiburg",
+        short_name: "Football Mondays",
+        description: "Weekly football sign-up app for Freiburg",
+        theme_color: "#e87f24",
+        background_color: "#e8f4f8",
+        display: "standalone",
+        scope: "/",
+        start_url: "/",
+        orientation: "portrait",
+        icons: [
+          {
+            src: "icon.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+        ],
+      },
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,svg}"],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/api\.open-meteo\.com\/.*/i,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "weather-cache",
+              expiration: { maxAgeSeconds: 60 * 60 },
+            },
+          },
+        ],
+      },
+    }),
+  ],
   root: ".",
   publicDir: "public",
   server: {
