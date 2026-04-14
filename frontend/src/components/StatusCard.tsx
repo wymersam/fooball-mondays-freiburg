@@ -1,6 +1,7 @@
 import { useState, useEffect, use } from "react";
 import { StatusCardProps } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+import WeatherWidget from "./WeatherWidget";
 
 function useCountdown(targetISO: string) {
   const calculate = () => {
@@ -76,6 +77,7 @@ function StatusCard({ status, language }: StatusCardProps) {
         <h2>
           {t.nextGame}: {formattedDate}
         </h2>
+        <WeatherWidget />
         <p className="reset-countdown">Resets in: {countdownStr}</p>
       </div>
 

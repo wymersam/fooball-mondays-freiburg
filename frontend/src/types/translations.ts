@@ -37,6 +37,18 @@ export interface Translations {
   loadingStatus: string;
   areYouSureRemove: string;
   createdBy: string;
+  weatherClear: string;
+  weatherMainlyClear: string;
+  weatherPartlyCloudy: string;
+  weatherOvercast: string;
+  weatherFoggy: string;
+  weatherDrizzle: string;
+  weatherRain: string;
+  weatherSnow: string;
+  weatherShowers: string;
+  weatherSnowShowers: string;
+  weatherThunderstorm: string;
+  predictedWeather: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -77,6 +89,18 @@ export const translations: Record<Language, Translations> = {
     loadingStatus: "Loading current status...",
     areYouSureRemove: "Are you sure you want to remove your signup?",
     createdBy: "created by Sammy :)",
+    weatherClear: "Clear",
+    weatherMainlyClear: "Mainly clear",
+    weatherPartlyCloudy: "Partly cloudy",
+    weatherOvercast: "Overcast",
+    weatherFoggy: "Foggy",
+    weatherDrizzle: "Drizzle",
+    weatherRain: "Rain",
+    weatherSnow: "Snow",
+    weatherShowers: "Showers",
+    weatherSnowShowers: "Snow showers",
+    weatherThunderstorm: "Thunderstorm",
+    predictedWeather: "Weather forecast",
   },
   es: {
     welcomeMessage: "¡Bienvenido a Fútbol los Lunes!",
@@ -116,6 +140,18 @@ export const translations: Record<Language, Translations> = {
     loadingStatus: "Cargando estado actual...",
     areYouSureRemove: "¿Estás seguro de que quieres eliminar tu inscripción?",
     createdBy: "creado por Sammy :)",
+    weatherClear: "Despejado",
+    weatherMainlyClear: "Principalmente despejado",
+    weatherPartlyCloudy: "Parcialmente nublado",
+    weatherOvercast: "Nublado",
+    weatherFoggy: "Niebla",
+    weatherDrizzle: "Llovizna",
+    weatherRain: "Lluvia",
+    weatherSnow: "Nieve",
+    weatherShowers: "Chubascos",
+    weatherSnowShowers: "Chubascos de nieve",
+    weatherThunderstorm: "Tormenta",
+    predictedWeather: "Pronóstico",
   },
   it: {
     welcomeMessage: "Benvenuto a Calcio il Lunedì!",
@@ -155,6 +191,18 @@ export const translations: Record<Language, Translations> = {
     loadingStatus: "Caricamento stato attuale...",
     areYouSureRemove: "Sei sicuro di voler rimuovere la tua iscrizione?",
     createdBy: "creato da Sammy :)",
+    weatherClear: "Sereno",
+    weatherMainlyClear: "Prevalentemente sereno",
+    weatherPartlyCloudy: "Parzialmente nuvoloso",
+    weatherOvercast: "Coperto",
+    weatherFoggy: "Nebbia",
+    weatherDrizzle: "Pioggerella",
+    weatherRain: "Pioggia",
+    weatherSnow: "Neve",
+    weatherShowers: "Rovesci",
+    weatherSnowShowers: "Rovesci di neve",
+    weatherThunderstorm: "Temporale",
+    predictedWeather: "Previsioni meteo",
   },
   ar: {
     welcomeMessage: "!مرحباً بك في كرة القدم يوم الاثنين",
@@ -194,6 +242,18 @@ export const translations: Record<Language, Translations> = {
     loadingStatus: "...جاري تحميل الحالة الحالية",
     areYouSureRemove: "هل أنت متأكد من أنك تريد إزالة تسجيلك؟",
     createdBy: "(أنشأها سامي :)",
+    weatherClear: "صافٍ",
+    weatherMainlyClear: "صافٍ في معظمه",
+    weatherPartlyCloudy: "غائم جزئياً",
+    weatherOvercast: "ملبّد بالغيوم",
+    weatherFoggy: "ضبابي",
+    weatherDrizzle: "رذاذ",
+    weatherRain: "مطر",
+    weatherSnow: "ثلج",
+    weatherShowers: "زخات مطر",
+    weatherSnowShowers: "زخات ثلج",
+    weatherThunderstorm: "عاصفة رعدية",
+    predictedWeather: "توقعات الطقس",
   },
   de: {
     welcomeMessage: "Willkommen bei Fußball Montags!",
@@ -234,6 +294,18 @@ export const translations: Record<Language, Translations> = {
     areYouSureRemove:
       "Bist du sicher, dass du deine Anmeldung entfernen möchtest?",
     createdBy: "erstellt von Sammy :)",
+    weatherClear: "Klar",
+    weatherMainlyClear: "Überwiegend klar",
+    weatherPartlyCloudy: "Teils bewölkt",
+    weatherOvercast: "Bedeckt",
+    weatherFoggy: "Neblig",
+    weatherDrizzle: "Nieselregen",
+    weatherRain: "Regen",
+    weatherSnow: "Schnee",
+    weatherShowers: "Schauer",
+    weatherSnowShowers: "Schneeschauer",
+    weatherThunderstorm: "Gewitter",
+    predictedWeather: "Wettervorhersage",
   },
   pt: {
     welcomeMessage: "Bem-vindo ao Futebol às Segundas! ⚽",
@@ -273,6 +345,18 @@ export const translations: Record<Language, Translations> = {
     loadingStatus: "Carregando status atual...",
     areYouSureRemove: "Tem certeza de que deseja remover sua inscrição?",
     createdBy: "criado por Sammy :)",
+    weatherClear: "Limpo",
+    weatherMainlyClear: "Principalmente limpo",
+    weatherPartlyCloudy: "Parcialmente nublado",
+    weatherOvercast: "Nublado",
+    weatherFoggy: "Nevoeiro",
+    weatherDrizzle: "Garoa",
+    weatherRain: "Chuva",
+    weatherSnow: "Neve",
+    weatherShowers: "Pancadas",
+    weatherSnowShowers: "Pancadas de neve",
+    weatherThunderstorm: "Tempestade",
+    predictedWeather: "Previsão do tempo",
   },
 };
 

@@ -6,6 +6,7 @@ import ErrorMessage from "./components/ErrorMessage";
 import { User } from "./types";
 import { apiService } from "./services/apiService";
 import { LanguageProvider } from "./context/LanguageContext";
+import { useLanguage } from "./context/LanguageContext";
 
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -81,9 +82,16 @@ function App() {
           />
         )}
       </div>
-      <p className="created-by-footer">Created by Sammy</p>
+      <p className="created-by-footer">
+        <Footer />
+      </p>
     </LanguageProvider>
   );
+}
+
+function Footer() {
+  const { t } = useLanguage();
+  return <>{t.createdBy}</>;
 }
 
 export default App;
