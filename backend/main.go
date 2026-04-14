@@ -86,6 +86,11 @@ func main() {
 		log.Fatalf("Failed to create tables: %v", err)
 	}
 
+	// Migrate existing TIMESTAMP columns to TIMESTAMPTZ
+	if err := db.MigrateSchema(sqlDB); err != nil {
+		log.Fatalf("Failed to migrate schema: %v", err)
+	}
+
 	// Start weekly reset checker
 	startWeeklyResetChecker(sqlDB)
 	log.Println("Weekly reset checker started")

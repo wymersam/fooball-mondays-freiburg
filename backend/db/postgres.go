@@ -12,17 +12,27 @@ func CreateTables(db *sql.DB) error {
     CREATE TABLE IF NOT EXISTS users (
         user_id TEXT PRIMARY KEY,
         username TEXT NOT NULL UNIQUE,
-        created_at TIMESTAMP NOT NULL
+        created_at TIMESTAMPTZ NOT NULL
     );
     CREATE TABLE IF NOT EXISTS signups (
         user_id TEXT,
         username TEXT,
-        signup_time TIMESTAMP,
+        signup_time TIMESTAMPTZ,
         position INTEGER,
         week_key TEXT,
         PRIMARY KEY (user_id, week_key),
         FOREIGN KEY(user_id) REFERENCES users(user_id)
     );
+    `)
+	return err
+}
+
+// MigrateSchema upgrades existing columns to TIMESTAMPTZ if they are plain TIMESTAMP.
+// Safe to run on every startup — it's a no-op if already TIMESTAMPTZ.
+func MigrateSchema(db *sql.DB) error {
+	_, err := db.Exec(`
+    ALTER TABLE users ALTER COLUMN created_at TYPE TIMESTAMPTZ USING created_at AT TIME ZONE 'UTC';
+    ALTER TABLE signups ALTER COLUMN signup_time TYPE TIMESTAMPTZ USING signup_time AT TIME ZONE 'UTC';
     `)
 	return err
 }
