@@ -58,6 +58,12 @@ function App() {
     setTimeout(() => setError(""), 5000);
   };
 
+  const handleSessionExpired = (): void => {
+    localStorage.removeItem("currentUser");
+    setCurrentUser(null);
+    setError("");
+  };
+
   return (
     <LanguageProvider>
       <div className="language-selector-wrapper">
@@ -68,7 +74,11 @@ function App() {
         {!currentUser ? (
           <AuthForm onLogin={handleLogin} />
         ) : (
-          <MainApp currentUser={currentUser} onError={showError} />
+          <MainApp
+            currentUser={currentUser}
+            onError={showError}
+            onSessionExpired={handleSessionExpired}
+          />
         )}
       </div>
       <p className="created-by-footer">Created by Sammy</p>

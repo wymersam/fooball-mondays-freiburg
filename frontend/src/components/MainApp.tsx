@@ -7,7 +7,7 @@ import { apiService } from "../services/apiService";
 import { MainAppProps, SignupStatus } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 
-function MainApp({ currentUser, onError }: MainAppProps) {
+function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
   const { t } = useLanguage();
   const [status, setStatus] = useState<SignupStatus | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -30,12 +30,20 @@ function MainApp({ currentUser, onError }: MainAppProps) {
     }
   };
 
+  const handleAuthError = (error: any): void => {
+    if (error?.message === "Please register first") {
+      onSessionExpired();
+    } else {
+      onError(error?.message || "Something went wrong");
+    }
+  };
+
   const handleSignup = async (): Promise<void> => {
     try {
       await apiService.signup();
       await loadStatus();
     } catch (error: any) {
-      onError(error.message || "Signup failed");
+      handleAuthError(error);
     }
   };
 
@@ -48,7 +56,7 @@ function MainApp({ currentUser, onError }: MainAppProps) {
       await apiService.removeSignup();
       await loadStatus();
     } catch (error: any) {
-      onError(error.message || "Failed to remove signup");
+      handleAuthError(error);
     }
   };
 

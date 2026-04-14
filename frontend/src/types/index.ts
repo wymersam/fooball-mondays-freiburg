@@ -46,6 +46,7 @@ export interface ErrorMessageProps {
 export interface MainAppProps {
   currentUser: User;
   onError: (message: string) => void;
+  onSessionExpired: () => void;
 }
 
 export interface PlayerListProps {
