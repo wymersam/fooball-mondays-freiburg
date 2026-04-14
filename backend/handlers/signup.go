@@ -14,7 +14,7 @@ import (
 func SignupHandler(dbConn *sql.DB, getCurrentWeekKey func() string, isSignupTime func() bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !isSignupTime() {
-			c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Signups are temporarily blocked during the reset window (Monday 7pm-8pm). Please try again after 8pm."})
+			c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Signups are temporarily blocked during the reset window (Monday 7pm-10pm). Please try again after 10pm."})
 			return
 		}
 		userID, err := c.Cookie("userId")

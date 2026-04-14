@@ -5,6 +5,9 @@ import (
 	"football-mondays/db"
 	"football-mondays/models"
 	"net/http"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -54,11 +57,30 @@ func nextResetTime() time.Time {
 	if now.Weekday() == time.Sunday {
 		monday = monday.AddDate(0, 0, -7)
 	}
-	resetToday := time.Date(monday.Year(), monday.Month(), monday.Day(), 19, 0, 0, 0, loc)
+
+	blockHour := 19
+	blockMinute := 0
+	if resetHour := os.Getenv("RESET_HOUR"); resetHour != "" {
+		if strings.Contains(resetHour, ":") {
+			parts := strings.SplitN(resetHour, ":", 2)
+			if h, err := strconv.Atoi(parts[0]); err == nil {
+				blockHour = h
+			}
+			if m, err := strconv.Atoi(parts[1]); err == nil {
+				blockMinute = m
+			}
+		} else {
+			if h, err := strconv.Atoi(resetHour); err == nil {
+				blockHour = h
+			}
+		}
+	}
+
+	resetToday := time.Date(monday.Year(), monday.Month(), monday.Day(), blockHour, blockMinute, 0, 0, loc)
 	if now.Before(resetToday) {
 		return resetToday.UTC()
 	}
 	// Already past this Monday's reset — next reset is next Monday
 	nextMonday := monday.AddDate(0, 0, 7)
-	return time.Date(nextMonday.Year(), nextMonday.Month(), nextMonday.Day(), 19, 0, 0, 0, loc).UTC()
+	return time.Date(nextMonday.Year(), nextMonday.Month(), nextMonday.Day(), blockHour, blockMinute, 0, 0, loc).UTC()
 }

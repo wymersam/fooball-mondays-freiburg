@@ -67,6 +67,7 @@ func IsSignupTime() bool {
 	if blockDay == "" {
 		blockDay = "Monday"
 	}
+
 	blockTimeStr := os.Getenv("SIGNUP_BLOCK_HOUR")
 	blockHour := 19
 	blockMinute := 0
@@ -87,10 +88,10 @@ func IsSignupTime() bool {
 		}
 	}
 
-	// Compare current day/time to block window (90 minutes from block time)
+	// Compare current day/time to block window (180 minutes from block time)
 	weekdayStr := now.Weekday().String()
 	blockStart := time.Date(now.Year(), now.Month(), now.Day(), blockHour, blockMinute, 0, 0, loc)
-	blockEnd := blockStart.Add(90 * time.Minute)
+	blockEnd := blockStart.Add(180 * time.Minute)
 	log.Printf("IsSignupTime debug: now=%s %02d:%02d, env blockDay=%s, blockTime=%02d:%02d", weekdayStr, now.Hour(), now.Minute(), blockDay, blockHour, blockMinute)
 	if weekdayStr == blockDay && !now.Before(blockStart) && now.Before(blockEnd) {
 		log.Println("Signup is currently blocked!")
