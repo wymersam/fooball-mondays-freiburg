@@ -40,10 +40,25 @@ func setUserCookie(c *gin.Context, userID string) {
 func setupStaticFiles(r *gin.Engine) {
 	// Check if build directory exists (production)
 	if _, err := os.Stat("./build/index.html"); err == nil {
-		r.Static("/assets", "./build/assets")
-		r.StaticFile("/", "./build/index.html")
-		r.NoRoute(func(c *gin.Context) {
-			c.File("./build/index.html")
+		buildDir := http.Dir("./build")
+		r.Use(func(c *gin.Context) {
+			// Skip API routes
+			if len(c.Request.URL.Path) >= 4 && c.Request.URL.Path[:4] == "/api" {
+				c.Next()
+				return
+			}
+			// Try to open the requested path in the build directory
+			path := c.Request.URL.Path
+			f, err := buildDir.Open(path)
+			if err != nil {
+				// Not found — serve index.html for SPA routing
+				c.File("./build/index.html")
+				c.Abort()
+				return
+			}
+			f.Close()
+			c.FileFromFS(path, buildDir)
+			c.Abort()
 		})
 	} else {
 		// Development mode - serve from public

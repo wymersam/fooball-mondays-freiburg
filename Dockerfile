@@ -6,6 +6,7 @@ RUN npm ci
 COPY frontend/index.html ./
 COPY frontend/tsconfig.json ./
 COPY frontend/vite.config.ts ./
+COPY frontend/public/ ./public/
 COPY frontend/src/ ./src/
 RUN npm run build
 
