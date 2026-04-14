@@ -283,3 +283,64 @@ func ClearSignupsForWeek(db *sql.DB, weekKey string) error {
 	_, err := db.Exec(`DELETE FROM signups WHERE week_key = $1`, weekKey)
 	return err
 }
+
+// ArchiveWeekSignups saves the final signup list into game_history before the week is cleared.
+// Positions 1-12 are marked played=true, the rest as reserve (played=false).
+func ArchiveWeekSignups(db *sql.DB, weekKey string) error {
+	_, err := db.Exec(`
+		INSERT INTO game_history (user_id, username, week_key, played)
+		SELECT user_id, username, week_key, position <= 12
+		FROM signups
+		WHERE week_key = $1
+		ON CONFLICT (user_id, week_key) DO NOTHING
+	`, weekKey)
+	return err
+}
+
+// RecordDropout records when a player removes their own signup for a week.
+func RecordDropout(db *sql.DB, userID, username, weekKey string) error {
+	_, err := db.Exec(`
+		INSERT INTO dropouts (user_id, username, week_key, dropout_time)
+		VALUES ($1, $2, $3, NOW())
+		ON CONFLICT (user_id, week_key) DO NOTHING
+	`, userID, username, weekKey)
+	return err
+}
+
+// PlayerStat holds aggregated history for one player.
+type PlayerStat struct {
+	Username     string `json:"username"`
+	GamesPlayed  int    `json:"gamesPlayed"`
+	GamesReserve int    `json:"gamesReserve"`
+	Dropouts     int    `json:"dropouts"`
+}
+
+// GetPlayerStats returns aggregated stats for all players who have any activity.
+func GetPlayerStats(db *sql.DB) ([]PlayerStat, error) {
+	rows, err := db.Query(`
+		SELECT
+			u.username,
+			COUNT(CASE WHEN gh.played = true  THEN 1 END) AS games_played,
+			COUNT(CASE WHEN gh.played = false THEN 1 END) AS games_reserve,
+			COUNT(d.week_key)                              AS dropouts
+		FROM users u
+		LEFT JOIN game_history gh ON gh.user_id = u.user_id
+		LEFT JOIN dropouts      d  ON d.user_id  = u.user_id
+		GROUP BY u.username
+		HAVING COUNT(gh.week_key) + COUNT(d.week_key) > 0
+		ORDER BY games_played DESC, u.username ASC
+	`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var stats []PlayerStat
+	for rows.Next() {
+		var s PlayerStat
+		if err := rows.Scan(&s.Username, &s.GamesPlayed, &s.GamesReserve, &s.Dropouts); err != nil {
+			return nil, err
+		}
+		stats = append(stats, s)
+	}
+	return stats, nil
+}

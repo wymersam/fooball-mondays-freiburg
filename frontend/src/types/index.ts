@@ -39,6 +39,13 @@ export interface ErrorResponse {
   error: string;
 }
 
+export interface PlayerStat {
+  username: string;
+  gamesPlayed: number;
+  gamesReserve: number;
+  dropouts: number;
+}
+
 // Component prop types
 export interface AuthFormProps {
   onLogin: (username: string, inviteCode: string) => Promise<void>;

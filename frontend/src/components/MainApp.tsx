@@ -5,6 +5,7 @@ import PaymentsList from "./PaymentsList";
 import CollectorsList from "./CollectorsList";
 import SignupButtons from "./SignupButtons";
 import Rules from "./Rules";
+import PlayerHistory from "./PlayerHistory";
 import { apiService } from "../services/apiService";
 import { MainAppProps, SignupStatus } from "../types";
 import { useLanguage } from "../context/LanguageContext";

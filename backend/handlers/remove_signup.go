@@ -23,6 +23,7 @@ func RemoveSignupHandler(dbConn *sql.DB, getCurrentWeekKey func() string) gin.Ha
 			return
 		}
 		currentWeek := getCurrentWeekKey()
+		_ = db.RecordDropout(dbConn, userID, user.Username, currentWeek)
 		err = db.RemoveSignup(dbConn, userID, currentWeek)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "Failed to remove signup"})
