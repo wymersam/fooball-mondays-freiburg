@@ -15,6 +15,7 @@ import (
 )
 
 // isAdminUser checks whether the cookie user is in the ADMIN_USERNAMES env var.
+// Used only by AdminCheckHandler so the password prompt can appear on the frontend.
 func isAdminUser(c *gin.Context, dbConn *sql.DB) bool {
 	adminNames := os.Getenv("ADMIN_USERNAMES")
 	if adminNames == "" {
@@ -34,6 +35,19 @@ func isAdminUser(c *gin.Context, dbConn *sql.DB) bool {
 		}
 	}
 	return false
+}
+
+// isAdminAuthed checks username (via cookie) AND the X-Admin-Password header against
+// the ADMIN_PASSWORD env var. If ADMIN_PASSWORD is not set, falls back to username-only.
+func isAdminAuthed(c *gin.Context, dbConn *sql.DB) bool {
+	if !isAdminUser(c, dbConn) {
+		return false
+	}
+	password := os.Getenv("ADMIN_PASSWORD")
+	if password == "" {
+		return true // no password configured, username alone is sufficient
+	}
+	return c.GetHeader("X-Admin-Password") == password
 }
 
 func boolPtr(v bool) *bool { return &v }
@@ -66,7 +80,7 @@ func AdminCheckHandler(dbConn *sql.DB) gin.HandlerFunc {
 // AdminOverrideStatusHandler returns the current override state.
 func AdminOverrideStatusHandler(dbConn *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if !isAdminUser(c, dbConn) {
+		if !isAdminAuthed(c, dbConn) {
 			c.JSON(http.StatusForbidden, models.ErrorResponse{Error: "Forbidden"})
 			return
 		}
@@ -84,7 +98,7 @@ func AdminOverrideStatusHandler(dbConn *sql.DB) gin.HandlerFunc {
 // AdminResetHandler clears the current week's signups and forces the signup window open.
 func AdminResetHandler(dbConn *sql.DB, getCurrentWeekKey func() string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if !isAdminUser(c, dbConn) {
+		if !isAdminAuthed(c, dbConn) {
 			c.JSON(http.StatusForbidden, models.ErrorResponse{Error: "Forbidden"})
 			return
 		}
@@ -137,7 +151,7 @@ func AdminResetHandler(dbConn *sql.DB, getCurrentWeekKey func() string) gin.Hand
 // AdminOpenSignupsHandler forces the signup window open without clearing signups.
 func AdminOpenSignupsHandler(dbConn *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if !isAdminUser(c, dbConn) {
+		if !isAdminAuthed(c, dbConn) {
 			c.JSON(http.StatusForbidden, models.ErrorResponse{Error: "Forbidden"})
 			return
 		}
@@ -149,7 +163,7 @@ func AdminOpenSignupsHandler(dbConn *sql.DB) gin.HandlerFunc {
 // AdminCloseSignupsHandler forces the signup window closed.
 func AdminCloseSignupsHandler(dbConn *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if !isAdminUser(c, dbConn) {
+		if !isAdminAuthed(c, dbConn) {
 			c.JSON(http.StatusForbidden, models.ErrorResponse{Error: "Forbidden"})
 			return
 		}
@@ -161,7 +175,7 @@ func AdminCloseSignupsHandler(dbConn *sql.DB) gin.HandlerFunc {
 // AdminClearOverrideHandler removes the override and restores time-based rules.
 func AdminClearOverrideHandler(dbConn *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if !isAdminUser(c, dbConn) {
+		if !isAdminAuthed(c, dbConn) {
 			c.JSON(http.StatusForbidden, models.ErrorResponse{Error: "Forbidden"})
 			return
 		}
