@@ -96,6 +96,55 @@ class ApiService {
     }
     return data;
   }
+
+  async adminCheck(): Promise<{ isAdmin: boolean }> {
+    const response = await fetch(`${API_BASE}/api/admin/check`, {
+      credentials: "include",
+    });
+    if (!response.ok) return { isAdmin: false };
+    return response.json();
+  }
+
+  async adminOverrideStatus(): Promise<{
+    override: "auto" | "open" | "closed";
+  }> {
+    const response = await fetch(`${API_BASE}/api/admin/override`, {
+      credentials: "include",
+    });
+    if (!response.ok) return { override: "auto" };
+    return response.json();
+  }
+
+  async adminReset(): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/admin/reset`, {
+      method: "POST",
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Reset failed");
+  }
+
+  async adminOpenSignups(): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/admin/open`, {
+      method: "POST",
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Failed to open signups");
+  }
+
+  async adminCloseSignups(): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/admin/close`, {
+      method: "POST",
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Failed to close signups");
+  }
+
+  async adminClearOverride(): Promise<void> {
+    await fetch(`${API_BASE}/api/admin/override`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+  }
 }
 
 export const apiService = new ApiService();

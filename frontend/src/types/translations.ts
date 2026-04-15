@@ -49,6 +49,11 @@ export interface Translations {
   weatherSnowShowers: string;
   weatherThunderstorm: string;
   predictedWeather: string;
+  adminReset: string;
+  adminResetConfirm: string;
+  adminOpenSignups: string;
+  adminCloseSignups: string;
+  adminAutoMode: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -101,6 +106,12 @@ export const translations: Record<Language, Translations> = {
     weatherSnowShowers: "Snow showers",
     weatherThunderstorm: "Thunderstorm",
     predictedWeather: "Weather forecast",
+    adminReset: "Reset signups",
+    adminResetConfirm:
+      "This will clear all current signups and reopen the window. Are you sure?",
+    adminOpenSignups: "Open signups",
+    adminCloseSignups: "Close signups",
+    adminAutoMode: "🔄 Auto",
   },
   es: {
     welcomeMessage: "¡Bienvenido a Fútbol los Lunes!",
@@ -152,6 +163,12 @@ export const translations: Record<Language, Translations> = {
     weatherSnowShowers: "Chubascos de nieve",
     weatherThunderstorm: "Tormenta",
     predictedWeather: "Pronóstico",
+    adminReset: "Reiniciar inscripciones",
+    adminResetConfirm:
+      "Esto borrará todas las inscripciones actuales y reabrirá la ventana. ¿Estás seguro?",
+    adminOpenSignups: "Abrir inscripciones",
+    adminCloseSignups: "Cerrar inscripciones",
+    adminAutoMode: "🔄 Auto",
   },
   it: {
     welcomeMessage: "Benvenuto a Calcio il Lunedì!",
@@ -203,6 +220,12 @@ export const translations: Record<Language, Translations> = {
     weatherSnowShowers: "Rovesci di neve",
     weatherThunderstorm: "Temporale",
     predictedWeather: "Previsioni meteo",
+    adminReset: "Reimposta iscrizioni",
+    adminResetConfirm:
+      "Questo cancellerà tutte le iscrizioni e riaprirà la finestra. Sei sicuro?",
+    adminOpenSignups: "Apri iscrizioni",
+    adminCloseSignups: "Chiudi iscrizioni",
+    adminAutoMode: "🔄 Auto",
   },
   ar: {
     welcomeMessage: "!مرحباً بك في كرة القدم يوم الاثنين",
@@ -254,6 +277,12 @@ export const translations: Record<Language, Translations> = {
     weatherSnowShowers: "زخات ثلج",
     weatherThunderstorm: "عاصفة رعدية",
     predictedWeather: "توقعات الطقس",
+    adminReset: "إعادة تعيين التسجيلات",
+    adminResetConfirm:
+      "سيؤدي هذا إلى مسح جميع التسجيلات وإعادة فتح النافذة. هل أنت متأكد؟",
+    adminOpenSignups: "فتح التسجيلات",
+    adminCloseSignups: "إغلاق التسجيلات",
+    adminAutoMode: "🔄 تلقائي",
   },
   de: {
     welcomeMessage: "Willkommen bei Fußball Montags!",
@@ -306,6 +335,12 @@ export const translations: Record<Language, Translations> = {
     weatherSnowShowers: "Schneeschauer",
     weatherThunderstorm: "Gewitter",
     predictedWeather: "Wettervorhersage",
+    adminReset: "Anmeldungen zurücksetzen",
+    adminResetConfirm:
+      "Alle aktuellen Anmeldungen werden gelöscht und das Fenster wieder geöffnet. Bist du sicher?",
+    adminOpenSignups: "Anmeldungen öffnen",
+    adminCloseSignups: "Anmeldungen schließen",
+    adminAutoMode: "🔄 Auto",
   },
   pt: {
     welcomeMessage: "Bem-vindo ao Futebol às Segundas! ⚽",
@@ -357,6 +392,12 @@ export const translations: Record<Language, Translations> = {
     weatherSnowShowers: "Pancadas de neve",
     weatherThunderstorm: "Tempestade",
     predictedWeather: "Previsão do tempo",
+    adminReset: "Redefinir inscrições",
+    adminResetConfirm:
+      "Isso apagará todas as inscrições e reabrirá a janela. Tem certeza?",
+    adminOpenSignups: "Abrir inscrições",
+    adminCloseSignups: "Fechar inscrições",
+    adminAutoMode: "🔄 Auto",
   },
 };
 

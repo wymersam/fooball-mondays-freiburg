@@ -56,6 +56,10 @@ func GetCurrentWeekKey() string {
 
 // Check if signups are allowed (block window configurable via env)
 func IsSignupTime() bool {
+	// Admin override: nil = use time rules, true = force open, false = force closed
+	if ov := GetSignupOverride(); ov != nil {
+		return *ov
+	}
 	loc, err := time.LoadLocation("Europe/Berlin")
 	if err != nil {
 		loc = time.Local

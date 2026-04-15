@@ -154,6 +154,16 @@ func main() {
 		api.POST("/login", handlers.LoginHandler(sqlDB, setUserCookie))
 		api.POST("/signup", handlers.SignupHandler(sqlDB, utils.GetCurrentWeekKey, utils.IsSignupTime))
 		api.DELETE("/signup", handlers.RemoveSignupHandler(sqlDB, utils.GetCurrentWeekKey))
+
+		admin := api.Group("/admin")
+		{
+			admin.GET("/check", handlers.AdminCheckHandler(sqlDB))
+			admin.GET("/override", handlers.AdminOverrideStatusHandler(sqlDB))
+			admin.POST("/reset", handlers.AdminResetHandler(sqlDB, utils.GetCurrentWeekKey))
+			admin.POST("/open", handlers.AdminOpenSignupsHandler(sqlDB))
+			admin.POST("/close", handlers.AdminCloseSignupsHandler(sqlDB))
+			admin.DELETE("/override", handlers.AdminClearOverrideHandler(sqlDB))
+		}
 	}
 
 	// Setup static file serving

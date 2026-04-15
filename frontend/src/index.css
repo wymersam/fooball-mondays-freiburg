@@ -208,6 +208,72 @@ button {
   direction: rtl;
 }
 
+/* Admin bar */
+.admin-bar {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-reset-btn {
+  padding: 0.5rem 1.25rem;
+  border: 2px dashed #c0392b;
+  border-radius: var(--border-radius);
+  background: transparent;
+  color: #c0392b;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.admin-reset-btn:hover:not(:disabled) {
+  background: #c0392b;
+  color: white;
+}
+
+.admin-reset-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-override-btn {
+  padding: 0.5rem 1.25rem;
+  border: 2px solid #27ae60;
+  border-radius: var(--border-radius);
+  background: transparent;
+  color: #27ae60;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.admin-override-btn.active,
+.admin-override-btn:hover {
+  background: #27ae60;
+  color: white;
+}
+
+.admin-override-btn.danger {
+  border-color: #c0392b;
+  color: #c0392b;
+}
+
+.admin-override-btn.danger.active,
+.admin-override-btn.danger:hover {
+  background: #c0392b;
+  color: white;
+}
+
 /* Container */
 .container {
   margin: 0 auto;
