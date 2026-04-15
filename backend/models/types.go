@@ -25,6 +25,7 @@ type Signup struct {
 	Username   string    `json:"username"`
 	SignupTime time.Time `json:"signupTime"`
 	Position   int       `json:"position"`
+	BibWasher  bool      `json:"bibWasher"`
 }
 
 type SuccessResponse struct {

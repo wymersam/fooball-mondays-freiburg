@@ -1,7 +1,14 @@
 import { PlayerListProps } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+import { apiService } from "../services/apiService";
 
-function PlayerList({ players, currentUser, isMainList }: PlayerListProps) {
+function PlayerList({
+  players,
+  currentUser,
+  isMainList,
+  onRefresh,
+  onError,
+}: PlayerListProps) {
   const { t } = useLanguage();
   if (!players || players.length === 0) {
     return (
@@ -27,7 +34,7 @@ function PlayerList({ players, currentUser, isMainList }: PlayerListProps) {
         return (
           <div
             key={player.userId || index}
-            className={`player-item ${isCurrentUser ? "current-user" : ""}`}
+            className={`player-item ${isCurrentUser ? "current-user" : ""} ${player.bibWasher ? "bib-washer-row" : ""}`}
           >
             <div className="player-info">
               <div className="player-avatar">
@@ -37,6 +44,9 @@ function PlayerList({ players, currentUser, isMainList }: PlayerListProps) {
                 <span className="player-name">
                   {player.username}
                   {isCurrentUser && <span className="you-badge">{t.you}</span>}
+                  {player.bibWasher && (
+                    <span className="bib-washer-badge">🧺 Bib washer</span>
+                  )}
                 </span>
                 <span className="signup-time">
                   {t.signedUpAt}{" "}
@@ -45,6 +55,30 @@ function PlayerList({ players, currentUser, isMainList }: PlayerListProps) {
                     minute: "2-digit",
                   })}
                 </span>
+                {isCurrentUser &&
+                  isMainList &&
+                  !players.some(
+                    (p) => p.bibWasher && p.username !== currentUser?.username,
+                  ) && (
+                    <button
+                      className={`bib-washer-button ${player.bibWasher ? "bib-washer-button--active" : ""}`}
+                      onClick={async () => {
+                        try {
+                          await apiService.setBibWasher(!player.bibWasher);
+                          await onRefresh();
+                        } catch (err: any) {
+                          onError(
+                            err?.message ||
+                              "Failed to update bib washer status",
+                          );
+                        }
+                      }}
+                    >
+                      {player.bibWasher
+                        ? "✕ Unvolunteer"
+                        : "🧺 Volunteer to wash bibs"}
+                    </button>
+                  )}
               </div>
             </div>
             <div

@@ -142,7 +142,7 @@ func main() {
 	}
 	config.AllowCredentials = true
 	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
-	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"}
 	r.Use(cors.New(config))
 
 	// API routes
@@ -154,6 +154,7 @@ func main() {
 		api.POST("/login", handlers.LoginHandler(sqlDB, setUserCookie))
 		api.POST("/signup", handlers.SignupHandler(sqlDB, utils.GetCurrentWeekKey, utils.IsSignupTime))
 		api.DELETE("/signup", handlers.RemoveSignupHandler(sqlDB, utils.GetCurrentWeekKey))
+		api.PATCH("/bib-washer", handlers.BibWasherHandler(sqlDB, utils.GetCurrentWeekKey))
 
 		admin := api.Group("/admin")
 		{

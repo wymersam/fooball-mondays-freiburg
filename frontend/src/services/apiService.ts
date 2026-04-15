@@ -145,6 +145,19 @@ class ApiService {
       credentials: "include",
     });
   }
+
+  async setBibWasher(value: boolean): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/bib-washer`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ bibWasher: value }),
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to update bib washer status");
+    }
+  }
 }
 
 export const apiService = new ApiService();

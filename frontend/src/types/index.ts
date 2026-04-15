@@ -5,6 +5,7 @@ export interface Signup {
   username: string;
   signupTime: string;
   position: number;
+  bibWasher?: boolean; // Optional field to indicate if the player is a bib washer
 }
 
 export interface User {
@@ -53,11 +54,15 @@ export interface PlayerListProps {
   players: Signup[];
   currentUser: User | null;
   isMainList: boolean;
+  onRefresh: () => Promise<void>;
+  onError: (message: string) => void;
 }
 
 export interface PlayerListsProps {
   status: SignupStatus | null;
   currentUser: User | null;
+  onRefresh: () => Promise<void>;
+  onError: (message: string) => void;
 }
 
 export interface StatusCardProps {

@@ -2,7 +2,12 @@ import PlayerList from "./PlayerList";
 import { PlayerListsProps } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 
-function PlayerLists({ status, currentUser }: PlayerListsProps) {
+function PlayerLists({
+  status,
+  currentUser,
+  onRefresh,
+  onError,
+}: PlayerListsProps) {
   const { t } = useLanguage();
   if (!status) return null;
 
@@ -21,6 +26,8 @@ function PlayerLists({ status, currentUser }: PlayerListsProps) {
           players={mainList}
           currentUser={currentUser}
           isMainList={true}
+          onRefresh={onRefresh}
+          onError={onError}
         />
       </div>
 
@@ -34,6 +41,8 @@ function PlayerLists({ status, currentUser }: PlayerListsProps) {
             players={reserveList}
             currentUser={currentUser}
             isMainList={false}
+            onRefresh={onRefresh}
+            onError={onError}
           />
         </div>
       )}
