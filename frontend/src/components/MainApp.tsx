@@ -142,7 +142,12 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
         onSignup={handleSignup}
         onRemoveSignup={handleRemoveSignup}
       />
-      <PlayerLists status={status} currentUser={currentUser} />
+      <PlayerLists
+        status={status}
+        currentUser={currentUser}
+        onRefresh={loadStatus}
+        onError={onError}
+      />
       <div className="rules-container">
         <Rules />
       </div>
