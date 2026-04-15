@@ -5,9 +5,11 @@ import (
 	"football-mondays/db"
 	"football-mondays/models"
 	"football-mondays/utils"
+	"log"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -35,6 +37,24 @@ func isAdminUser(c *gin.Context, dbConn *sql.DB) bool {
 }
 
 func boolPtr(v bool) *bool { return &v }
+
+// nextMonday returns the week key (Monday date) of the week following the given week key.
+func nextMonday(weekKey string) string {
+	t, err := time.Parse("2006-01-02", weekKey)
+	if err != nil {
+		return weekKey
+	}
+	return t.AddDate(0, 0, 7).Format("2006-01-02")
+}
+
+// prevMonday returns the week key of the week preceding the given week key.
+func prevMonday(weekKey string) string {
+	t, err := time.Parse("2006-01-02", weekKey)
+	if err != nil {
+		return weekKey
+	}
+	return t.AddDate(0, 0, -7).Format("2006-01-02")
+}
 
 // AdminCheckHandler returns whether the current user is an admin.
 func AdminCheckHandler(dbConn *sql.DB) gin.HandlerFunc {
@@ -69,10 +89,46 @@ func AdminResetHandler(dbConn *sql.DB, getCurrentWeekKey func() string) gin.Hand
 			return
 		}
 		weekKey := getCurrentWeekKey()
+		prevWeekKey := prevMonday(weekKey)
+
+		log.Printf("[AdminReset] prevWeekKey=%s weekKey=%s", prevWeekKey, weekKey)
+
+		// Snapshot the bib washer before clearing; try current week first, then previous.
+		bibEntry, err := db.LookupBibWasherEntry(dbConn, weekKey)
+		if err != nil {
+			log.Printf("[AdminReset] Error looking up bib washer for %s: %v", weekKey, err)
+		}
+		if bibEntry == nil {
+			bibEntry, err = db.LookupBibWasherEntry(dbConn, prevWeekKey)
+			if err != nil {
+				log.Printf("[AdminReset] Error looking up bib washer for %s: %v", prevWeekKey, err)
+			}
+		}
+		if bibEntry != nil {
+			log.Printf("[AdminReset] Found bib washer: %s, will re-add to %s after reset", bibEntry.Username, weekKey)
+		} else {
+			log.Printf("[AdminReset] No bib washer found in %s or %s", weekKey, prevWeekKey)
+		}
+
 		if err := db.ClearSignupsForWeek(dbConn, weekKey); err != nil {
 			c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "Failed to reset signups"})
 			return
 		}
+
+		// Re-insert the bib washer as position 1 in the freshly cleared week.
+		if bibEntry != nil {
+			if err := db.InsertSignup(dbConn, models.Signup{
+				UserID:     bibEntry.UserID,
+				Username:   bibEntry.Username,
+				SignupTime: time.Now(),
+				Position:   1,
+			}, weekKey); err != nil {
+				log.Printf("[AdminReset] Error re-inserting bib washer %s into %s: %v", bibEntry.Username, weekKey, err)
+			} else {
+				log.Printf("[AdminReset] Bib washer %s re-added to %s at position 1", bibEntry.Username, weekKey)
+			}
+		}
+
 		utils.SetSignupOverride(boolPtr(true))
 		c.JSON(http.StatusOK, models.SuccessResponse{Success: true})
 	}
