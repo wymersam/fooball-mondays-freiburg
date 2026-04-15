@@ -26,6 +26,8 @@ type Signup struct {
 	SignupTime time.Time `json:"signupTime"`
 	Position   int       `json:"position"`
 	BibWasher  bool      `json:"bibWasher"`
+	HasPaid    bool      `json:"hasPaid"`
+	PaypalRef  string    `json:"paypalRef"`
 }
 
 type SuccessResponse struct {
@@ -48,6 +50,7 @@ type SignupStatus struct {
 	CanSignup    bool      `json:"canSignup"`
 	MainList     []Signup  `json:"mainList"`
 	ReserveList  []Signup  `json:"reserveList"`
+	PrevMainList []Signup  `json:"prevMainList"`
 	UserSignedUp bool      `json:"userSignedUp"`
 	NextReset    time.Time `json:"nextReset"`
 }

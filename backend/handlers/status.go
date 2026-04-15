@@ -24,6 +24,14 @@ func StatusHandler(dbConn *sql.DB, getCurrentWeekKey func() string, isSignupTime
 			mainList = weekSignups[:12]
 			reserveList = weekSignups[12:]
 		}
+
+		// Previous week: the game that already happened, used for the payments tab.
+		prevWeek := prevWeekKey(currentWeek)
+		prevSignups, _ := db.GetSignupsForWeek(dbConn, prevWeek)
+		prevMainList := prevSignups
+		if len(prevSignups) > 12 {
+			prevMainList = prevSignups[:12]
+		}
 		username := c.Query("currentUser")
 		userSignedUp := false
 		if username != "" {
@@ -39,11 +47,21 @@ func StatusHandler(dbConn *sql.DB, getCurrentWeekKey func() string, isSignupTime
 			CanSignup:    isSignupTime(),
 			MainList:     mainList,
 			ReserveList:  reserveList,
+			PrevMainList: prevMainList,
 			UserSignedUp: userSignedUp,
 			NextReset:    nextResetTime(),
 		}
 		c.JSON(http.StatusOK, response)
 	}
+}
+
+// prevWeekKey returns the Monday week key for the week before the given week key.
+func prevWeekKey(weekKey string) string {
+	t, err := time.Parse("2006-01-02", weekKey)
+	if err != nil {
+		return weekKey
+	}
+	return t.AddDate(0, 0, -7).Format("2006-01-02")
 }
 
 // nextResetTime returns the next Monday 19:00 Europe/Berlin as a UTC time.

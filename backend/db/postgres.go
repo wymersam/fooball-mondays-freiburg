@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"football-mondays/models"
 	"time"
 )
@@ -21,6 +22,8 @@ func CreateTables(db *sql.DB) error {
         position INTEGER,
         week_key TEXT,
 		bib_washer BOOLEAN DEFAULT FALSE,
+		has_paid BOOLEAN DEFAULT FALSE,
+		paypal_ref TEXT DEFAULT '',
         PRIMARY KEY (user_id, week_key),
         FOREIGN KEY(user_id) REFERENCES users(user_id)
     );
@@ -35,6 +38,8 @@ func MigrateSchema(db *sql.DB) error {
     ALTER TABLE users ALTER COLUMN created_at TYPE TIMESTAMPTZ USING created_at AT TIME ZONE 'UTC';
     ALTER TABLE signups ALTER COLUMN signup_time TYPE TIMESTAMPTZ USING signup_time AT TIME ZONE 'UTC';
     ALTER TABLE signups ADD COLUMN IF NOT EXISTS bib_washer BOOLEAN DEFAULT FALSE;
+    ALTER TABLE signups ADD COLUMN IF NOT EXISTS has_paid BOOLEAN DEFAULT FALSE;
+    ALTER TABLE signups ADD COLUMN IF NOT EXISTS paypal_ref TEXT DEFAULT '';
     `)
 	return err
 }
@@ -87,7 +92,7 @@ func InsertSignup(db *sql.DB, signup models.Signup, weekKey string) error {
 
 // GetSignupsForWeek retrieves all signups for a given week, ordered by position
 func GetSignupsForWeek(db *sql.DB, weekKey string) ([]models.Signup, error) {
-	rows, err := db.Query(`SELECT user_id, username, signup_time, position, bib_washer FROM signups WHERE week_key = $1 ORDER BY position ASC`, weekKey)
+	rows, err := db.Query(`SELECT user_id, username, signup_time, position, bib_washer, has_paid, paypal_ref FROM signups WHERE week_key = $1 ORDER BY position ASC`, weekKey)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +102,7 @@ func GetSignupsForWeek(db *sql.DB, weekKey string) ([]models.Signup, error) {
 	for rows.Next() {
 		var s models.Signup
 		var signupTime time.Time
-		if err := rows.Scan(&s.UserID, &s.Username, &signupTime, &s.Position, &s.BibWasher); err != nil {
+		if err := rows.Scan(&s.UserID, &s.Username, &signupTime, &s.Position, &s.BibWasher, &s.HasPaid, &s.PaypalRef); err != nil {
 			return nil, err
 		}
 		s.SignupTime = signupTime
@@ -112,9 +117,9 @@ func LookupBibWasherEntry(db *sql.DB, weekKey string) (*models.Signup, error) {
 	var s models.Signup
 	var signupTime time.Time
 	err := db.QueryRow(
-		`SELECT user_id, username, signup_time, position, bib_washer FROM signups WHERE week_key = $1 AND bib_washer = TRUE LIMIT 1`,
+		`SELECT user_id, username, signup_time, position, bib_washer, has_paid, paypal_ref FROM signups WHERE week_key = $1 AND bib_washer = TRUE LIMIT 1`,
 		weekKey,
-	).Scan(&s.UserID, &s.Username, &signupTime, &s.Position, &s.BibWasher)
+	).Scan(&s.UserID, &s.Username, &signupTime, &s.Position, &s.BibWasher, &s.HasPaid, &s.PaypalRef)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -157,9 +162,9 @@ func GetSignupForUser(db *sql.DB, userID, weekKey string) (*models.Signup, error
 	var s models.Signup
 	var signupTime time.Time
 	err := db.QueryRow(
-		`SELECT user_id, username, signup_time, position, bib_washer FROM signups WHERE user_id = $1 AND week_key = $2`,
+		`SELECT user_id, username, signup_time, position, bib_washer, has_paid, paypal_ref FROM signups WHERE user_id = $1 AND week_key = $2`,
 		userID, weekKey,
-	).Scan(&s.UserID, &s.Username, &signupTime, &s.Position, &s.BibWasher)
+	).Scan(&s.UserID, &s.Username, &signupTime, &s.Position, &s.BibWasher, &s.HasPaid, &s.PaypalRef)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -178,6 +183,31 @@ func GetBibWasher(db *sql.DB, weekKey string) (string, error) {
 		return "", nil
 	}
 	return userID, err
+}
+
+// SetPaypalRef sets the PayPal reference for a user's signup in a given week.
+// Only one person per week can set a paypal_ref; setting to "" clears it.
+// Returns an error if another user already has a ref set.
+func SetPaypalRef(db *sql.DB, userID, weekKey, ref string) error {
+	if ref != "" {
+		// Check if another user already has a ref set
+		var existingUserID string
+		err := db.QueryRow(
+			`SELECT user_id FROM signups WHERE week_key = $1 AND paypal_ref != '' LIMIT 1`,
+			weekKey,
+		).Scan(&existingUserID)
+		if err == nil && existingUserID != userID {
+			return fmt.Errorf("another player has already added their PayPal details")
+		}
+	}
+	_, err := db.Exec(`UPDATE signups SET paypal_ref = $1 WHERE user_id = $2 AND week_key = $3`, ref, userID, weekKey)
+	return err
+}
+
+// TogglePaid sets the has_paid flag for a user's signup in a given week.
+func TogglePaid(db *sql.DB, userID, weekKey string, value bool) error {
+	_, err := db.Exec(`UPDATE signups SET has_paid = $1 WHERE user_id = $2 AND week_key = $3`, value, userID, weekKey)
+	return err
 }
 
 // SetBibWasher sets the bib_washer flag for a user's signup in a given week.

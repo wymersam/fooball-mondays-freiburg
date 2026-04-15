@@ -45,7 +45,7 @@ function PlayerList({
                   {player.username}
                   {isCurrentUser && <span className="you-badge">{t.you}</span>}
                   {player.bibWasher && (
-                    <span className="bib-washer-badge">🧺 Bib washer</span>
+                    <span className="bib-washer-badge">{t.bibWasherBadge}</span>
                   )}
                 </span>
                 <span className="signup-time">
@@ -56,6 +56,7 @@ function PlayerList({
                   })}
                 </span>
                 {isCurrentUser &&
+                  isMainList &&
                   !players.some(
                     (p) => p.bibWasher && p.username !== currentUser?.username,
                   ) && (
@@ -73,9 +74,7 @@ function PlayerList({
                         }
                       }}
                     >
-                      {player.bibWasher
-                        ? "✕ Unvolunteer"
-                        : "🧺 Volunteer to wash bibs"}
+                      {player.bibWasher ? t.unvolunteer : t.volunteerToWashBibs}
                     </button>
                   )}
               </div>

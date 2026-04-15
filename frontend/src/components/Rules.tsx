@@ -39,6 +39,13 @@ function Rules() {
             <p>{t.selfSignupOnlyDesc}</p>
           </div>
         </div>
+        <div className="rule">
+          <div className="rule-icon">🧺</div>
+          <div className="rule-text">
+            <h4>{t.bibRule}</h4>
+            <p>{t.bibRuleDesc}</p>
+          </div>
+        </div>
       </div>
     </div>
   );

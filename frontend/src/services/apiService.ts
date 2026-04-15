@@ -158,6 +158,32 @@ class ApiService {
       throw new Error(data.error || "Failed to update bib washer status");
     }
   }
+
+  async setPaid(value: boolean): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/paid`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ hasPaid: value }),
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to update payment status");
+    }
+  }
+
+  async setPaypalRef(ref: string): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/paypal-ref`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ paypalRef: ref }),
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to update PayPal details");
+    }
+  }
 }
 
 export const apiService = new ApiService();

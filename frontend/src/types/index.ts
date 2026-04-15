@@ -5,7 +5,9 @@ export interface Signup {
   username: string;
   signupTime: string;
   position: number;
-  bibWasher?: boolean; // Optional field to indicate if the player is a bib washer
+  bibWasher?: boolean;
+  hasPaid?: boolean;
+  paypalRef?: string;
 }
 
 export interface User {
@@ -17,6 +19,7 @@ export interface SignupStatus {
   canSignup: boolean;
   mainList: Signup[];
   reserveList: Signup[];
+  prevMainList: Signup[];
   userSignedUp: boolean;
   nextReset: string;
 }

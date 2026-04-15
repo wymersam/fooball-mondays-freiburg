@@ -54,6 +54,28 @@ export interface Translations {
   adminOpenSignups: string;
   adminCloseSignups: string;
   adminAutoMode: string;
+  noPaymentsToTrack: string;
+  noPaymentsDesc: string;
+  payViaPaypal: string;
+  edit: string;
+  save: string;
+  cancel: string;
+  removePaypal: string;
+  paypalPlaceholder: string;
+  addPaypalDetails: string;
+  paidBadge: string;
+  unpaidBadge: string;
+  markAsPaid: string;
+  undo: string;
+  playersTab: string;
+  paymentsTab: string;
+  bibWasherBadge: string;
+  volunteerToWashBibs: string;
+  unvolunteer: string;
+  paidLabel: string;
+  totalLabel: string;
+  bibRule: string;
+  bibRuleDesc: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -112,6 +134,30 @@ export const translations: Record<Language, Translations> = {
     adminOpenSignups: "Open signups",
     adminCloseSignups: "Close signups",
     adminAutoMode: "🔄 Auto",
+    noPaymentsToTrack: "No payments to track",
+    noPaymentsDesc:
+      "Last week's player list will appear here after the weekly reset.",
+    payViaPaypal: "Pay {username} via PayPal",
+    edit: "Edit",
+    save: "Save",
+    cancel: "Cancel",
+    removePaypal: "Remove",
+    paypalPlaceholder: "PayPal.me/yourname or @handle",
+    addPaypalDetails: "+ Add your PayPal details so others can pay you back",
+    paidBadge: "✓ Paid",
+    unpaidBadge: "Unpaid",
+    markAsPaid: "Mark as paid",
+    undo: "Undo",
+    playersTab: "Players",
+    paymentsTab: "Payments",
+    bibWasherBadge: "🧺 Bib washer",
+    volunteerToWashBibs: "🧺 Volunteer to wash bibs",
+    unvolunteer: "✕ Unvolunteer",
+    paidLabel: "paid",
+    totalLabel: "total",
+    bibRule: "Bibs",
+    bibRuleDesc:
+      "If you volunteer to wash the bibs, you automatically get a spot for next week.",
   },
   es: {
     welcomeMessage: "¡Bienvenido a Fútbol los Lunes!",
@@ -169,6 +215,31 @@ export const translations: Record<Language, Translations> = {
     adminOpenSignups: "Abrir inscripciones",
     adminCloseSignups: "Cerrar inscripciones",
     adminAutoMode: "🔄 Auto",
+    noPaymentsToTrack: "No hay pagos que registrar",
+    noPaymentsDesc:
+      "La lista de jugadores de la semana pasada aparecerá aquí después del reinicio semanal.",
+    payViaPaypal: "Paga a {username} via PayPal",
+    edit: "Editar",
+    save: "Guardar",
+    cancel: "Cancelar",
+    removePaypal: "Eliminar",
+    paypalPlaceholder: "PayPal.me/tunombre o @usuario",
+    addPaypalDetails:
+      "+ Añade tus datos de PayPal para que otros puedan pagarte",
+    paidBadge: "✓ Pagado",
+    unpaidBadge: "Sin pagar",
+    markAsPaid: "Marcar como pagado",
+    undo: "Deshacer",
+    playersTab: "Jugadores",
+    paymentsTab: "Pagos",
+    bibWasherBadge: "🧺 Lavador de petos",
+    volunteerToWashBibs: "🧺 Ofrecerse a lavar los petos",
+    unvolunteer: "✕ Cancelar ofrecimiento",
+    paidLabel: "pagados",
+    totalLabel: "total",
+    bibRule: "Petos",
+    bibRuleDesc:
+      "Si te ofreces a lavar los petos, obtienes automáticamente un lugar para la semana siguiente.",
   },
   it: {
     welcomeMessage: "Benvenuto a Calcio il Lunedì!",
@@ -226,6 +297,31 @@ export const translations: Record<Language, Translations> = {
     adminOpenSignups: "Apri iscrizioni",
     adminCloseSignups: "Chiudi iscrizioni",
     adminAutoMode: "🔄 Auto",
+    noPaymentsToTrack: "Nessun pagamento da monitorare",
+    noPaymentsDesc:
+      "La lista dei giocatori della settimana scorsa apparirà qui dopo il reset settimanale.",
+    payViaPaypal: "Paga {username} via PayPal",
+    edit: "Modifica",
+    save: "Salva",
+    cancel: "Annulla",
+    removePaypal: "Rimuovi",
+    paypalPlaceholder: "PayPal.me/tuonome o @handle",
+    addPaypalDetails:
+      "+ Aggiungi i tuoi dati PayPal così gli altri possono pagarti",
+    paidBadge: "✓ Pagato",
+    unpaidBadge: "Non pagato",
+    markAsPaid: "Segna come pagato",
+    undo: "Annulla",
+    playersTab: "Giocatori",
+    paymentsTab: "Pagamenti",
+    bibWasherBadge: "🧺 Lava casacche",
+    volunteerToWashBibs: "🧺 Offriti per lavare le casacche",
+    unvolunteer: "✕ Ritira disponibilità",
+    paidLabel: "pagati",
+    totalLabel: "totale",
+    bibRule: "Casacche",
+    bibRuleDesc:
+      "Se ti offri di lavare le casacche, ottieni automaticamente un posto per la settimana successiva.",
   },
   ar: {
     welcomeMessage: "!مرحباً بك في كرة القدم يوم الاثنين",
@@ -283,6 +379,31 @@ export const translations: Record<Language, Translations> = {
     adminOpenSignups: "فتح التسجيلات",
     adminCloseSignups: "إغلاق التسجيلات",
     adminAutoMode: "🔄 تلقائي",
+    noPaymentsToTrack: "لا توجد مدفوعات لتتبعها",
+    noPaymentsDesc:
+      "ستظهر قائمة لاعبي الأسبوع الماضي هنا بعد إعادة التعيين الأسبوعية.",
+    payViaPaypal: "ادفع لـ {username} عبر PayPal",
+    edit: "تعديل",
+    save: "حفظ",
+    cancel: "إلغاء",
+    removePaypal: "إزالة",
+    paypalPlaceholder: "PayPal.me/اسمك أو @handle",
+    addPaypalDetails:
+      "+ أضف تفاصيل PayPal الخاصة بك حتى يتمكن الآخرون من الدفع لك",
+    paidBadge: "✓ مدفوع",
+    unpaidBadge: "غير مدفوع",
+    markAsPaid: "وضع علامة كمدفوع",
+    undo: "تراجع",
+    playersTab: "اللاعبون",
+    paymentsTab: "المدفوعات",
+    bibWasherBadge: "🧺 غاسل القمصان",
+    volunteerToWashBibs: "🧺 تطوع لغسيل القمصان",
+    unvolunteer: "✕ إلغاء التطوع",
+    paidLabel: "مدفوع",
+    totalLabel: "إجمالي",
+    bibRule: "القمصان",
+    bibRuleDesc:
+      "إذا تطوعت لغسيل القمصان، تحصل تلقائياً على مكان للأسبوع القادم.",
   },
   de: {
     welcomeMessage: "Willkommen bei Fußball Montags!",
@@ -341,6 +462,31 @@ export const translations: Record<Language, Translations> = {
     adminOpenSignups: "Anmeldungen öffnen",
     adminCloseSignups: "Anmeldungen schließen",
     adminAutoMode: "🔄 Auto",
+    noPaymentsToTrack: "Keine Zahlungen zu verfolgen",
+    noPaymentsDesc:
+      "Die Spielerliste der letzten Woche erscheint hier nach dem wöchentlichen Reset.",
+    payViaPaypal: "{username} via PayPal bezahlen",
+    edit: "Bearbeiten",
+    save: "Speichern",
+    cancel: "Abbrechen",
+    removePaypal: "Entfernen",
+    paypalPlaceholder: "PayPal.me/deinname oder @handle",
+    addPaypalDetails:
+      "+ PayPal-Daten hinzufügen, damit andere dich bezahlen können",
+    paidBadge: "✓ Bezahlt",
+    unpaidBadge: "Ausstehend",
+    markAsPaid: "Als bezahlt markieren",
+    undo: "Rückgängig",
+    playersTab: "Spieler",
+    paymentsTab: "Zahlungen",
+    bibWasherBadge: "🧺 Trikot-Wascher",
+    volunteerToWashBibs: "🧺 Freiwillig Trikots waschen",
+    unvolunteer: "✕ Nicht mehr freiwillig",
+    paidLabel: "bezahlt",
+    totalLabel: "gesamt",
+    bibRule: "Trikots",
+    bibRuleDesc:
+      "Wenn du dich freiwillig meldest, die Leibchen zu waschen, bekommst du automatisch einen Platz für die nächste Woche.",
   },
   pt: {
     welcomeMessage: "Bem-vindo ao Futebol às Segundas! ⚽",
@@ -398,6 +544,31 @@ export const translations: Record<Language, Translations> = {
     adminOpenSignups: "Abrir inscrições",
     adminCloseSignups: "Fechar inscrições",
     adminAutoMode: "🔄 Auto",
+    noPaymentsToTrack: "Sem pagamentos para registar",
+    noPaymentsDesc:
+      "A lista de jogadores da semana passada aparecerá aqui após o reinício semanal.",
+    payViaPaypal: "Pagar {username} via PayPal",
+    edit: "Editar",
+    save: "Guardar",
+    cancel: "Cancelar",
+    removePaypal: "Remover",
+    paypalPlaceholder: "PayPal.me/seunome ou @handle",
+    addPaypalDetails:
+      "+ Adicionar os seus dados de PayPal para que outros possam pagar-lhe",
+    paidBadge: "✓ Pago",
+    unpaidBadge: "Por pagar",
+    markAsPaid: "Marcar como pago",
+    undo: "Desfazer",
+    playersTab: "Jogadores",
+    paymentsTab: "Pagamentos",
+    bibWasherBadge: "🧺 Lavador de coletes",
+    volunteerToWashBibs: "🧺 Voluntário para lavar os coletes",
+    unvolunteer: "✕ Cancelar voluntariado",
+    paidLabel: "pagos",
+    totalLabel: "total",
+    bibRule: "Coletes",
+    bibRuleDesc:
+      "Se te voluntariares para lavar os coletes, obtens automaticamente um lugar para a semana seguinte.",
   },
 };
 

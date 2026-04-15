@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import StatusCard from "./StatusCard";
 import PlayerLists from "./PlayerLists";
+import PaymentsList from "./PaymentsList";
 import SignupButtons from "./SignupButtons";
 import Rules from "./Rules";
 import { apiService } from "../services/apiService";
@@ -16,6 +17,7 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
     "auto" | "open" | "closed"
   >("auto");
   const [resetting, setResetting] = useState(false);
+  const [activeTab, setActiveTab] = useState<"players" | "payments">("players");
 
   useEffect(() => {
     loadStatus();
@@ -142,12 +144,37 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
         onSignup={handleSignup}
         onRemoveSignup={handleRemoveSignup}
       />
-      <PlayerLists
-        status={status}
-        currentUser={currentUser}
-        onRefresh={loadStatus}
-        onError={onError}
-      />
+
+      <div className="tab-bar">
+        <button
+          className={`tab-btn ${activeTab === "players" ? "tab-btn--active" : ""}`}
+          onClick={() => setActiveTab("players")}
+        >
+          {t.playersTab}
+        </button>
+        <button
+          className={`tab-btn ${activeTab === "payments" ? "tab-btn--active" : ""}`}
+          onClick={() => setActiveTab("payments")}
+        >
+          {t.paymentsTab}
+        </button>
+      </div>
+
+      {activeTab === "players" ? (
+        <PlayerLists
+          status={status}
+          currentUser={currentUser}
+          onRefresh={loadStatus}
+          onError={onError}
+        />
+      ) : (
+        <PaymentsList
+          players={status?.prevMainList ?? []}
+          currentUser={currentUser}
+          onRefresh={loadStatus}
+          onError={onError}
+        />
+      )}
       <div className="rules-container">
         <Rules />
       </div>
