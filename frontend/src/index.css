@@ -1028,12 +1028,58 @@ input[type="text"].loading,
   }
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
   padding: 14px 16px;
   border: 2px solid var(--border);
   border-radius: 8px;
   font-size: 16px;
-  transition: border-color 0.2s;
+  font-family: inherit;
+  background: var(--background-secondary);
+  color: var(--text-primary);
+  width: 100%;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(232, 127, 36, 0.15);
+}
+
+input[type="text"]:disabled,
+input[type="password"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-hint {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.1rem;
+}
+
+.input-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: -0.25rem 0;
+}
+
+.input-divider::before,
+.input-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
 
 .register-form button {

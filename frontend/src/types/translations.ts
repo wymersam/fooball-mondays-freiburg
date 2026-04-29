@@ -76,6 +76,9 @@ export interface Translations {
   totalLabel: string;
   bibRule: string;
   bibRuleDesc: string;
+  inviteCode: string;
+  inviteCodePlaceholder: string;
+  inviteCodeHint: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -158,6 +161,9 @@ export const translations: Record<Language, Translations> = {
     bibRule: "Bibs",
     bibRuleDesc:
       "If you volunteer to wash the bibs, you automatically get a spot for next week.",
+    inviteCode: "Invite Code",
+    inviteCodePlaceholder: "Enter your invite code",
+    inviteCodeHint: "Required for new accounts",
   },
   es: {
     welcomeMessage: "¡Bienvenido a Fútbol los Lunes!",
@@ -240,6 +246,9 @@ export const translations: Record<Language, Translations> = {
     bibRule: "Petos",
     bibRuleDesc:
       "Si te ofreces a lavar los petos, obtienes automáticamente un lugar para la semana siguiente.",
+    inviteCode: "Código de invitación",
+    inviteCodePlaceholder: "Ingresa tu código de invitación",
+    inviteCodeHint: "Requerido para cuentas nuevas",
   },
   it: {
     welcomeMessage: "Benvenuto a Calcio il Lunedì!",
@@ -322,6 +331,9 @@ export const translations: Record<Language, Translations> = {
     bibRule: "Casacche",
     bibRuleDesc:
       "Se ti offri di lavare le casacche, ottieni automaticamente un posto per la settimana successiva.",
+    inviteCode: "Codice Invito",
+    inviteCodePlaceholder: "Inserisci il tuo codice invito",
+    inviteCodeHint: "Richiesto per i nuovi account",
   },
   ar: {
     welcomeMessage: "!مرحباً بك في كرة القدم يوم الاثنين",
@@ -404,6 +416,9 @@ export const translations: Record<Language, Translations> = {
     bibRule: "القمصان",
     bibRuleDesc:
       "إذا تطوعت لغسيل القمصان، تحصل تلقائياً على مكان للأسبوع القادم.",
+    inviteCode: "رمز الدعوة",
+    inviteCodePlaceholder: "أدخل رمز الدعوة الخاص بك",
+    inviteCodeHint: "مطلوب للحسابات الجديدة",
   },
   de: {
     welcomeMessage: "Willkommen bei Fußball Montags!",
@@ -487,6 +502,9 @@ export const translations: Record<Language, Translations> = {
     bibRule: "Trikots",
     bibRuleDesc:
       "Wenn du dich freiwillig meldest, die Leibchen zu waschen, bekommst du automatisch einen Platz für die nächste Woche.",
+    inviteCode: "Einladungscode",
+    inviteCodePlaceholder: "Gib deinen Einladungscode ein",
+    inviteCodeHint: "Nur für neue Konten erforderlich",
   },
   pt: {
     welcomeMessage: "Bem-vindo ao Futebol às Segundas! ⚽",
@@ -569,6 +587,9 @@ export const translations: Record<Language, Translations> = {
     bibRule: "Coletes",
     bibRuleDesc:
       "Se te voluntariares para lavar os coletes, obtens automaticamente um lugar para a semana seguinte.",
+    inviteCode: "Código de convite",
+    inviteCodePlaceholder: "Digite seu código de convite",
+    inviteCodeHint: "Obrigatório para novas contas",
   },
 };
 

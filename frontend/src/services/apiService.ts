@@ -63,12 +63,15 @@ class ApiService {
    * @param username - The username to register
    * @returns RegisterResponse from backend
    */
-  async registerUser(username: string): Promise<RegisterResponse> {
+  async registerUser(
+    username: string,
+    inviteCode: string,
+  ): Promise<RegisterResponse> {
     const response = await fetch(`${API_BASE}/api/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ username }),
+      body: JSON.stringify({ username, inviteCode }),
     });
     const data = await response.json();
     if (!response.ok) {
