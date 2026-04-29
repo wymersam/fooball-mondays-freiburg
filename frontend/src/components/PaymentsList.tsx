@@ -63,7 +63,6 @@ function PaymentsList({
 
   return (
     <div className="payments-list">
-      {/* PayPal collector banner */}
       {collector ? (
         <div className="paypal-banner">
           <div className="paypal-banner-info">

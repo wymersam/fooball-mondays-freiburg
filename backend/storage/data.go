@@ -69,14 +69,14 @@ func CheckWeeklyReset(dbConn *sql.DB) {
 	if weekdayStr == blockDay && !now.Before(resetTime) && lastResetWeekKey != currentWeekKey {
 		// Clear the previous week's signups (the ones for today's game that just ended),
 		// so new signups under currentWeekKey are for the following week's game.
-		prevWeekKey := currentWeek.AddDate(0, 0, -7).Format("2006-01-02")
-		log.Printf("Resetting signups for week %s (clearing %s) at %s %02d:%02d (Europe/Berlin)", currentWeekKey, prevWeekKey, blockDay, blockHour, blockMinute)
-		if carried, err := db.CarryForwardBibWasher(dbConn, prevWeekKey, currentWeekKey); err != nil {
-			log.Printf("Error carrying forward bib washer from %s to %s: %v", prevWeekKey, currentWeekKey, err)
+		weekToClean := currentWeek.AddDate(0, 0, -14).Format("2006-01-02")
+		log.Printf("Resetting signups for week %s (clearing %s) at %s %02d:%02d (Europe/Berlin)", currentWeekKey, weekToClean, blockDay, blockHour, blockMinute)
+		if carried, err := db.CarryForwardBibWasher(dbConn, weekToClean, currentWeekKey); err != nil {
+			log.Printf("Error carrying forward bib washer from %s to %s: %v", weekToClean, currentWeekKey, err)
 		} else if carried {
-			log.Printf("Bib washer carried forward from %s to %s", prevWeekKey, currentWeekKey)
+			log.Printf("Bib washer carried forward from %s to %s", weekToClean, currentWeekKey)
 		}
-		_ = db.ClearSignupsForWeek(dbConn, prevWeekKey)
+		_ = db.ClearSignupsForWeek(dbConn, weekToClean)
 		lastResetWeekKey = currentWeekKey
 	}
 }
