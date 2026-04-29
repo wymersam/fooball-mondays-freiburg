@@ -90,9 +90,9 @@ func InsertSignup(db *sql.DB, signup models.Signup, weekKey string) error {
 	return err
 }
 
-// GetSignupsForWeek retrieves all signups for a given week, ordered by position
+// GetSignupsForWeek retrieves all signups for a given week, ordered by signup time
 func GetSignupsForWeek(db *sql.DB, weekKey string) ([]models.Signup, error) {
-	rows, err := db.Query(`SELECT user_id, username, signup_time, position, bib_washer, has_paid, paypal_ref FROM signups WHERE week_key = $1 ORDER BY position ASC`, weekKey)
+	rows, err := db.Query(`SELECT user_id, username, signup_time, position, bib_washer, has_paid, paypal_ref FROM signups WHERE week_key = $1 ORDER BY signup_time ASC`, weekKey)
 	if err != nil {
 		return nil, err
 	}
@@ -155,24 +155,6 @@ func CarryForwardBibWasher(db *sql.DB, fromWeekKey, toWeekKey string) (bool, err
 		userID, username, time.Now(), count+1, toWeekKey,
 	)
 	return true, err
-}
-
-// GetSignupForUser retrieves a single signup for a user in a given week.
-func GetSignupForUser(db *sql.DB, userID, weekKey string) (*models.Signup, error) {
-	var s models.Signup
-	var signupTime time.Time
-	err := db.QueryRow(
-		`SELECT user_id, username, signup_time, position, bib_washer, has_paid, paypal_ref FROM signups WHERE user_id = $1 AND week_key = $2`,
-		userID, weekKey,
-	).Scan(&s.UserID, &s.Username, &signupTime, &s.Position, &s.BibWasher, &s.HasPaid, &s.PaypalRef)
-	if err == sql.ErrNoRows {
-		return nil, nil
-	}
-	if err != nil {
-		return nil, err
-	}
-	s.SignupTime = signupTime
-	return &s, nil
 }
 
 // GetBibWasher returns the userID of the current bib washer for a week, or "" if none.

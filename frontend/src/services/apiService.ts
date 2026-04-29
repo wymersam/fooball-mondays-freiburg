@@ -105,44 +105,49 @@ class ApiService {
     return response.json();
   }
 
-  async adminOverrideStatus(): Promise<{
+  async adminOverrideStatus(password: string): Promise<{
     override: "auto" | "open" | "closed";
   }> {
     const response = await fetch(`${API_BASE}/api/admin/override`, {
       credentials: "include",
+      headers: { "X-Admin-Password": password },
     });
     if (!response.ok) return { override: "auto" };
     return response.json();
   }
 
-  async adminReset(): Promise<void> {
+  async adminReset(password: string): Promise<void> {
     const response = await fetch(`${API_BASE}/api/admin/reset`, {
       method: "POST",
       credentials: "include",
+      headers: { "X-Admin-Password": password },
     });
     if (!response.ok) throw new Error("Reset failed");
   }
 
-  async adminOpenSignups(): Promise<void> {
+  async adminOpenSignups(password: string): Promise<void> {
     const response = await fetch(`${API_BASE}/api/admin/open`, {
       method: "POST",
       credentials: "include",
+      headers: { "X-Admin-Password": password },
     });
     if (!response.ok) throw new Error("Failed to open signups");
   }
 
-  async adminCloseSignups(): Promise<void> {
+  async adminCloseSignups(password: string): Promise<void> {
     const response = await fetch(`${API_BASE}/api/admin/close`, {
       method: "POST",
       credentials: "include",
+      headers: { "X-Admin-Password": password },
     });
     if (!response.ok) throw new Error("Failed to close signups");
   }
 
-  async adminClearOverride(): Promise<void> {
+  async adminClearOverride(password: string): Promise<void> {
     await fetch(`${API_BASE}/api/admin/override`, {
       method: "DELETE",
       credentials: "include",
+      headers: { "X-Admin-Password": password },
     });
   }
 

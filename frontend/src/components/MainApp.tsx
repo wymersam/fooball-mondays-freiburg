@@ -13,6 +13,7 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
   const [status, setStatus] = useState<SignupStatus | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [adminPassword, setAdminPassword] = useState("");
   const [overrideState, setOverrideState] = useState<
     "auto" | "open" | "closed"
   >("auto");
@@ -28,10 +29,13 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
   useEffect(() => {
     apiService.adminCheck().then(({ isAdmin }) => {
       setIsAdmin(isAdmin);
-      if (isAdmin)
+      if (isAdmin) {
+        const pwd = window.prompt("Enter admin password:") ?? "";
+        setAdminPassword(pwd);
         apiService
-          .adminOverrideStatus()
+          .adminOverrideStatus(pwd)
           .then(({ override }) => setOverrideState(override));
+      }
     });
   }, [currentUser.username]);
 
@@ -77,7 +81,7 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
     if (!window.confirm(t.adminResetConfirm)) return;
     setResetting(true);
     try {
-      await apiService.adminReset();
+      await apiService.adminReset(adminPassword);
       setOverrideState("open");
       await loadStatus();
     } catch (error: any) {
@@ -88,19 +92,19 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
   };
 
   const handleAdminOpen = async (): Promise<void> => {
-    await apiService.adminOpenSignups();
+    await apiService.adminOpenSignups(adminPassword);
     setOverrideState("open");
     await loadStatus();
   };
 
   const handleAdminClose = async (): Promise<void> => {
-    await apiService.adminCloseSignups();
+    await apiService.adminCloseSignups(adminPassword);
     setOverrideState("closed");
     await loadStatus();
   };
 
   const handleAdminAuto = async (): Promise<void> => {
-    await apiService.adminClearOverride();
+    await apiService.adminClearOverride(adminPassword);
     setOverrideState("auto");
     await loadStatus();
   };
