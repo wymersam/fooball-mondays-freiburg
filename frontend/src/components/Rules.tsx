@@ -46,6 +46,13 @@ function Rules() {
             <p>{t.bibRuleDesc}</p>
           </div>
         </div>
+        <div className="rule">
+          <div className="rule-icon">⚽</div>
+          <div className="rule-text">
+            <h4>{t.ballRule}</h4>
+            <p>{t.ballRuleDesc}</p>
+          </div>
+        </div>
       </div>
     </div>
   );

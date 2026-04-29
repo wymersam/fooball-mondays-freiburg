@@ -34,7 +34,7 @@ function PlayerList({
         return (
           <div
             key={index}
-            className={`player-item ${isCurrentUser ? "current-user" : ""} ${player.bibWasher ? "bib-washer-row" : ""}`}
+            className={`player-item ${isCurrentUser ? "current-user" : ""} ${player.bibWasher ? "bib-washer-row" : ""} ${player.ballBringer ? "ball-bringer-row" : ""}`}
           >
             <div className="player-info">
               <div className="player-avatar">
@@ -46,6 +46,11 @@ function PlayerList({
                   {isCurrentUser && <span className="you-badge">{t.you}</span>}
                   {player.bibWasher && (
                     <span className="bib-washer-badge">{t.bibWasherBadge}</span>
+                  )}
+                  {player.ballBringer && (
+                    <span className="ball-bringer-badge">
+                      {t.ballBringerBadge}
+                    </span>
                   )}
                 </span>
                 <span className="signup-time">
@@ -77,9 +82,29 @@ function PlayerList({
                         }
                       }}
                     >
-                      {player.bibWasher ? t.unvolunteer : t.volunteerToWashBibs}
+                      {player.bibWasher
+                        ? t.unvolunteerBibs
+                        : t.volunteerToWashBibs}
                     </button>
                   )}
+                {isCurrentUser && isMainList && (
+                  <button
+                    className={`ball-bringer-button ${player.ballBringer ? "ball-bringer-button--active" : ""}`}
+                    onClick={async () => {
+                      try {
+                        await apiService.setBallBringer(!player.ballBringer);
+                        await onRefresh();
+                      } catch (err: any) {
+                        onError(
+                          err?.message ||
+                            "Failed to update bringing ball status",
+                        );
+                      }
+                    }}
+                  >
+                    {player.ballBringer ? t.unvolunteerBall : t.canBringBall}
+                  </button>
+                )}
               </div>
             </div>
             <div

@@ -21,13 +21,14 @@ type RegisterResponse struct {
 }
 
 type Signup struct {
-	UserID     string    `json:"userId"`
-	Username   string    `json:"username"`
-	SignupTime time.Time `json:"signupTime"`
-	Position   int       `json:"position"`
-	BibWasher  bool      `json:"bibWasher"`
-	HasPaid    bool      `json:"hasPaid"`
-	PaypalRef  string    `json:"paypalRef"`
+	UserID      string    `json:"userId"`
+	Username    string    `json:"username"`
+	SignupTime  time.Time `json:"signupTime"`
+	Position    int       `json:"position"`
+	BibWasher   bool      `json:"bibWasher"`
+	BallBringer bool      `json:"ballBringer"`
+	HasPaid     bool      `json:"hasPaid"`
+	PaypalRef   string    `json:"paypalRef"`
 }
 
 type SuccessResponse struct {

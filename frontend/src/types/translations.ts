@@ -70,12 +70,17 @@ export interface Translations {
   playersTab: string;
   paymentsTab: string;
   bibWasherBadge: string;
+  ballBringerBadge: string;
   volunteerToWashBibs: string;
-  unvolunteer: string;
+  canBringBall: string;
+  unvolunteerBibs: string;
+  unvolunteerBall: string;
   paidLabel: string;
   totalLabel: string;
   bibRule: string;
   bibRuleDesc: string;
+  ballRule: string;
+  ballRuleDesc: string;
   inviteCode: string;
   inviteCodePlaceholder: string;
   inviteCodeHint: string;
@@ -139,7 +144,7 @@ export const translations: Record<Language, Translations> = {
     adminAutoMode: "🔄 Auto",
     noPaymentsToTrack: "No payments to track",
     noPaymentsDesc:
-      "Last week's player list will appear here after the weekly reset.",
+      "Last week's player list will appear here after the weekly reset",
     payViaPaypal: "Pay {username} via PayPal",
     edit: "Edit",
     save: "Save",
@@ -153,14 +158,20 @@ export const translations: Record<Language, Translations> = {
     undo: "Undo",
     playersTab: "Players",
     paymentsTab: "Payments",
-    bibWasherBadge: "🧺 Bib washer",
-    volunteerToWashBibs: "🧺 Volunteer to wash bibs",
-    unvolunteer: "✕ Unvolunteer",
+    bibWasherBadge: "🧺",
+    ballBringerBadge: "⚽",
+    volunteerToWashBibs: "🧺 Wash bibs",
+    canBringBall: "⚽ Bring ball",
+    unvolunteerBibs: "✕ Bibs",
+    unvolunteerBall: "✕ Ball",
     paidLabel: "paid",
     totalLabel: "total",
     bibRule: "Bibs",
     bibRuleDesc:
-      "If you volunteer to wash the bibs, you automatically get a spot for next week.",
+      "If you volunteer to wash the bibs, you automatically get a spot for next week",
+    ballRule: "Ball",
+    ballRuleDesc:
+      "Let the group know you're bringing a ball by volunteering in the player list",
     inviteCode: "Invite Code",
     inviteCodePlaceholder: "Enter your invite code",
     inviteCodeHint: "Required for new accounts",
@@ -223,7 +234,7 @@ export const translations: Record<Language, Translations> = {
     adminAutoMode: "🔄 Auto",
     noPaymentsToTrack: "No hay pagos que registrar",
     noPaymentsDesc:
-      "La lista de jugadores de la semana pasada aparecerá aquí después del reinicio semanal.",
+      "La lista de jugadores de la semana pasada aparecerá aquí después del reinicio semanal",
     payViaPaypal: "Paga a {username} via PayPal",
     edit: "Editar",
     save: "Guardar",
@@ -238,14 +249,20 @@ export const translations: Record<Language, Translations> = {
     undo: "Deshacer",
     playersTab: "Jugadores",
     paymentsTab: "Pagos",
-    bibWasherBadge: "🧺 Lavador de petos",
-    volunteerToWashBibs: "🧺 Ofrecerse a lavar los petos",
-    unvolunteer: "✕ Cancelar ofrecimiento",
+    bibWasherBadge: "🧺",
+    ballBringerBadge: "⚽",
+    volunteerToWashBibs: "🧺 Lavar petos",
+    canBringBall: "⚽ Traer balón",
+    unvolunteerBibs: "✕ Petos",
+    unvolunteerBall: "✕ Balón",
     paidLabel: "pagados",
     totalLabel: "total",
     bibRule: "Petos",
     bibRuleDesc:
-      "Si te ofreces a lavar los petos, obtienes automáticamente un lugar para la semana siguiente.",
+      "Si te ofreces a lavar los petos, obtienes automáticamente un lugar para la semana siguiente",
+    ballRule: "Balón",
+    ballRuleDesc:
+      "Avisa al grupo que traes un balón voluntáriate en la lista de jugadores",
     inviteCode: "Código de invitación",
     inviteCodePlaceholder: "Ingresa tu código de invitación",
     inviteCodeHint: "Requerido para cuentas nuevas",
@@ -308,7 +325,7 @@ export const translations: Record<Language, Translations> = {
     adminAutoMode: "🔄 Auto",
     noPaymentsToTrack: "Nessun pagamento da monitorare",
     noPaymentsDesc:
-      "La lista dei giocatori della settimana scorsa apparirà qui dopo il reset settimanale.",
+      "La lista dei giocatori della settimana scorsa apparirà qui dopo il reset settimanale",
     payViaPaypal: "Paga {username} via PayPal",
     edit: "Modifica",
     save: "Salva",
@@ -323,14 +340,20 @@ export const translations: Record<Language, Translations> = {
     undo: "Annulla",
     playersTab: "Giocatori",
     paymentsTab: "Pagamenti",
-    bibWasherBadge: "🧺 Lava casacche",
-    volunteerToWashBibs: "🧺 Offriti per lavare le casacche",
-    unvolunteer: "✕ Ritira disponibilità",
+    bibWasherBadge: "🧺",
+    ballBringerBadge: "⚽",
+    volunteerToWashBibs: "🧺 Lava casacche",
+    unvolunteerBibs: "✕ Casacche",
+    unvolunteerBall: "✕ Pallone",
+    canBringBall: "⚽ Porta pallone",
     paidLabel: "pagati",
     totalLabel: "totale",
     bibRule: "Casacche",
     bibRuleDesc:
-      "Se ti offri di lavare le casacche, ottieni automaticamente un posto per la settimana successiva.",
+      "Se ti offri di lavare le casacche, ottieni automaticamente un posto per la settimana successiva",
+    ballRule: "Pallone",
+    ballRuleDesc:
+      "Fai sapere al gruppo che porti un pallone volontariandoti nella lista giocatori",
     inviteCode: "Codice Invito",
     inviteCodePlaceholder: "Inserisci il tuo codice invito",
     inviteCodeHint: "Richiesto per i nuovi account",
@@ -393,7 +416,7 @@ export const translations: Record<Language, Translations> = {
     adminAutoMode: "🔄 تلقائي",
     noPaymentsToTrack: "لا توجد مدفوعات لتتبعها",
     noPaymentsDesc:
-      "ستظهر قائمة لاعبي الأسبوع الماضي هنا بعد إعادة التعيين الأسبوعية.",
+      "ستظهر قائمة لاعبي الأسبوع الماضي هنا بعد إعادة التعيين الأسبوعية",
     payViaPaypal: "ادفع لـ {username} عبر PayPal",
     edit: "تعديل",
     save: "حفظ",
@@ -408,14 +431,19 @@ export const translations: Record<Language, Translations> = {
     undo: "تراجع",
     playersTab: "اللاعبون",
     paymentsTab: "المدفوعات",
-    bibWasherBadge: "🧺 غاسل القمصان",
-    volunteerToWashBibs: "🧺 تطوع لغسيل القمصان",
-    unvolunteer: "✕ إلغاء التطوع",
+    bibWasherBadge: "🧺",
+    ballBringerBadge: "⚽",
+    volunteerToWashBibs: "🧺 غسيل",
+    unvolunteerBibs: "✕ قمصان",
+    unvolunteerBall: "✕ كرة",
+    canBringBall: "⚽ إحضار كرة",
     paidLabel: "مدفوع",
     totalLabel: "إجمالي",
     bibRule: "القمصان",
     bibRuleDesc:
-      "إذا تطوعت لغسيل القمصان، تحصل تلقائياً على مكان للأسبوع القادم.",
+      "إذا تطوعت لغسيل القمصان، تحصل تلقائياً على مكان للأسبوع القادم",
+    ballRule: "الكرة",
+    ballRuleDesc: "أخبر المجموعة بأنك ستحضر كرة عبر قائمة اللاعبين",
     inviteCode: "رمز الدعوة",
     inviteCodePlaceholder: "أدخل رمز الدعوة الخاص بك",
     inviteCodeHint: "مطلوب للحسابات الجديدة",
@@ -479,7 +507,7 @@ export const translations: Record<Language, Translations> = {
     adminAutoMode: "🔄 Auto",
     noPaymentsToTrack: "Keine Zahlungen zu verfolgen",
     noPaymentsDesc:
-      "Die Spielerliste der letzten Woche erscheint hier nach dem wöchentlichen Reset.",
+      "Die Spielerliste der letzten Woche erscheint hier nach dem wöchentlichen Reset",
     payViaPaypal: "{username} via PayPal bezahlen",
     edit: "Bearbeiten",
     save: "Speichern",
@@ -494,14 +522,20 @@ export const translations: Record<Language, Translations> = {
     undo: "Rückgängig",
     playersTab: "Spieler",
     paymentsTab: "Zahlungen",
-    bibWasherBadge: "🧺 Trikot-Wascher",
-    volunteerToWashBibs: "🧺 Freiwillig Trikots waschen",
-    unvolunteer: "✕ Nicht mehr freiwillig",
+    bibWasherBadge: "🧺",
+    volunteerToWashBibs: "🧺 Trikots waschen",
+    ballBringerBadge: "⚽",
+    canBringBall: "⚽ Ball mitbringen",
+    unvolunteerBibs: "✕ Trikots",
+    unvolunteerBall: "✕ Ball",
     paidLabel: "bezahlt",
     totalLabel: "gesamt",
     bibRule: "Trikots",
     bibRuleDesc:
-      "Wenn du dich freiwillig meldest, die Leibchen zu waschen, bekommst du automatisch einen Platz für die nächste Woche.",
+      "Wenn du dich freiwillig meldest, die Leibchen zu waschen, bekommst du automatisch einen Platz für die nächste Woche",
+    ballRule: "Ball",
+    ballRuleDesc:
+      "Teile der Gruppe mit, dass du einen Ball mitbringst, indem du dich in der Spielerliste freiwillig meldest",
     inviteCode: "Einladungscode",
     inviteCodePlaceholder: "Gib deinen Einladungscode ein",
     inviteCodeHint: "Nur für neue Konten erforderlich",
@@ -564,7 +598,7 @@ export const translations: Record<Language, Translations> = {
     adminAutoMode: "🔄 Auto",
     noPaymentsToTrack: "Sem pagamentos para registar",
     noPaymentsDesc:
-      "A lista de jogadores da semana passada aparecerá aqui após o reinício semanal.",
+      "A lista de jogadores da semana passada aparecerá aqui após o reinício semanal",
     payViaPaypal: "Pagar {username} via PayPal",
     edit: "Editar",
     save: "Guardar",
@@ -579,14 +613,20 @@ export const translations: Record<Language, Translations> = {
     undo: "Desfazer",
     playersTab: "Jogadores",
     paymentsTab: "Pagamentos",
-    bibWasherBadge: "🧺 Lavador de coletes",
-    volunteerToWashBibs: "🧺 Voluntário para lavar os coletes",
-    unvolunteer: "✕ Cancelar voluntariado",
+    bibWasherBadge: "🧺",
+    ballBringerBadge: "⚽",
+    canBringBall: "⚽ Trazer bola",
+    volunteerToWashBibs: "🧺 Lavar coletes",
+    unvolunteerBibs: "✕ Coletes",
+    unvolunteerBall: "✕ Bola",
     paidLabel: "pagos",
     totalLabel: "total",
     bibRule: "Coletes",
     bibRuleDesc:
-      "Se te voluntariares para lavar os coletes, obtens automaticamente um lugar para a semana seguinte.",
+      "Se te voluntariares para lavar os coletes, obtens automaticamente um lugar para a semana seguinte",
+    ballRule: "Bola",
+    ballRuleDesc:
+      "Avisa o grupo que vais trazer uma bola voluntariando-te na lista de jogadores",
     inviteCode: "Código de convite",
     inviteCodePlaceholder: "Digite seu código de convite",
     inviteCodeHint: "Obrigatório para novas contas",

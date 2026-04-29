@@ -155,6 +155,7 @@ func main() {
 		api.POST("/signup", handlers.SignupHandler(sqlDB, utils.GetCurrentWeekKey, utils.IsSignupTime))
 		api.DELETE("/signup", handlers.RemoveSignupHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.PATCH("/bib-washer", handlers.BibWasherHandler(sqlDB, utils.GetCurrentWeekKey))
+		api.PATCH("/ball-bringer", handlers.BallBringerHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.PATCH("/paid", handlers.PaidHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.PATCH("/paypal-ref", handlers.PaypalRefHandler(sqlDB, utils.GetCurrentWeekKey))
 

@@ -6,6 +6,7 @@ export interface Signup {
   signupTime: string;
   position: number;
   bibWasher?: boolean;
+  ballBringer?: boolean;
   hasPaid?: boolean;
   paypalRef?: string;
 }

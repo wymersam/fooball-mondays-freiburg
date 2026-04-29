@@ -22,6 +22,7 @@ func CreateTables(db *sql.DB) error {
         position INTEGER,
         week_key TEXT,
 		bib_washer BOOLEAN DEFAULT FALSE,
+		ball_bringer BOOLEAN DEFAULT FALSE,
 		has_paid BOOLEAN DEFAULT FALSE,
 		paypal_ref TEXT DEFAULT '',
         PRIMARY KEY (user_id, week_key),
@@ -38,6 +39,7 @@ func MigrateSchema(db *sql.DB) error {
     ALTER TABLE users ALTER COLUMN created_at TYPE TIMESTAMPTZ USING created_at AT TIME ZONE 'UTC';
     ALTER TABLE signups ALTER COLUMN signup_time TYPE TIMESTAMPTZ USING signup_time AT TIME ZONE 'UTC';
     ALTER TABLE signups ADD COLUMN IF NOT EXISTS bib_washer BOOLEAN DEFAULT FALSE;
+    ALTER TABLE signups ADD COLUMN IF NOT EXISTS ball_bringer BOOLEAN DEFAULT FALSE;
     ALTER TABLE signups ADD COLUMN IF NOT EXISTS has_paid BOOLEAN DEFAULT FALSE;
     ALTER TABLE signups ADD COLUMN IF NOT EXISTS paypal_ref TEXT DEFAULT '';
     `)
@@ -92,7 +94,7 @@ func InsertSignup(db *sql.DB, signup models.Signup, weekKey string) error {
 
 // GetSignupsForWeek retrieves all signups for a given week, ordered by signup time
 func GetSignupsForWeek(db *sql.DB, weekKey string) ([]models.Signup, error) {
-	rows, err := db.Query(`SELECT user_id, username, signup_time, position, bib_washer, has_paid, paypal_ref FROM signups WHERE week_key = $1 ORDER BY signup_time ASC`, weekKey)
+	rows, err := db.Query(`SELECT user_id, username, signup_time, position, bib_washer, ball_bringer, has_paid, paypal_ref FROM signups WHERE week_key = $1 ORDER BY signup_time ASC`, weekKey)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +104,7 @@ func GetSignupsForWeek(db *sql.DB, weekKey string) ([]models.Signup, error) {
 	for rows.Next() {
 		var s models.Signup
 		var signupTime time.Time
-		if err := rows.Scan(&s.UserID, &s.Username, &signupTime, &s.Position, &s.BibWasher, &s.HasPaid, &s.PaypalRef); err != nil {
+		if err := rows.Scan(&s.UserID, &s.Username, &signupTime, &s.Position, &s.BibWasher, &s.BallBringer, &s.HasPaid, &s.PaypalRef); err != nil {
 			return nil, err
 		}
 		s.SignupTime = signupTime
@@ -167,6 +169,16 @@ func GetBibWasher(db *sql.DB, weekKey string) (string, error) {
 	return userID, err
 }
 
+// GetBallBringer returns the userID of the current ball bringer for a week, or "" if none.
+func GetBallBringer(db *sql.DB, weekKey string) (string, error) {
+	var userID string
+	err := db.QueryRow(`SELECT user_id FROM signups WHERE week_key = $1 AND ball_bringer = TRUE LIMIT 1`, weekKey).Scan(&userID)
+	if err == sql.ErrNoRows {
+		return "", nil
+	}
+	return userID, err
+}
+
 // SetPaypalRef sets the PayPal reference for a user's signup in a given week.
 // Only one person per week can set a paypal_ref; setting to "" clears it.
 // Returns an error if another user already has a ref set.
@@ -195,6 +207,12 @@ func TogglePaid(db *sql.DB, userID, weekKey string, value bool) error {
 // SetBibWasher sets the bib_washer flag for a user's signup in a given week.
 func SetBibWasher(db *sql.DB, userID, weekKey string, value bool) error {
 	_, err := db.Exec(`UPDATE signups SET bib_washer = $1 WHERE user_id = $2 AND week_key = $3`, value, userID, weekKey)
+	return err
+}
+
+// SetBallBringer sets the ball_bringer flag for a user's signup in a given week.
+func SetBallBringer(db *sql.DB, userID, weekKey string, value bool) error {
+	_, err := db.Exec(`UPDATE signups SET ball_bringer = $1 WHERE user_id = $2 AND week_key = $3`, value, userID, weekKey)
 	return err
 }
 

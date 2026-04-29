@@ -167,6 +167,19 @@ class ApiService {
     }
   }
 
+  async setBallBringer(value: boolean): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/ball-bringer`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ ballBringer: value }),
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to update bringing ball status");
+    }
+  }
+
   async setPaid(value: boolean): Promise<void> {
     const response = await fetch(`${API_BASE}/api/paid`, {
       method: "PATCH",

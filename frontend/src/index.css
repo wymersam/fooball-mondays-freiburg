@@ -493,11 +493,13 @@ input[type="text"].loading,
   border-left: 3px solid var(--color-accent);
 }
 
-.player-item.bib-washer-row {
+.player-item.bib-washer-row,
+.player-item.ball-bringer-row {
   background: rgba(232, 127, 36, 0.07);
 }
 
-.player-item.bib-washer-row.current-user {
+.player-item.bib-washer-row.current-user,
+.player-item.ball-bringer-row.current-user {
   background: rgba(232, 127, 36, 0.15);
 }
 
@@ -526,6 +528,8 @@ input[type="text"].loading,
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .player-name {
@@ -533,7 +537,8 @@ input[type="text"].loading,
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .you-badge {
@@ -563,7 +568,8 @@ input[type="text"].loading,
   text-align: center;
 }
 
-.bib-washer-badge {
+.bib-washer-badge,
+.ball-bringer-badge {
   background: #fff3e0;
   color: var(--color-accent);
   border: 1px solid rgba(232, 127, 36, 0.35);
@@ -574,7 +580,8 @@ input[type="text"].loading,
   white-space: nowrap;
 }
 
-.bib-washer-button {
+.bib-washer-button,
+.ball-bringer-button {
   margin-top: 0.4rem;
   padding: 0.3rem 0.75rem;
   background: transparent;
@@ -588,19 +595,26 @@ input[type="text"].loading,
     background 0.15s ease,
     color 0.15s ease;
   align-self: flex-start;
+  max-width: 100%;
+  word-break: break-word;
+  white-space: normal;
+  text-align: left;
 }
 
-.bib-washer-button:hover {
+.bib-washer-button:hover,
+.ball-bringer-button:hover {
   background: var(--color-accent);
   color: white;
 }
 
-.bib-washer-button--active {
+.bib-washer-button--active,
+.ball-bringer-button--active {
   background: var(--color-accent);
   color: white;
 }
 
-.bib-washer-button--active:hover {
+.bib-washer-button--active:hover,
+.ball-bringer-button--active:hover {
   background: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
 }
