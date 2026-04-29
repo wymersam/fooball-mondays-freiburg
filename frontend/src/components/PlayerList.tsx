@@ -33,7 +33,7 @@ function PlayerList({
 
         return (
           <div
-            key={player.userId || index}
+            key={index}
             className={`player-item ${isCurrentUser ? "current-user" : ""} ${player.bibWasher ? "bib-washer-row" : ""}`}
           >
             <div className="player-info">
@@ -50,7 +50,10 @@ function PlayerList({
                 </span>
                 <span className="signup-time">
                   {t.signedUpAt}{" "}
-                  {new Date(player.signupTime).toLocaleTimeString("en-GB", {
+                  {new Date(player.signupTime).toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "2-digit",
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
