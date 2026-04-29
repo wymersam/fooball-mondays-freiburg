@@ -28,7 +28,10 @@ function App() {
     }
   }, []);
 
-  const handleLogin = async (username: string): Promise<void> => {
+  const handleLogin = async (
+    username: string,
+    inviteCode: string,
+  ): Promise<void> => {
     try {
       // Try to log in first
       const response = await apiService.loginUser(username);
@@ -42,7 +45,10 @@ function App() {
           err.message.includes("not found"))
       ) {
         try {
-          const regResponse = await apiService.registerUser(username);
+          const regResponse = await apiService.registerUser(
+            username,
+            inviteCode,
+          );
           setCurrentUser({ username: regResponse.username });
           setError("");
         } catch (regErr: any) {

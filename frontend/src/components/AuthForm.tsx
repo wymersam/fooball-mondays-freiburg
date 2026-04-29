@@ -6,6 +6,7 @@ function AuthForm({ onLogin }: AuthFormProps) {
   const { t } = useLanguage();
   const [username, setUsername] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [inviteCode, setInviteCode] = useState<string>("");
 
   const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
@@ -16,7 +17,7 @@ function AuthForm({ onLogin }: AuthFormProps) {
 
     setIsSubmitting(true);
     try {
-      await onLogin(username.trim());
+      await onLogin(username.trim(), inviteCode.trim());
 
       localStorage.setItem(
         "currentUser",
@@ -51,6 +52,21 @@ function AuthForm({ onLogin }: AuthFormProps) {
             disabled={isSubmitting}
             className={isSubmitting ? "loading" : ""}
           />
+        </div>
+        <div className="input-divider">🔒</div>
+        <div className="input-group">
+          <label htmlFor="inviteCode">{t.inviteCode}</label>
+          <input
+            id="inviteCode"
+            type="password"
+            placeholder={t.inviteCodePlaceholder}
+            value={inviteCode}
+            onChange={(e) =>
+              setInviteCode((e.target as HTMLInputElement).value)
+            }
+            disabled={isSubmitting}
+          />
+          <span className="input-hint">{t.inviteCodeHint}</span>
         </div>
         <button
           type="submit"
