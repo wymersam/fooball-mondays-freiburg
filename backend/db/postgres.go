@@ -137,11 +137,10 @@ func LookupBibWasherEntry(db *sql.DB, weekKey string) (*models.Signup, error) {
 // Returns true if a bib washer was found and carried forward, false if none existed.
 func CarryForwardBibWasher(db *sql.DB, fromWeekKey, toWeekKey string) (bool, error) {
 	var userID, username string
-	var signupTime time.Time
 	err := db.QueryRow(
-		`SELECT user_id, username, signup_time FROM signups WHERE week_key = $1 AND bib_washer = TRUE LIMIT 1`,
+		`SELECT user_id, username FROM signups WHERE week_key = $1 AND bib_washer = TRUE LIMIT 1`,
 		fromWeekKey,
-	).Scan(&userID, &username, &signupTime)
+	).Scan(&userID, &username)
 	if err == sql.ErrNoRows {
 		return false, nil
 	}

@@ -22,8 +22,11 @@ func CheckWeeklyReset(dbConn *sql.DB) {
 	if err != nil {
 		loc = time.Local
 	}
-	now := time.Now().In(loc)
+	checkWeeklyResetAt(dbConn, time.Now().In(loc))
+}
 
+// checkWeeklyResetAt is the testable core of CheckWeeklyReset, accepting an explicit time.
+func checkWeeklyResetAt(dbConn *sql.DB, now time.Time) {
 	// Calculate the Monday of the *previous* week as the week key for signups to clear.
 	// Signups are stored under the Monday key of the week they were made.
 	// We want to clear whatever week was active before this reset fires.
@@ -60,7 +63,7 @@ func CheckWeeklyReset(dbConn *sql.DB) {
 	}
 
 	weekdayStr := now.Weekday().String()
-	resetTime := time.Date(now.Year(), now.Month(), now.Day(), blockHour, blockMinute, 0, 0, loc)
+	resetTime := time.Date(now.Year(), now.Month(), now.Day(), blockHour, blockMinute, 0, 0, now.Location())
 
 	// Only reset if:
 	// 1. It's the configured reset day (e.g. Monday)
