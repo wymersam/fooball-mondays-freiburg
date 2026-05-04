@@ -8,6 +8,8 @@ interface PaymentsListProps {
   currentUser: User | null;
   onRefresh: () => Promise<void>;
   onError: (message: string) => void;
+  isAdmin?: boolean;
+  adminPassword?: string;
 }
 
 function PaymentsList({
@@ -15,6 +17,8 @@ function PaymentsList({
   currentUser,
   onRefresh,
   onError,
+  isAdmin = false,
+  adminPassword = "",
 }: PaymentsListProps) {
   const { t } = useLanguage();
   const [paypalInput, setPaypalInput] = React.useState("");
@@ -30,7 +34,15 @@ function PaymentsList({
 
   const handleSavePaypal = async () => {
     try {
-      await apiService.setPaypalRef(paypalInput.trim());
+      if (isAdmin && !isCollector && collector) {
+        await apiService.adminSetPaypalRef(
+          adminPassword,
+          collector.userId,
+          paypalInput.trim(),
+        );
+      } else {
+        await apiService.setPaypalRef(paypalInput.trim());
+      }
       await onRefresh();
       setEditingPaypal(false);
     } catch (err: any) {
@@ -40,7 +52,11 @@ function PaymentsList({
 
   const handleClearPaypal = async () => {
     try {
-      await apiService.setPaypalRef("");
+      if (isAdmin && !isCollector && collector) {
+        await apiService.adminSetPaypalRef(adminPassword, collector.userId, "");
+      } else {
+        await apiService.setPaypalRef("");
+      }
       await onRefresh();
       setEditingPaypal(false);
       setPaypalInput("");
@@ -82,7 +98,7 @@ function PaymentsList({
               {collector.paypalRef}
             </a>
           </div>
-          {isCollector && (
+          {(isCollector || isAdmin) && (
             <button
               className="paypal-edit-btn"
               onClick={() => {
@@ -128,8 +144,8 @@ function PaymentsList({
         </div>
       ) : null}
 
-      {/* Edit mode when collector wants to update */}
-      {editingPaypal && isCollector && collector && (
+      {/* Edit mode when collector (or admin) wants to update */}
+      {editingPaypal && (isCollector || isAdmin) && collector && (
         <div className="paypal-banner">
           <div className="paypal-input-row">
             <input
@@ -195,7 +211,7 @@ function PaymentsList({
                 </span>
               )}
 
-              {isCurrentUser && (
+              {(isCurrentUser || isAdmin) && (
                 <button
                   className={`payment-toggle-btn ${
                     player.hasPaid
@@ -204,7 +220,15 @@ function PaymentsList({
                   }`}
                   onClick={async () => {
                     try {
-                      await apiService.setPaid(!player.hasPaid);
+                      if (isAdmin && !isCurrentUser) {
+                        await apiService.adminSetPaid(
+                          adminPassword,
+                          player.userId,
+                          !player.hasPaid,
+                        );
+                      } else {
+                        await apiService.setPaid(!player.hasPaid);
+                      }
                       await onRefresh();
                     } catch (err: any) {
                       onError(

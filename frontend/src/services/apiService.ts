@@ -154,6 +154,46 @@ class ApiService {
     });
   }
 
+  async adminSetPaid(
+    password: string,
+    userId: string,
+    hasPaid: boolean,
+  ): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/admin/paid`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Admin-Password": password,
+      },
+      credentials: "include",
+      body: JSON.stringify({ userId, hasPaid }),
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to update payment status");
+    }
+  }
+
+  async adminSetPaypalRef(
+    password: string,
+    userId: string,
+    paypalRef: string,
+  ): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/admin/paypal-ref`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Admin-Password": password,
+      },
+      credentials: "include",
+      body: JSON.stringify({ userId, paypalRef }),
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to update PayPal details");
+    }
+  }
+
   async setBibWasher(value: boolean): Promise<void> {
     const response = await fetch(`${API_BASE}/api/bib-washer`, {
       method: "PATCH",

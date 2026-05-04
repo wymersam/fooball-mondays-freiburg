@@ -177,6 +177,8 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
           currentUser={currentUser}
           onRefresh={loadStatus}
           onError={onError}
+          isAdmin={isAdmin}
+          adminPassword={adminPassword}
         />
       )}
       <div className="rules-container">

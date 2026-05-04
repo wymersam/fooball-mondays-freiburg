@@ -183,3 +183,55 @@ func AdminClearOverrideHandler(dbConn *sql.DB) gin.HandlerFunc {
 		c.JSON(http.StatusOK, models.SuccessResponse{Success: true})
 	}
 }
+
+type adminPaidRequest struct {
+	UserID  string `json:"userId"`
+	HasPaid bool   `json:"hasPaid"`
+}
+
+// AdminPaidHandler lets an admin toggle the paid status of any player for the previous week.
+func AdminPaidHandler(dbConn *sql.DB, getCurrentWeekKey func() string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if !isAdminAuthed(c, dbConn) {
+			c.JSON(http.StatusForbidden, models.ErrorResponse{Error: "Forbidden"})
+			return
+		}
+		var req adminPaidRequest
+		if err := c.ShouldBindJSON(&req); err != nil || req.UserID == "" {
+			c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Invalid request"})
+			return
+		}
+		weekKey := prevMonday(getCurrentWeekKey())
+		if err := db.TogglePaid(dbConn, req.UserID, weekKey, req.HasPaid); err != nil {
+			c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "Failed to update payment status"})
+			return
+		}
+		c.JSON(http.StatusOK, models.SuccessResponse{Success: true})
+	}
+}
+
+type adminPaypalRefRequest struct {
+	UserID    string `json:"userId"`
+	PaypalRef string `json:"paypalRef"`
+}
+
+// AdminPaypalRefHandler lets an admin set or clear the PayPal ref for any player for the previous week.
+func AdminPaypalRefHandler(dbConn *sql.DB, getCurrentWeekKey func() string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if !isAdminAuthed(c, dbConn) {
+			c.JSON(http.StatusForbidden, models.ErrorResponse{Error: "Forbidden"})
+			return
+		}
+		var req adminPaypalRefRequest
+		if err := c.ShouldBindJSON(&req); err != nil || req.UserID == "" {
+			c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Invalid request"})
+			return
+		}
+		weekKey := prevMonday(getCurrentWeekKey())
+		if err := db.SetPaypalRef(dbConn, req.UserID, weekKey, req.PaypalRef); err != nil {
+			c.JSON(http.StatusConflict, models.ErrorResponse{Error: err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, models.SuccessResponse{Success: true})
+	}
+}

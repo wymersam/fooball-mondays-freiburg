@@ -167,6 +167,8 @@ func main() {
 			admin.POST("/open", handlers.AdminOpenSignupsHandler(sqlDB))
 			admin.POST("/close", handlers.AdminCloseSignupsHandler(sqlDB))
 			admin.DELETE("/override", handlers.AdminClearOverrideHandler(sqlDB))
+			admin.PATCH("/paid", handlers.AdminPaidHandler(sqlDB, utils.GetCurrentWeekKey))
+			admin.PATCH("/paypal-ref", handlers.AdminPaypalRefHandler(sqlDB, utils.GetCurrentWeekKey))
 		}
 	}
 
