@@ -81,6 +81,9 @@ export interface Translations {
   bibRuleDesc: string;
   ballRule: string;
   ballRuleDesc: string;
+  collectorsTab: string;
+  noCollectorsYet: string;
+  collectorsAmountNote: string;
   inviteCode: string;
   inviteCodePlaceholder: string;
   inviteCodeHint: string;
@@ -172,6 +175,9 @@ export const translations: Record<Language, Translations> = {
     ballRule: "Ball",
     ballRuleDesc:
       "Let the group know you're bringing a ball by volunteering in the player list",
+    collectorsTab: "Collectors",
+    noCollectorsYet: "No collector history yet",
+    collectorsAmountNote: "Each week the collector gathers €60 from the group.",
     inviteCode: "Invite Code",
     inviteCodePlaceholder: "Enter your invite code",
     inviteCodeHint: "Required for new accounts",
@@ -263,6 +269,9 @@ export const translations: Record<Language, Translations> = {
     ballRule: "Balón",
     ballRuleDesc:
       "Avisa al grupo que traes un balón voluntáriate en la lista de jugadores",
+    collectorsTab: "Recaudadores",
+    noCollectorsYet: "Aún no hay historial de recaudadores",
+    collectorsAmountNote: "Cada semana el recaudador recoge €60 del grupo.",
     inviteCode: "Código de invitación",
     inviteCodePlaceholder: "Ingresa tu código de invitación",
     inviteCodeHint: "Requerido para cuentas nuevas",
@@ -354,6 +363,10 @@ export const translations: Record<Language, Translations> = {
     ballRule: "Pallone",
     ballRuleDesc:
       "Fai sapere al gruppo che porti un pallone volontariandoti nella lista giocatori",
+    collectorsTab: "Raccoglitori",
+    noCollectorsYet: "Ancora nessuna cronologia dei raccoglitori",
+    collectorsAmountNote:
+      "Ogni settimana il raccoglitore raccoglie €60 dal gruppo.",
     inviteCode: "Codice Invito",
     inviteCodePlaceholder: "Inserisci il tuo codice invito",
     inviteCodeHint: "Richiesto per i nuovi account",
@@ -444,6 +457,9 @@ export const translations: Record<Language, Translations> = {
       "إذا تطوعت لغسيل القمصان، تحصل تلقائياً على مكان للأسبوع القادم",
     ballRule: "الكرة",
     ballRuleDesc: "أخبر المجموعة بأنك ستحضر كرة عبر قائمة اللاعبين",
+    collectorsTab: "المحصلون",
+    noCollectorsYet: "لا يوجد سجل حتى الآن",
+    collectorsAmountNote: "يجمع المحصل 60€ من المجموعة كل أسبوع.",
     inviteCode: "رمز الدعوة",
     inviteCodePlaceholder: "أدخل رمز الدعوة الخاص بك",
     inviteCodeHint: "مطلوب للحسابات الجديدة",
@@ -536,6 +552,10 @@ export const translations: Record<Language, Translations> = {
     ballRule: "Ball",
     ballRuleDesc:
       "Teile der Gruppe mit, dass du einen Ball mitbringst, indem du dich in der Spielerliste freiwillig meldest",
+    collectorsTab: "Kassierer",
+    noCollectorsYet: "Noch kein Verlauf",
+    collectorsAmountNote:
+      "Jede Woche sammelt der Kassierer €60 von der Gruppe ein.",
     inviteCode: "Einladungscode",
     inviteCodePlaceholder: "Gib deinen Einladungscode ein",
     inviteCodeHint: "Nur für neue Konten erforderlich",
@@ -627,6 +647,9 @@ export const translations: Record<Language, Translations> = {
     ballRule: "Bola",
     ballRuleDesc:
       "Avisa o grupo que vais trazer uma bola voluntariando-te na lista de jogadores",
+    collectorsTab: "Cobradores",
+    noCollectorsYet: "Ainda sem histórico de cobradores",
+    collectorsAmountNote: "Cada semana o cobrador recolhe €60 do grupo.",
     inviteCode: "Código de convite",
     inviteCodePlaceholder: "Digite seu código de convite",
     inviteCodeHint: "Obrigatório para novas contas",

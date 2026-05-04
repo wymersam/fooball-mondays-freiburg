@@ -28,6 +28,11 @@ func CreateTables(db *sql.DB) error {
         PRIMARY KEY (user_id, week_key),
         FOREIGN KEY(user_id) REFERENCES users(user_id)
     );
+    CREATE TABLE IF NOT EXISTS collectors (
+        week_key TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        username TEXT NOT NULL
+    );
     `)
 	return err
 }
@@ -42,6 +47,11 @@ func MigrateSchema(db *sql.DB) error {
     ALTER TABLE signups ADD COLUMN IF NOT EXISTS ball_bringer BOOLEAN DEFAULT FALSE;
     ALTER TABLE signups ADD COLUMN IF NOT EXISTS has_paid BOOLEAN DEFAULT FALSE;
     ALTER TABLE signups ADD COLUMN IF NOT EXISTS paypal_ref TEXT DEFAULT '';
+    CREATE TABLE IF NOT EXISTS collectors (
+        week_key TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        username TEXT NOT NULL
+    );
     `)
 	return err
 }
@@ -194,7 +204,54 @@ func SetPaypalRef(db *sql.DB, userID, weekKey, ref string) error {
 		}
 	}
 	_, err := db.Exec(`UPDATE signups SET paypal_ref = $1 WHERE user_id = $2 AND week_key = $3`, ref, userID, weekKey)
+	if err != nil {
+		return err
+	}
+	// Persist collector record permanently when a paypal ref is set.
+	if ref != "" {
+		return UpsertCollector(db, userID, weekKey)
+	}
+	return nil
+}
+
+// UpsertCollector inserts or updates the collector record for a week.
+// The stored week_key is the actual game date (weekKey + 7 days), not the signup week key.
+func UpsertCollector(db *sql.DB, userID, weekKey string) error {
+	var username string
+	if err := db.QueryRow(`SELECT username FROM users WHERE user_id = $1`, userID).Scan(&username); err != nil {
+		return err
+	}
+	// Convert signup week key to actual game date.
+	t, err := time.Parse("2006-01-02", weekKey)
+	if err != nil {
+		return err
+	}
+	gameDate := t.AddDate(0, 0, 7).Format("2006-01-02")
+	_, err = db.Exec(`
+		INSERT INTO collectors (week_key, user_id, username)
+		VALUES ($1, $2, $3)
+		ON CONFLICT (week_key) DO UPDATE SET user_id = $2, username = $3`,
+		gameDate, userID, username,
+	)
 	return err
+}
+
+// GetCollectors returns all collector records ordered by week descending.
+func GetCollectors(db *sql.DB) ([]models.CollectorRecord, error) {
+	rows, err := db.Query(`SELECT week_key, user_id, username FROM collectors ORDER BY week_key DESC`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var records []models.CollectorRecord
+	for rows.Next() {
+		var r models.CollectorRecord
+		if err := rows.Scan(&r.WeekKey, &r.UserID, &r.Username); err != nil {
+			return nil, err
+		}
+		records = append(records, r)
+	}
+	return records, nil
 }
 
 // TogglePaid sets the has_paid flag for a user's signup in a given week.

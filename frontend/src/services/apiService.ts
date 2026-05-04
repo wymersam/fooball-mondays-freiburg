@@ -245,6 +245,16 @@ class ApiService {
       throw new Error(data.error || "Failed to update PayPal details");
     }
   }
+
+  async getCollectors(): Promise<
+    { weekKey: string; userId: string; username: string }[]
+  > {
+    const response = await fetch(`${API_BASE}/api/collectors`, {
+      credentials: "include",
+    });
+    if (!response.ok) return [];
+    return response.json();
+  }
 }
 
 export const apiService = new ApiService();

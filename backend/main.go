@@ -158,6 +158,7 @@ func main() {
 		api.PATCH("/ball-bringer", handlers.BallBringerHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.PATCH("/paid", handlers.PaidHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.PATCH("/paypal-ref", handlers.PaypalRefHandler(sqlDB, utils.GetCurrentWeekKey))
+		api.GET("/collectors", handlers.CollectorsHandler(sqlDB))
 
 		admin := api.Group("/admin")
 		{
@@ -169,6 +170,7 @@ func main() {
 			admin.DELETE("/override", handlers.AdminClearOverrideHandler(sqlDB))
 			admin.PATCH("/paid", handlers.AdminPaidHandler(sqlDB, utils.GetCurrentWeekKey))
 			admin.PATCH("/paypal-ref", handlers.AdminPaypalRefHandler(sqlDB, utils.GetCurrentWeekKey))
+			admin.GET("/collectors", handlers.AdminCollectorsHandler(sqlDB))
 		}
 	}
 

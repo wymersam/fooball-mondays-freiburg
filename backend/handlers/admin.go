@@ -235,3 +235,31 @@ func AdminPaypalRefHandler(dbConn *sql.DB, getCurrentWeekKey func() string) gin.
 		c.JSON(http.StatusOK, models.SuccessResponse{Success: true})
 	}
 }
+
+// AdminCollectorsHandler returns the full collector history.
+func AdminCollectorsHandler(dbConn *sql.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if !isAdminAuthed(c, dbConn) {
+			c.JSON(http.StatusForbidden, models.ErrorResponse{Error: "Forbidden"})
+			return
+		}
+		records, err := db.GetCollectors(dbConn)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "Failed to fetch collector history"})
+			return
+		}
+		c.JSON(http.StatusOK, records)
+	}
+}
+
+// CollectorsHandler returns the full collector history (public, no auth required).
+func CollectorsHandler(dbConn *sql.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		records, err := db.GetCollectors(dbConn)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "Failed to fetch collector history"})
+			return
+		}
+		c.JSON(http.StatusOK, records)
+	}
+}

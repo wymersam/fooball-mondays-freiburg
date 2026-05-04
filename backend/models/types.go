@@ -46,6 +46,12 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
+type CollectorRecord struct {
+	WeekKey  string `json:"weekKey"`
+	UserID   string `json:"userId"`
+	Username string `json:"username"`
+}
+
 type SignupStatus struct {
 	CurrentWeek  string    `json:"currentWeek"`
 	CanSignup    bool      `json:"canSignup"`

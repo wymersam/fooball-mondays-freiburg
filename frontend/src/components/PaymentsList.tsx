@@ -23,6 +23,7 @@ function PaymentsList({
   const { t } = useLanguage();
   const [paypalInput, setPaypalInput] = React.useState("");
   const [editingPaypal, setEditingPaypal] = React.useState(false);
+  const [selectedCollectorId, setSelectedCollectorId] = React.useState("");
 
   const paidCount = players.filter((p) => p.hasPaid).length;
   const collector = players.find((p) => p.paypalRef && p.paypalRef !== "");
@@ -34,10 +35,12 @@ function PaymentsList({
 
   const handleSavePaypal = async () => {
     try {
-      if (isAdmin && !isCollector && collector) {
+      if (isAdmin) {
+        // Admin editing existing collector
+        const targetId = collector ? collector.userId : selectedCollectorId;
         await apiService.adminSetPaypalRef(
           adminPassword,
-          collector.userId,
+          targetId,
           paypalInput.trim(),
         );
       } else {
@@ -45,6 +48,7 @@ function PaymentsList({
       }
       await onRefresh();
       setEditingPaypal(false);
+      setSelectedCollectorId("");
     } catch (err: any) {
       onError(err?.message || "Failed to update PayPal details");
     }
@@ -52,7 +56,7 @@ function PaymentsList({
 
   const handleClearPaypal = async () => {
     try {
-      if (isAdmin && !isCollector && collector) {
+      if (isAdmin && collector) {
         await apiService.adminSetPaypalRef(adminPassword, collector.userId, "");
       } else {
         await apiService.setPaypalRef("");
@@ -107,6 +111,57 @@ function PaymentsList({
               }}
             >
               {t.edit}
+            </button>
+          )}
+        </div>
+      ) : isAdmin && !collector ? (
+        <div className="paypal-banner paypal-banner--empty">
+          {editingPaypal ? (
+            <div className="paypal-input-row">
+              <select
+                className="paypal-input"
+                value={selectedCollectorId}
+                onChange={(e) => setSelectedCollectorId(e.target.value)}
+              >
+                <option value="">Select collector...</option>
+                {players.map((p) => (
+                  <option key={p.userId} value={p.userId}>
+                    {p.username}
+                  </option>
+                ))}
+              </select>
+              <input
+                className="paypal-input"
+                type="text"
+                placeholder={t.paypalPlaceholder}
+                value={paypalInput}
+                onChange={(e) => setPaypalInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSavePaypal()}
+              />
+              <button
+                className="paypal-save-btn"
+                onClick={handleSavePaypal}
+                disabled={!selectedCollectorId || !paypalInput.trim()}
+              >
+                {t.save}
+              </button>
+              <button
+                className="paypal-cancel-btn"
+                onClick={() => {
+                  setEditingPaypal(false);
+                  setSelectedCollectorId("");
+                  setPaypalInput("");
+                }}
+              >
+                {t.cancel}
+              </button>
+            </div>
+          ) : (
+            <button
+              className="paypal-add-btn"
+              onClick={() => setEditingPaypal(true)}
+            >
+              {t.addPaypalDetails}
             </button>
           )}
         </div>

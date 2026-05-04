@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import StatusCard from "./StatusCard";
 import PlayerLists from "./PlayerLists";
 import PaymentsList from "./PaymentsList";
+import CollectorsList from "./CollectorsList";
 import SignupButtons from "./SignupButtons";
 import Rules from "./Rules";
 import { apiService } from "../services/apiService";
@@ -18,7 +19,9 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
     "auto" | "open" | "closed"
   >("auto");
   const [resetting, setResetting] = useState(false);
-  const [activeTab, setActiveTab] = useState<"players" | "payments">("players");
+  const [activeTab, setActiveTab] = useState<
+    "players" | "payments" | "collectors"
+  >("players");
 
   useEffect(() => {
     loadStatus();
@@ -162,6 +165,12 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
         >
           {t.paymentsTab}
         </button>
+        <button
+          className={`tab-btn ${activeTab === "collectors" ? "tab-btn--active" : ""}`}
+          onClick={() => setActiveTab("collectors")}
+        >
+          {t.collectorsTab}
+        </button>
       </div>
 
       {activeTab === "players" ? (
@@ -171,7 +180,7 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
           onRefresh={loadStatus}
           onError={onError}
         />
-      ) : (
+      ) : activeTab === "payments" ? (
         <PaymentsList
           players={status?.prevMainList ?? []}
           currentUser={currentUser}
@@ -180,6 +189,8 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
           isAdmin={isAdmin}
           adminPassword={adminPassword}
         />
+      ) : (
+        <CollectorsList />
       )}
       <div className="rules-container">
         <Rules />
