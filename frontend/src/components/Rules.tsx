@@ -53,6 +53,13 @@ function Rules() {
             <p>{t.ballRuleDesc}</p>
           </div>
         </div>
+        <div className="rule">
+          <div className="rule-icon">💰</div>
+          <div className="rule-text">
+            <h4>{t.paymentRule}</h4>
+            <p>{t.paymentRuleDesc}</p>
+          </div>
+        </div>
       </div>
     </div>
   );

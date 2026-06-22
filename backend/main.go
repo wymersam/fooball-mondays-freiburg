@@ -157,7 +157,6 @@ func main() {
 		api.PATCH("/bib-washer", handlers.BibWasherHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.PATCH("/ball-bringer", handlers.BallBringerHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.PATCH("/paid", handlers.PaidHandler(sqlDB, utils.GetCurrentWeekKey))
-		api.PATCH("/paypal-ref", handlers.PaypalRefHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.GET("/collectors", handlers.CollectorsHandler(sqlDB))
 
 		admin := api.Group("/admin")
@@ -168,9 +167,6 @@ func main() {
 			admin.POST("/open", handlers.AdminOpenSignupsHandler(sqlDB))
 			admin.POST("/close", handlers.AdminCloseSignupsHandler(sqlDB))
 			admin.DELETE("/override", handlers.AdminClearOverrideHandler(sqlDB))
-			admin.PATCH("/paid", handlers.AdminPaidHandler(sqlDB, utils.GetCurrentWeekKey))
-			admin.PATCH("/paypal-ref", handlers.AdminPaypalRefHandler(sqlDB, utils.GetCurrentWeekKey))
-			admin.GET("/collectors", handlers.AdminCollectorsHandler(sqlDB))
 		}
 	}
 

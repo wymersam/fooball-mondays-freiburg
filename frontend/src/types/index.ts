@@ -8,7 +8,6 @@ export interface Signup {
   bibWasher?: boolean;
   ballBringer?: boolean;
   hasPaid?: boolean;
-  paypalRef?: string;
 }
 
 export interface User {
@@ -78,4 +77,11 @@ export interface SignupButtonsProps {
   status: SignupStatus | null;
   onSignup: () => Promise<void>;
   onRemoveSignup: () => Promise<void>;
+}
+
+export interface PaymentsListProps {
+  players: Signup[];
+  currentUser: User | null;
+  onRefresh: () => Promise<void>;
+  onError: (message: string) => void;
 }

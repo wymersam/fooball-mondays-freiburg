@@ -25,6 +25,8 @@ export interface Translations {
   you: string;
   signedUpAt: string;
   gameRules: string;
+  paymentRule: string;
+  paymentRuleDesc: string;
   signupWindow: string;
   signupWindowDesc: string;
   playingSpots: string;
@@ -83,7 +85,6 @@ export interface Translations {
   ballRuleDesc: string;
   collectorsTab: string;
   noCollectorsYet: string;
-  collectorsAmountNote: string;
   inviteCode: string;
   inviteCodePlaceholder: string;
   inviteCodeHint: string;
@@ -115,6 +116,9 @@ export const translations: Record<Language, Translations> = {
     you: "You",
     signedUpAt: "Signed up:",
     gameRules: "📋 Game Rules",
+    paymentRule: "Payments",
+    paymentRuleDesc:
+      "Each week, one person collects €60 from the group to pay for the field. Please make sure to pay them ASAP!",
     signupWindow: "Sign-up Window",
     signupWindowDesc: "List resets Monday 7:00 PM, signups open at 10:00 PM",
     playingSpots: "Playing Spots",
@@ -153,7 +157,7 @@ export const translations: Record<Language, Translations> = {
     save: "Save",
     cancel: "Cancel",
     removePaypal: "Remove",
-    paypalPlaceholder: "PayPal.me/yourname or @handle",
+    paypalPlaceholder: "PayPal.me/yourname",
     addPaypalDetails: "+ Add your PayPal details so others can pay you back",
     paidBadge: "✓ Paid",
     unpaidBadge: "Unpaid",
@@ -177,7 +181,6 @@ export const translations: Record<Language, Translations> = {
       "Let the group know you're bringing a ball by volunteering in the player list",
     collectorsTab: "Collectors",
     noCollectorsYet: "No collector history yet",
-    collectorsAmountNote: "Each week the collector gathers €60 from the group.",
     inviteCode: "Invite Code",
     inviteCodePlaceholder: "Enter your invite code",
     inviteCodeHint: "Required for new accounts",
@@ -207,6 +210,9 @@ export const translations: Record<Language, Translations> = {
     you: "Tú",
     signedUpAt: "Inscrito:",
     gameRules: "📋 Reglas del Juego",
+    paymentRule: "Pagos",
+    paymentRuleDesc:
+      "Cada semana, una persona recoge €60 del grupo para pagar el campo. ¡Por favor, asegúrate de pagarles lo antes posible!",
     signupWindow: "Ventana de Inscripción",
     signupWindowDesc:
       "La lista se reinicia el lunes a las 19:00, inscripciones abren a las 22:00",
@@ -246,7 +252,7 @@ export const translations: Record<Language, Translations> = {
     save: "Guardar",
     cancel: "Cancelar",
     removePaypal: "Eliminar",
-    paypalPlaceholder: "PayPal.me/tunombre o @usuario",
+    paypalPlaceholder: "PayPal.me/tunombre",
     addPaypalDetails:
       "+ Añade tus datos de PayPal para que otros puedan pagarte",
     paidBadge: "✓ Pagado",
@@ -271,7 +277,6 @@ export const translations: Record<Language, Translations> = {
       "Avisa al grupo que traes un balón voluntáriate en la lista de jugadores",
     collectorsTab: "Recaudadores",
     noCollectorsYet: "Aún no hay historial de recaudadores",
-    collectorsAmountNote: "Cada semana el recaudador recoge €60 del grupo.",
     inviteCode: "Código de invitación",
     inviteCodePlaceholder: "Ingresa tu código de invitación",
     inviteCodeHint: "Requerido para cuentas nuevas",
@@ -301,6 +306,9 @@ export const translations: Record<Language, Translations> = {
     you: "Tu",
     signedUpAt: "Iscritto:",
     gameRules: "📋 Regole del Gioco",
+    paymentRule: "Pagamenti",
+    paymentRuleDesc:
+      "Ogni settimana, una persona raccoglie €60 dal gruppo per pagare il campo. Assicurati di pagare loro il prima possibile!",
     signupWindow: "Finestra di Iscrizione",
     signupWindowDesc:
       "L'elenco si azzera lunedì alle 19:00, iscrizioni aperte alle 22:00",
@@ -340,7 +348,7 @@ export const translations: Record<Language, Translations> = {
     save: "Salva",
     cancel: "Annulla",
     removePaypal: "Rimuovi",
-    paypalPlaceholder: "PayPal.me/tuonome o @handle",
+    paypalPlaceholder: "PayPal.me/tuonome",
     addPaypalDetails:
       "+ Aggiungi i tuoi dati PayPal così gli altri possono pagarti",
     paidBadge: "✓ Pagato",
@@ -365,8 +373,6 @@ export const translations: Record<Language, Translations> = {
       "Fai sapere al gruppo che porti un pallone volontariandoti nella lista giocatori",
     collectorsTab: "Raccoglitori",
     noCollectorsYet: "Ancora nessuna cronologia dei raccoglitori",
-    collectorsAmountNote:
-      "Ogni settimana il raccoglitore raccoglie €60 dal gruppo.",
     inviteCode: "Codice Invito",
     inviteCodePlaceholder: "Inserisci il tuo codice invito",
     inviteCodeHint: "Richiesto per i nuovi account",
@@ -396,6 +402,9 @@ export const translations: Record<Language, Translations> = {
     you: "أنت",
     signedUpAt: ":مسجل",
     gameRules: "قواعد اللعبة 📋",
+    paymentRule: "المدفوعات",
+    paymentRuleDesc:
+      "كل أسبوع، يقوم شخص واحد بجمع 60 يورو من المجموعة لدفع ثمن الملعب. يرجى التأكد من دفعهم في أقرب وقت ممكن!",
     signupWindow: "نافذة التسجيل",
     signupWindowDesc:
       "تتم إعادة تعيين القائمة يوم الاثنين الساعة 19:00، التسجيلات تفتح الساعة 22:00",
@@ -435,7 +444,7 @@ export const translations: Record<Language, Translations> = {
     save: "حفظ",
     cancel: "إلغاء",
     removePaypal: "إزالة",
-    paypalPlaceholder: "PayPal.me/اسمك أو @handle",
+    paypalPlaceholder: "PayPal.me/اسمك",
     addPaypalDetails:
       "+ أضف تفاصيل PayPal الخاصة بك حتى يتمكن الآخرون من الدفع لك",
     paidBadge: "✓ مدفوع",
@@ -459,7 +468,6 @@ export const translations: Record<Language, Translations> = {
     ballRuleDesc: "أخبر المجموعة بأنك ستحضر كرة عبر قائمة اللاعبين",
     collectorsTab: "المحصلون",
     noCollectorsYet: "لا يوجد سجل حتى الآن",
-    collectorsAmountNote: "يجمع المحصل 60€ من المجموعة كل أسبوع.",
     inviteCode: "رمز الدعوة",
     inviteCodePlaceholder: "أدخل رمز الدعوة الخاص بك",
     inviteCodeHint: "مطلوب للحسابات الجديدة",
@@ -489,6 +497,9 @@ export const translations: Record<Language, Translations> = {
     you: "Du",
     signedUpAt: "Angemeldet:",
     gameRules: "📋 Spielregeln",
+    paymentRule: "Zahlungen",
+    paymentRuleDesc:
+      "Jede Woche sammelt eine Person €60 von der Gruppe ein, um das Spielfeld zu bezahlen. Bitte stelle sicher, dass du so schnell wie möglich bezahlst!",
     signupWindow: "Anmeldefenster",
     signupWindowDesc:
       "Liste wird Montag 19:00 Uhr zurückgesetzt, Anmeldungen öffnen um 22:00 Uhr",
@@ -529,7 +540,7 @@ export const translations: Record<Language, Translations> = {
     save: "Speichern",
     cancel: "Abbrechen",
     removePaypal: "Entfernen",
-    paypalPlaceholder: "PayPal.me/deinname oder @handle",
+    paypalPlaceholder: "PayPal.me/deinname",
     addPaypalDetails:
       "+ PayPal-Daten hinzufügen, damit andere dich bezahlen können",
     paidBadge: "✓ Bezahlt",
@@ -554,8 +565,6 @@ export const translations: Record<Language, Translations> = {
       "Teile der Gruppe mit, dass du einen Ball mitbringst, indem du dich in der Spielerliste freiwillig meldest",
     collectorsTab: "Kassierer",
     noCollectorsYet: "Noch kein Verlauf",
-    collectorsAmountNote:
-      "Jede Woche sammelt der Kassierer €60 von der Gruppe ein.",
     inviteCode: "Einladungscode",
     inviteCodePlaceholder: "Gib deinen Einladungscode ein",
     inviteCodeHint: "Nur für neue Konten erforderlich",
@@ -585,6 +594,9 @@ export const translations: Record<Language, Translations> = {
     you: "Você",
     signedUpAt: "Inscrito:",
     gameRules: "📋 Regras do Jogo",
+    paymentRule: "Pagamentos",
+    paymentRuleDesc:
+      "Cada semana, uma pessoa coleta €60 do grupo para pagar o campo. Por favor, certifique-se de pagar o mais rápido possível!",
     signupWindow: "Janela de Inscrição",
     signupWindowDesc:
       "A lista reinicia segunda-feira às 19:00, inscrições abrem às 22:00",
@@ -624,7 +636,7 @@ export const translations: Record<Language, Translations> = {
     save: "Guardar",
     cancel: "Cancelar",
     removePaypal: "Remover",
-    paypalPlaceholder: "PayPal.me/seunome ou @handle",
+    paypalPlaceholder: "PayPal.me/seunome",
     addPaypalDetails:
       "+ Adicionar os seus dados de PayPal para que outros possam pagar-lhe",
     paidBadge: "✓ Pago",
@@ -649,7 +661,6 @@ export const translations: Record<Language, Translations> = {
       "Avisa o grupo que vais trazer uma bola voluntariando-te na lista de jogadores",
     collectorsTab: "Cobradores",
     noCollectorsYet: "Ainda sem histórico de cobradores",
-    collectorsAmountNote: "Cada semana o cobrador recolhe €60 do grupo.",
     inviteCode: "Código de convite",
     inviteCodePlaceholder: "Digite seu código de convite",
     inviteCodeHint: "Obrigatório para novas contas",

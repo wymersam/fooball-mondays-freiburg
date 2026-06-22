@@ -1,5 +1,11 @@
 import { SignupStatus, SuccessResponse, RegisterResponse } from "../types";
 
+type OverrideStatus = "auto" | "open" | "closed";
+
+interface AdminOverrideResponse {
+  override: OverrideStatus;
+}
+
 // API base URL for backend requests
 // In development, this should match your backend server (Vite proxy or direct)
 const API_BASE = "";
@@ -108,9 +114,7 @@ class ApiService {
     return response.json();
   }
 
-  async adminOverrideStatus(password: string): Promise<{
-    override: "auto" | "open" | "closed";
-  }> {
+  async adminOverrideStatus(password: string): Promise<AdminOverrideResponse> {
     const response = await fetch(`${API_BASE}/api/admin/override`, {
       credentials: "include",
       headers: { "X-Admin-Password": password },
@@ -154,46 +158,6 @@ class ApiService {
     });
   }
 
-  async adminSetPaid(
-    password: string,
-    userId: string,
-    hasPaid: boolean,
-  ): Promise<void> {
-    const response = await fetch(`${API_BASE}/api/admin/paid`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Admin-Password": password,
-      },
-      credentials: "include",
-      body: JSON.stringify({ userId, hasPaid }),
-    });
-    if (!response.ok) {
-      const data = await response.json().catch(() => ({}));
-      throw new Error(data.error || "Failed to update payment status");
-    }
-  }
-
-  async adminSetPaypalRef(
-    password: string,
-    userId: string,
-    paypalRef: string,
-  ): Promise<void> {
-    const response = await fetch(`${API_BASE}/api/admin/paypal-ref`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Admin-Password": password,
-      },
-      credentials: "include",
-      body: JSON.stringify({ userId, paypalRef }),
-    });
-    if (!response.ok) {
-      const data = await response.json().catch(() => ({}));
-      throw new Error(data.error || "Failed to update PayPal details");
-    }
-  }
-
   async setBibWasher(value: boolean): Promise<void> {
     const response = await fetch(`${API_BASE}/api/bib-washer`, {
       method: "PATCH",
@@ -233,16 +197,16 @@ class ApiService {
     }
   }
 
-  async setPaypalRef(ref: string): Promise<void> {
-    const response = await fetch(`${API_BASE}/api/paypal-ref`, {
-      method: "PATCH",
+  async addCollector(name: string, weekKey: string): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/collectors`, {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ paypalRef: ref }),
+      body: JSON.stringify({ username: name, weekKey }),
     });
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
-      throw new Error(data.error || "Failed to update PayPal details");
+      throw new Error(data.error || "Failed to add collector");
     }
   }
 

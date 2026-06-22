@@ -28,7 +28,6 @@ type Signup struct {
 	BibWasher   bool      `json:"bibWasher"`
 	BallBringer bool      `json:"ballBringer"`
 	HasPaid     bool      `json:"hasPaid"`
-	PaypalRef   string    `json:"paypalRef"`
 }
 
 type SuccessResponse struct {
