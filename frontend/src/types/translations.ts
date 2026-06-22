@@ -58,13 +58,9 @@ export interface Translations {
   adminAutoMode: string;
   noPaymentsToTrack: string;
   noPaymentsDesc: string;
-  payViaPaypal: string;
   edit: string;
   save: string;
   cancel: string;
-  removePaypal: string;
-  paypalPlaceholder: string;
-  addPaypalDetails: string;
   paidBadge: string;
   unpaidBadge: string;
   markAsPaid: string;
@@ -152,13 +148,9 @@ export const translations: Record<Language, Translations> = {
     noPaymentsToTrack: "No payments to track",
     noPaymentsDesc:
       "Last week's player list will appear here after the weekly reset",
-    payViaPaypal: "Pay {username} via PayPal",
     edit: "Edit",
     save: "Save",
     cancel: "Cancel",
-    removePaypal: "Remove",
-    paypalPlaceholder: "PayPal.me/yourname",
-    addPaypalDetails: "+ Add your PayPal details so others can pay you back",
     paidBadge: "✓ Paid",
     unpaidBadge: "Unpaid",
     markAsPaid: "Mark as paid",
@@ -247,14 +239,9 @@ export const translations: Record<Language, Translations> = {
     noPaymentsToTrack: "No hay pagos que registrar",
     noPaymentsDesc:
       "La lista de jugadores de la semana pasada aparecerá aquí después del reinicio semanal",
-    payViaPaypal: "Paga a {username} via PayPal",
     edit: "Editar",
     save: "Guardar",
     cancel: "Cancelar",
-    removePaypal: "Eliminar",
-    paypalPlaceholder: "PayPal.me/tunombre",
-    addPaypalDetails:
-      "+ Añade tus datos de PayPal para que otros puedan pagarte",
     paidBadge: "✓ Pagado",
     unpaidBadge: "Sin pagar",
     markAsPaid: "Marcar como pagado",
@@ -343,14 +330,9 @@ export const translations: Record<Language, Translations> = {
     noPaymentsToTrack: "Nessun pagamento da monitorare",
     noPaymentsDesc:
       "La lista dei giocatori della settimana scorsa apparirà qui dopo il reset settimanale",
-    payViaPaypal: "Paga {username} via PayPal",
     edit: "Modifica",
     save: "Salva",
     cancel: "Annulla",
-    removePaypal: "Rimuovi",
-    paypalPlaceholder: "PayPal.me/tuonome",
-    addPaypalDetails:
-      "+ Aggiungi i tuoi dati PayPal così gli altri possono pagarti",
     paidBadge: "✓ Pagato",
     unpaidBadge: "Non pagato",
     markAsPaid: "Segna come pagato",
@@ -439,14 +421,9 @@ export const translations: Record<Language, Translations> = {
     noPaymentsToTrack: "لا توجد مدفوعات لتتبعها",
     noPaymentsDesc:
       "ستظهر قائمة لاعبي الأسبوع الماضي هنا بعد إعادة التعيين الأسبوعية",
-    payViaPaypal: "ادفع لـ {username} عبر PayPal",
     edit: "تعديل",
     save: "حفظ",
     cancel: "إلغاء",
-    removePaypal: "إزالة",
-    paypalPlaceholder: "PayPal.me/اسمك",
-    addPaypalDetails:
-      "+ أضف تفاصيل PayPal الخاصة بك حتى يتمكن الآخرون من الدفع لك",
     paidBadge: "✓ مدفوع",
     unpaidBadge: "غير مدفوع",
     markAsPaid: "وضع علامة كمدفوع",
@@ -535,14 +512,9 @@ export const translations: Record<Language, Translations> = {
     noPaymentsToTrack: "Keine Zahlungen zu verfolgen",
     noPaymentsDesc:
       "Die Spielerliste der letzten Woche erscheint hier nach dem wöchentlichen Reset",
-    payViaPaypal: "{username} via PayPal bezahlen",
     edit: "Bearbeiten",
     save: "Speichern",
     cancel: "Abbrechen",
-    removePaypal: "Entfernen",
-    paypalPlaceholder: "PayPal.me/deinname",
-    addPaypalDetails:
-      "+ PayPal-Daten hinzufügen, damit andere dich bezahlen können",
     paidBadge: "✓ Bezahlt",
     unpaidBadge: "Ausstehend",
     markAsPaid: "Als bezahlt markieren",
@@ -631,14 +603,9 @@ export const translations: Record<Language, Translations> = {
     noPaymentsToTrack: "Sem pagamentos para registar",
     noPaymentsDesc:
       "A lista de jogadores da semana passada aparecerá aqui após o reinício semanal",
-    payViaPaypal: "Pagar {username} via PayPal",
     edit: "Editar",
     save: "Guardar",
     cancel: "Cancelar",
-    removePaypal: "Remover",
-    paypalPlaceholder: "PayPal.me/seunome",
-    addPaypalDetails:
-      "+ Adicionar os seus dados de PayPal para que outros possam pagar-lhe",
     paidBadge: "✓ Pago",
     unpaidBadge: "Por pagar",
     markAsPaid: "Marcar como pago",

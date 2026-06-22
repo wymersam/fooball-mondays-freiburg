@@ -23,7 +23,6 @@ func CreateTables(db *sql.DB) error {
 		bib_washer BOOLEAN DEFAULT FALSE,
 		ball_bringer BOOLEAN DEFAULT FALSE,
 		has_paid BOOLEAN DEFAULT FALSE,
-		paypal_ref TEXT DEFAULT '',
         PRIMARY KEY (user_id, week_key),
         FOREIGN KEY(user_id) REFERENCES users(user_id)
     );
@@ -45,7 +44,6 @@ func MigrateSchema(db *sql.DB) error {
     ALTER TABLE signups ADD COLUMN IF NOT EXISTS bib_washer BOOLEAN DEFAULT FALSE;
     ALTER TABLE signups ADD COLUMN IF NOT EXISTS ball_bringer BOOLEAN DEFAULT FALSE;
     ALTER TABLE signups ADD COLUMN IF NOT EXISTS has_paid BOOLEAN DEFAULT FALSE;
-    ALTER TABLE signups ADD COLUMN IF NOT EXISTS paypal_ref TEXT DEFAULT '';
     CREATE TABLE IF NOT EXISTS collectors (
         week_key TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,

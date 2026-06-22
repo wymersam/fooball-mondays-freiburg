@@ -10,20 +10,8 @@ function PaymentsList({
   onError,
 }: PaymentsListProps) {
   const { t } = useLanguage();
-  const [paypalInput, setPaypalInput] = React.useState("");
-  const [editingPaypal, setEditingPaypal] = React.useState(false);
-  const [paypal, setPaypal] = React.useState("");
 
   const paidCount = players.filter((p) => p.hasPaid).length;
-
-  function handleSavePaypal() {
-    if (!paypalInput.trim()) {
-      onError("PayPal reference cannot be empty");
-      return;
-    }
-    setPaypal(paypalInput.trim());
-    setEditingPaypal(false);
-  }
 
   if (players.length === 0) {
     return (
@@ -39,47 +27,6 @@ function PaymentsList({
 
   return (
     <div className="payments-list">
-      <div className="paypal-banner">
-        <div className="paypal-banner-info">
-          <a
-            className="paypal-banner-link"
-            href={`https://www.paypal.com/paypalme/${paypal}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          ></a>
-        </div>
-      </div>
-      <div className="paypal-banner paypal-banner--empty">
-        {editingPaypal ? (
-          <div className="paypal-input-row">
-            <input
-              className="paypal-input"
-              type="text"
-              placeholder={t.paypalPlaceholder}
-              value={paypalInput}
-              onChange={(e) => setPaypalInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSavePaypal()}
-              autoFocus
-            />
-            <button className="paypal-save-btn" onClick={handleSavePaypal}>
-              {t.save}
-            </button>
-            <button
-              className="paypal-cancel-btn"
-              onClick={() => setEditingPaypal(false)}
-            >
-              {t.cancel}
-            </button>
-          </div>
-        ) : (
-          <button
-            className="paypal-add-btn"
-            onClick={() => setEditingPaypal(true)}
-          >
-            {t.addPaypalDetails}
-          </button>
-        )}
-      </div>
       <div className="payments-summary">
         <span className="payments-paid">
           {paidCount} {t.paidLabel}
