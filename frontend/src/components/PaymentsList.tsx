@@ -1,54 +1,26 @@
 import React from "react";
-import { Signup, User } from "../types";
+import { PaymentsListProps } from "../types";
 import { apiService } from "../services/apiService";
 import { useLanguage } from "../context/LanguageContext";
-
-interface PaymentsListProps {
-  players: Signup[];
-  currentUser: User | null;
-  onRefresh: () => Promise<void>;
-  onError: (message: string) => void;
-  isAdmin?: boolean;
-  adminPassword?: string;
-}
 
 function PaymentsList({
   players,
   currentUser,
   onRefresh,
   onError,
-  isAdmin = false,
-  adminPassword = "",
 }: PaymentsListProps) {
   const { t } = useLanguage();
   const [paypalInput, setPaypalInput] = React.useState("");
   const [editingPaypal, setEditingPaypal] = React.useState(false);
-  const [selectedCollectorId, setSelectedCollectorId] = React.useState("");
 
   const paidCount = players.filter((p) => p.hasPaid).length;
-  const collector = players.find((p) => p.paypalRef && p.paypalRef !== "");
-  const currentUserEntry = players.find(
-    (p) => p.username === currentUser?.username,
-  );
-  const isCollector = collector?.username === currentUser?.username;
-  const canSetPaypal = !collector || isCollector;
 
   const handleSavePaypal = async () => {
     try {
-      if (isAdmin) {
-        // Admin editing existing collector
-        const targetId = collector ? collector.userId : selectedCollectorId;
-        await apiService.adminSetPaypalRef(
-          adminPassword,
-          targetId,
-          paypalInput.trim(),
-        );
-      } else {
-        await apiService.setPaypalRef(paypalInput.trim());
-      }
+      await apiService.setPaypalRef(paypalInput.trim());
+
       await onRefresh();
       setEditingPaypal(false);
-      setSelectedCollectorId("");
     } catch (err: any) {
       onError(err?.message || "Failed to update PayPal details");
     }
@@ -56,11 +28,7 @@ function PaymentsList({
 
   const handleClearPaypal = async () => {
     try {
-      if (isAdmin && collector) {
-        await apiService.adminSetPaypalRef(adminPassword, collector.userId, "");
-      } else {
-        await apiService.setPaypalRef("");
-      }
+      await apiService.setPaypalRef("");
       await onRefresh();
       setEditingPaypal(false);
       setPaypalInput("");
@@ -83,124 +51,85 @@ function PaymentsList({
 
   return (
     <div className="payments-list">
-      {collector ? (
-        <div className="paypal-banner">
-          <div className="paypal-banner-info">
-            <span className="paypal-banner-label">
-              {t.payViaPaypal.replace("{username}", collector.username)}
-            </span>
-            <a
-              className="paypal-banner-link"
-              href={
-                collector.paypalRef!.startsWith("http")
-                  ? collector.paypalRef
-                  : `https://paypal.me/${collector.paypalRef!.replace(/^@/, "")}`
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {collector.paypalRef}
-            </a>
-          </div>
-          {(isCollector || isAdmin) && (
+      <div className="paypal-banner">
+        <div className="paypal-banner-info">
+          <a
+            className="paypal-banner-link"
+            href={`https://www.paypal.com/paypalme/${paypalInput}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          ></a>
+        </div>
+      </div>
+      <div className="paypal-banner paypal-banner--empty">
+        {editingPaypal ? (
+          <div className="paypal-input-row">
+            <input
+              className="paypal-input"
+              type="text"
+              placeholder={t.paypalPlaceholder}
+              value={paypalInput}
+              onChange={(e) => setPaypalInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSavePaypal()}
+            />
             <button
-              className="paypal-edit-btn"
+              className="paypal-save-btn"
+              onClick={handleSavePaypal}
+              disabled={!paypalInput.trim()}
+            >
+              {t.save}
+            </button>
+            <button
+              className="paypal-cancel-btn"
               onClick={() => {
-                setPaypalInput(collector.paypalRef ?? "");
-                setEditingPaypal(true);
+                setEditingPaypal(false);
+                setPaypalInput("");
               }}
             >
-              {t.edit}
+              {t.cancel}
             </button>
-          )}
-        </div>
-      ) : isAdmin && !collector ? (
-        <div className="paypal-banner paypal-banner--empty">
-          {editingPaypal ? (
-            <div className="paypal-input-row">
-              <select
-                className="paypal-input"
-                value={selectedCollectorId}
-                onChange={(e) => setSelectedCollectorId(e.target.value)}
-              >
-                <option value="">Select collector...</option>
-                {players.map((p) => (
-                  <option key={p.userId} value={p.userId}>
-                    {p.username}
-                  </option>
-                ))}
-              </select>
-              <input
-                className="paypal-input"
-                type="text"
-                placeholder={t.paypalPlaceholder}
-                value={paypalInput}
-                onChange={(e) => setPaypalInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSavePaypal()}
-              />
-              <button
-                className="paypal-save-btn"
-                onClick={handleSavePaypal}
-                disabled={!selectedCollectorId || !paypalInput.trim()}
-              >
-                {t.save}
-              </button>
-              <button
-                className="paypal-cancel-btn"
-                onClick={() => {
-                  setEditingPaypal(false);
-                  setSelectedCollectorId("");
-                  setPaypalInput("");
-                }}
-              >
-                {t.cancel}
-              </button>
-            </div>
-          ) : (
+          </div>
+        ) : (
+          <button
+            className="paypal-add-btn"
+            onClick={() => setEditingPaypal(true)}
+          >
+            {t.addPaypalDetails}
+          </button>
+        )}
+      </div>
+      <div className="paypal-banner paypal-banner--empty">
+        {editingPaypal ? (
+          <div className="paypal-input-row">
+            <input
+              className="paypal-input"
+              type="text"
+              placeholder={t.paypalPlaceholder}
+              value={paypalInput}
+              onChange={(e) => setPaypalInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSavePaypal()}
+              autoFocus
+            />
+            <button className="paypal-save-btn" onClick={handleSavePaypal}>
+              {t.save}
+            </button>
             <button
-              className="paypal-add-btn"
-              onClick={() => setEditingPaypal(true)}
+              className="paypal-cancel-btn"
+              onClick={() => setEditingPaypal(false)}
             >
-              {t.addPaypalDetails}
+              {t.cancel}
             </button>
-          )}
-        </div>
-      ) : currentUserEntry && canSetPaypal ? (
-        <div className="paypal-banner paypal-banner--empty">
-          {editingPaypal ? (
-            <div className="paypal-input-row">
-              <input
-                className="paypal-input"
-                type="text"
-                placeholder={t.paypalPlaceholder}
-                value={paypalInput}
-                onChange={(e) => setPaypalInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSavePaypal()}
-                autoFocus
-              />
-              <button className="paypal-save-btn" onClick={handleSavePaypal}>
-                {t.save}
-              </button>
-              <button
-                className="paypal-cancel-btn"
-                onClick={() => setEditingPaypal(false)}
-              >
-                {t.cancel}
-              </button>
-            </div>
-          ) : (
-            <button
-              className="paypal-add-btn"
-              onClick={() => setEditingPaypal(true)}
-            >
-              {t.addPaypalDetails}
-            </button>
-          )}
-        </div>
-      ) : null}
-
-      {/* Edit mode when collector (or admin) wants to update */}
-      {editingPaypal && (isCollector || isAdmin) && collector && (
+          </div>
+        ) : (
+          <button
+            className="paypal-add-btn"
+            onClick={() => setEditingPaypal(true)}
+          >
+            {t.addPaypalDetails}
+          </button>
+        )}
+      </div>
+      {editingPaypal && (
         <div className="paypal-banner">
           <div className="paypal-input-row">
             <input
@@ -221,7 +150,6 @@ function PaymentsList({
           </div>
         </div>
       )}
-
       <div className="payments-summary">
         <span className="payments-paid">
           {paidCount} {t.paidLabel}
@@ -231,11 +159,9 @@ function PaymentsList({
           {players.length} {t.totalLabel}
         </span>
       </div>
-
       {players.map((player, index) => {
         const isCurrentUser =
           currentUser && player.username === currentUser.username;
-
         return (
           <div
             key={player.userId || index}
@@ -266,7 +192,7 @@ function PaymentsList({
                 </span>
               )}
 
-              {(isCurrentUser || isAdmin) && (
+              {isCurrentUser && (
                 <button
                   className={`payment-toggle-btn ${
                     player.hasPaid
@@ -275,15 +201,7 @@ function PaymentsList({
                   }`}
                   onClick={async () => {
                     try {
-                      if (isAdmin && !isCurrentUser) {
-                        await apiService.adminSetPaid(
-                          adminPassword,
-                          player.userId,
-                          !player.hasPaid,
-                        );
-                      } else {
-                        await apiService.setPaid(!player.hasPaid);
-                      }
+                      await apiService.setPaid(!player.hasPaid);
                       await onRefresh();
                     } catch (err: any) {
                       onError(

@@ -207,33 +207,8 @@ func SetPaypalRef(db *sql.DB, userID, weekKey, ref string) error {
 	if err != nil {
 		return err
 	}
-	// Persist collector record permanently when a paypal ref is set.
-	if ref != "" {
-		return UpsertCollector(db, userID, weekKey)
-	}
-	return nil
-}
 
-// UpsertCollector inserts or updates the collector record for a week.
-// The stored week_key is the actual game date (weekKey + 7 days), not the signup week key.
-func UpsertCollector(db *sql.DB, userID, weekKey string) error {
-	var username string
-	if err := db.QueryRow(`SELECT username FROM users WHERE user_id = $1`, userID).Scan(&username); err != nil {
-		return err
-	}
-	// Convert signup week key to actual game date.
-	t, err := time.Parse("2006-01-02", weekKey)
-	if err != nil {
-		return err
-	}
-	gameDate := t.AddDate(0, 0, 7).Format("2006-01-02")
-	_, err = db.Exec(`
-		INSERT INTO collectors (week_key, user_id, username)
-		VALUES ($1, $2, $3)
-		ON CONFLICT (week_key) DO UPDATE SET user_id = $2, username = $3`,
-		gameDate, userID, username,
-	)
-	return err
+	return nil
 }
 
 // GetCollectors returns all collector records ordered by week descending.

@@ -1069,6 +1069,40 @@ input[type="text"].loading,
   border-bottom: none;
 }
 
+.add-collector-form {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 0.5rem;
+}
+
+input[type="text"].add-collector-input {
+  padding: 0.3rem;
+  text-align: left;
+}
+
+.add-collector-button {
+  width: 100%;
+  padding: 0.4rem 0.75rem;
+  background: transparent;
+  color: var(--color-accent);
+  border: 1.5px solid var(--color-accent);
+  border-radius: var(--border-radius);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hide-add-collector-button {
+  display: none;
+}
+
+.save-collector-button {
+  display: flex;
+  font-size: 2rem;
+  cursor: pointer;
+  background: transparent;
+}
+
 /* Rules Card */
 .rules-card {
   margin: 1.5rem;

@@ -86,3 +86,10 @@ export interface SignupButtonsProps {
   onSignup: () => Promise<void>;
   onRemoveSignup: () => Promise<void>;
 }
+
+export interface PaymentsListProps {
+  players: Signup[];
+  currentUser: User | null;
+  onRefresh: () => Promise<void>;
+  onError: (message: string) => void;
+}
