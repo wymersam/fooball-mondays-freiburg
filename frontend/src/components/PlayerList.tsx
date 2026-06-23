@@ -6,6 +6,7 @@ import { IoHourglassOutline } from "react-icons/io5";
 import { GiSoccerBall } from "react-icons/gi";
 import { FaShirt } from "react-icons/fa6";
 import { CgCloseO } from "react-icons/cg";
+import { getAvatar } from "../utils/get-avatar";
 
 function PlayerList({
   players,
@@ -15,6 +16,7 @@ function PlayerList({
   onError,
 }: PlayerListProps) {
   const { t } = useLanguage();
+
   if (!players || players.length === 0) {
     return (
       <div
@@ -38,6 +40,7 @@ function PlayerList({
   return (
     <div className={`player-list ${isMainList ? "main-list" : "reserve-list"}`}>
       {players.map((player, index) => {
+        const AvatarIcon = getAvatar(player.username);
         const isCurrentUser =
           currentUser && player.username === currentUser.username;
         const position = isMainList ? index + 1 : `R${index + 1}`;
@@ -49,7 +52,7 @@ function PlayerList({
           >
             <div className="player-info">
               <div className="player-avatar">
-                {player.username.charAt(0).toUpperCase()}
+                <AvatarIcon size={32} />
               </div>
               <div className="player-details">
                 <span className="player-name">

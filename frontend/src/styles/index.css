@@ -233,17 +233,13 @@ button {
 }
 
 .player-avatar {
-  width: 2.5rem;
-  height: 2.5rem;
-  background: var(--color-accent);
-  color: white;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
+  background: var(--color-accent-soft);
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-weight: 600;
-  font-size: 0.875rem;
-  flex-shrink: 0;
+  align-items: center;
 }
 
 @media (min-width: 1024px) {

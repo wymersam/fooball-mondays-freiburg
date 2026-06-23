@@ -21,7 +21,7 @@ function PlayerLists({
       <div className="list-section main-section">
         <div className="list-header">
           <h3 className="list-title">{t.startingXI}</h3>
-          <span className="list-count">{mainList.length}/10</span>
+          <span className="list-count">{mainList.length}/12</span>
         </div>
         <PlayerList
           players={mainList}

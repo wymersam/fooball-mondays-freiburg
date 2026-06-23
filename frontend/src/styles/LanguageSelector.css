@@ -12,6 +12,7 @@
   background: var(--color-accent-light);
   padding: 0.3rem;
   width: 100%;
+  height: 3rem;
   direction: ltr;
   border-radius: 0.4rem;
 }
