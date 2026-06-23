@@ -1,0 +1,37 @@
+.weather-widget {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--color-accent-light);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.weather-label {
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+.weather-emoji {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.weather-info {
+  display: flex;
+  gap: 0.3rem;
+  align-items: baseline;
+}
+
+.weather-temp {
+  font-weight: 700;
+}
+
+.weather-desc {
+  opacity: 0.75;
+  font-weight: 500;
+}

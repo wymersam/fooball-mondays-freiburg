@@ -1,6 +1,7 @@
 import { useState, SubmitEvent, ChangeEvent } from "react";
 import { AuthFormProps } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+import "../styles/AuthForm.css";
 
 function AuthForm({ onLogin }: AuthFormProps) {
   const { t } = useLanguage();
@@ -76,10 +77,10 @@ function AuthForm({ onLogin }: AuthFormProps) {
           }
         >
           {isSubmitting ? (
-            <>
+            <div className="spinner-container">
               <span className="spinner"></span>
               {t.signingIn}
-            </>
+            </div>
           ) : (
             t.signIn
           )}

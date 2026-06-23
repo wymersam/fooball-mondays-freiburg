@@ -1,0 +1,46 @@
+.admin-bar {
+  margin: 0.75rem 0;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.admin-btn {
+  padding: 0.3rem;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: white;
+}
+
+.admin-btn--primary {
+  background-color: var(--color-accent);
+}
+
+.admin-btn--danger {
+  background-color: #e5484d;
+}
+
+.admin-btn--reset {
+  background-color: var(--color-secondary);
+}
+
+.admin-btn:hover {
+  opacity: 0.9;
+}
+
+.admin-btn.is-active {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15) inset;
+  transform: scale(0.98);
+}
+
+.admin-btn.is-loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

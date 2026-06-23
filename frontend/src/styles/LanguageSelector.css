@@ -1,0 +1,78 @@
+/* Language Selector Styles */
+.language-selector-wrapper {
+  max-width: 32rem;
+  margin: 0 auto 1.2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.language-selector {
+  display: flex;
+  gap: 1.8rem;
+  background: var(--color-accent-light);
+  padding: 0.3rem;
+  width: 100%;
+  direction: ltr;
+  border-radius: 0.4rem;
+}
+
+.language-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-radius: 0.3rem;
+  transition:
+    transform 0.1s ease,
+    background 0.2s ease;
+}
+
+.language-btn:hover {
+  transform: translateY(-1px);
+}
+
+.language-btn.active {
+  background: var(--color-accent);
+  color: white;
+  font-weight: 600;
+}
+
+.language-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.language-flag {
+  font-size: 1.2rem;
+}
+
+.language-name {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .language-selector-wrapper {
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+  }
+
+  .language-selector {
+    border-radius: 0.5rem;
+    width: auto;
+  }
+
+  .language-name {
+    display: inline;
+  }
+
+  .language-btn {
+    padding: 0.6rem 1rem;
+  }
+}

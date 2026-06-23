@@ -1,0 +1,147 @@
+/* Payments List */
+.payments-list {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  margin: 1rem 0;
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+}
+
+.payments-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.payments-paid {
+  color: #2e7d32;
+}
+
+.payments-separator {
+  color: var(--text-secondary);
+}
+
+.payments-total {
+  color: var(--text-secondary);
+}
+
+.payment-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+
+.payment-item:last-child {
+  border-bottom: none;
+}
+
+.payment-item--paid {
+  background: rgba(46, 125, 50, 0.05);
+  animation: paidPulse 0.25s ease;
+}
+
+.payment-player-info {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.payment-username {
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
+.payment-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.payment-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.payment-badge--paid {
+  background: #e8f5e9;
+  color: var(--text-primary);
+  border: 1px solid rgba(46, 125, 50, 0.25);
+}
+
+@keyframes paidPulse {
+  from {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.payment-badge--unpaid {
+  background: var(--error-bg);
+  color: var(--error-text);
+  border: 1px solid rgba(114, 28, 36, 0.2);
+}
+
+.payment-toggle-btn {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.payment-toggle-btn--pay {
+  background: transparent;
+  color: #2e7d32;
+  border: 1.5px solid #2e7d32;
+}
+
+.payment-toggle-btn--pay:hover {
+  background: #2e7d32;
+  color: white;
+}
+
+.payment-toggle-btn--undo {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--text-secondary);
+}
+
+.payment-toggle-btn--undo:hover {
+  background: var(--text-secondary);
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .payment-player-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .payment-item {
+    display: flex;
+  }
+
+  .payment-right {
+    margin-top: 0;
+  }
+}

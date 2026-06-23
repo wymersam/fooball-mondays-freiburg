@@ -60,3 +60,9 @@ type SignupStatus struct {
 	UserSignedUp bool      `json:"userSignedUp"`
 	NextReset    time.Time `json:"nextReset"`
 }
+
+type SetCollectorsRequest struct {
+	WeekKey  string `json:"weekKey"`
+	UserID   string `json:"userId,omitempty"`
+	Username string `json:"username"`
+}

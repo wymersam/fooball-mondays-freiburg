@@ -1,23 +1,33 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { Translations } from "../types/translations";
-
+import { GoSun } from "react-icons/go";
+import { CiCloudSun } from "react-icons/ci";
+import { CiCloudOn } from "react-icons/ci";
+import { GiFog } from "react-icons/gi";
+import { RiDrizzleLine } from "react-icons/ri";
+import { BsCloudRainHeavy } from "react-icons/bs";
+import { FaRegSnowflake } from "react-icons/fa";
+import { WiDayShowers } from "react-icons/wi";
+import { WiNightSnowWind } from "react-icons/wi";
+import { RiThunderstormsLine } from "react-icons/ri";
+import "../styles/WeatherWidget.css";
 interface WeatherData {
   temp: number;
   code: number;
 }
 
-function getWeatherEmoji(code: number): string {
-  if (code === 0) return "☀️";
-  if (code <= 2) return "🌤️";
-  if (code === 3) return "☁️";
-  if (code <= 48) return "🌫️";
-  if (code <= 55) return "🌦️";
-  if (code <= 65) return "🌧️";
-  if (code <= 77) return "🌨️";
-  if (code <= 82) return "🌦️";
-  if (code <= 86) return "🌨️";
-  return "⛈️";
+function getWeatherEmoji(code: number): React.ReactNode {
+  if (code === 0) return <GoSun size={24} />;
+  if (code <= 2) return <CiCloudSun size={24} />;
+  if (code === 3) return <CiCloudOn size={24} />;
+  if (code <= 48) return <GiFog size={24} />;
+  if (code <= 55) return <RiDrizzleLine size={24} />;
+  if (code <= 65) return <BsCloudRainHeavy size={24} />;
+  if (code <= 77) return <FaRegSnowflake size={24} />;
+  if (code <= 82) return <WiDayShowers size={24} />;
+  if (code <= 86) return <WiNightSnowWind size={24} />;
+  return <RiThunderstormsLine size={24} />;
 }
 
 function getWeatherDesc(code: number, t: Translations): string {

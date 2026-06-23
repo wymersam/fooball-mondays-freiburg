@@ -1,6 +1,7 @@
 import PlayerList from "./PlayerList";
 import { PlayerListsProps } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+import "../styles/PlayerLists.css";
 
 function PlayerLists({
   status,

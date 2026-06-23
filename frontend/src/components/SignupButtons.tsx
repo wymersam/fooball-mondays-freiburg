@@ -19,12 +19,12 @@ function SignupButtons({
   return (
     <div className="action-buttons">
       {status.userSignedUp ? (
-        <button className="btn btn-remove" onClick={onRemoveSignup}>
+        <button className="btn btn-danger btn-block" onClick={onRemoveSignup}>
           {t.removeMySignup}
         </button>
       ) : (
         status.canSignup && (
-          <button className="btn btn-primary" onClick={onSignup}>
+          <button className="btn btn-primary btn-block" onClick={onSignup}>
             {mainList.length >= 10 ? t.joinReserveList : t.signMeUp}
           </button>
         )

@@ -203,6 +203,15 @@ func GetCollectors(db *sql.DB) ([]models.CollectorRecord, error) {
 	return records, nil
 }
 
+func SetCollector(db *sql.DB, weekKey, userID, username string) error {
+	_, err := db.Exec(`
+		INSERT INTO collectors (week_key, user_id, username)
+		VALUES ($1, $2, $3)
+		ON CONFLICT (week_key) DO UPDATE SET user_id = EXCLUDED.user_id, username = EXCLUDED.username
+	`, weekKey, userID, username)
+	return err
+}
+
 // TogglePaid sets the has_paid flag for a user's signup in a given week.
 func TogglePaid(db *sql.DB, userID, weekKey string, value bool) error {
 	_, err := db.Exec(`UPDATE signups SET has_paid = $1 WHERE user_id = $2 AND week_key = $3`, value, userID, weekKey)

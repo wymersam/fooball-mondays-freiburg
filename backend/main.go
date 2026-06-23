@@ -158,6 +158,7 @@ func main() {
 		api.PATCH("/ball-bringer", handlers.BallBringerHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.PATCH("/paid", handlers.PaidHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.GET("/collectors", handlers.CollectorsHandler(sqlDB))
+		api.POST("/collectors", handlers.SetCollectorsHandler(sqlDB))
 
 		admin := api.Group("/admin")
 		{

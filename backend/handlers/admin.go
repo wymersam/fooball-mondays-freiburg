@@ -189,9 +189,28 @@ func CollectorsHandler(dbConn *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		records, err := db.GetCollectors(dbConn)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "Failed to fetch collector history"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch collector history"})
 			return
 		}
 		c.JSON(http.StatusOK, records)
+	}
+}
+
+func SetCollectorsHandler(dbConn *sql.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req models.SetCollectorsRequest
+
+		if err := c.ShouldBindJSON(&req); err != nil || req.WeekKey == "" || req.Username == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			return
+		}
+
+		err := db.SetCollector(dbConn, req.WeekKey, req.UserID, req.Username)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to set collector"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"success": true})
 	}
 }

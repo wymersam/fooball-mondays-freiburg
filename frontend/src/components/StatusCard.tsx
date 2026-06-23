@@ -1,7 +1,8 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { StatusCardProps } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 import WeatherWidget from "./WeatherWidget";
+import "../styles/StatusCard.css";
 
 function useCountdown(targetISO: string) {
   const calculate = () => {
@@ -65,7 +66,7 @@ function StatusCard({ status, language }: StatusCardProps) {
   });
 
   const countdown = useCountdown(status.nextReset);
-  const pad = (n: number) => String(n).padStart(2, "0");
+  const pad = (num: number) => num.toString().padStart(2, "0");
   const countdownStr =
     countdown.days > 0
       ? `${countdown.days}d ${pad(countdown.hours)}h ${pad(countdown.minutes)}m ${pad(countdown.seconds)}s`
@@ -78,7 +79,7 @@ function StatusCard({ status, language }: StatusCardProps) {
           {t.nextGame}: {formattedDate}
         </h2>
         <WeatherWidget />
-        <p className="reset-countdown">Resets in: {countdownStr}</p>
+        {/* <p className="reset-countdown">Resets in: {countdownStr}</p> */}
       </div>
 
       <div className={`signup-status ${status.canSignup ? "open" : "closed"}`}>

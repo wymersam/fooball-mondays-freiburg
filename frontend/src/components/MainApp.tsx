@@ -8,6 +8,8 @@ import Rules from "./Rules";
 import { apiService } from "../services/apiService";
 import { MainAppProps, SignupStatus } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+import Tab from "./Tab";
+import AdminButtonControls from "./AdminButtonControls";
 
 function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
   const { t, language } = useLanguage();
@@ -18,7 +20,6 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
   const [overrideState, setOverrideState] = useState<
     "auto" | "open" | "closed"
   >("auto");
-  const [resetting, setResetting] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "players" | "payments" | "collectors"
   >("players");
@@ -80,97 +81,44 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
     }
   };
 
-  const handleAdminReset = async (): Promise<void> => {
-    if (!window.confirm(t.adminResetConfirm)) return;
-    setResetting(true);
-    try {
-      await apiService.adminReset(adminPassword);
-      setOverrideState("open");
-      await loadStatus();
-    } catch (error: any) {
-      onError(error?.message || "Reset failed");
-    } finally {
-      setResetting(false);
-    }
-  };
-
-  const handleAdminOpen = async (): Promise<void> => {
-    await apiService.adminOpenSignups(adminPassword);
-    setOverrideState("open");
-    await loadStatus();
-  };
-
-  const handleAdminClose = async (): Promise<void> => {
-    await apiService.adminCloseSignups(adminPassword);
-    setOverrideState("closed");
-    await loadStatus();
-  };
-
-  const handleAdminAuto = async (): Promise<void> => {
-    await apiService.adminClearOverride(adminPassword);
-    setOverrideState("auto");
-    await loadStatus();
-  };
-
   if (loading) {
     return <div className="loading">{t.loadingStatus}</div>;
   }
 
   return (
-    <>
+    <div className="main-app">
       <StatusCard status={status} language={language} />
       {isAdmin && (
-        <div className="admin-bar">
-          <button
-            className="admin-reset-btn"
-            onClick={handleAdminReset}
-            disabled={resetting}
-          >
-            {resetting ? "⏳" : t.adminReset}
-          </button>
-          <button
-            className={`admin-override-btn${overrideState === "open" ? " active" : ""}`}
-            onClick={
-              overrideState === "open" ? handleAdminAuto : handleAdminOpen
-            }
-          >
-            {overrideState === "open" ? t.adminAutoMode : t.adminOpenSignups}
-          </button>
-          <button
-            className={`admin-override-btn danger${overrideState === "closed" ? " active" : ""}`}
-            onClick={
-              overrideState === "closed" ? handleAdminAuto : handleAdminClose
-            }
-          >
-            {overrideState === "closed" ? t.adminAutoMode : t.adminCloseSignups}
-          </button>
-        </div>
+        <AdminButtonControls
+          adminPassword={adminPassword}
+          overrideState={overrideState}
+          loadStatus={loadStatus}
+          setOverrideState={setOverrideState}
+          onError={onError}
+          t={t}
+        />
       )}
       <SignupButtons
         status={status}
         onSignup={handleSignup}
         onRemoveSignup={handleRemoveSignup}
       />
-
       <div className="tab-bar">
-        <button
-          className={`tab-btn ${activeTab === "players" ? "tab-btn--active" : ""}`}
+        <Tab
+          label={t.playersTab}
+          isActive={activeTab === "players"}
           onClick={() => setActiveTab("players")}
-        >
-          {t.playersTab}
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "payments" ? "tab-btn--active" : ""}`}
+        />
+        <Tab
+          label={t.paymentsTab}
+          isActive={activeTab === "payments"}
           onClick={() => setActiveTab("payments")}
-        >
-          {t.paymentsTab}
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "collectors" ? "tab-btn--active" : ""}`}
+        />
+        <Tab
+          label={t.collectorsTab}
+          isActive={activeTab === "collectors"}
           onClick={() => setActiveTab("collectors")}
-        >
-          {t.collectorsTab}
-        </button>
+        />
       </div>
 
       {activeTab === "players" ? (
@@ -190,10 +138,8 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
       ) : (
         <CollectorsList />
       )}
-      <div className="rules-container">
-        <Rules />
-      </div>
-    </>
+      <Rules />
+    </div>
   );
 }
 

@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { apiService } from "../services/apiService";
 import { useLanguage } from "../context/LanguageContext";
-
-interface CollectorRecord {
-  weekKey: string;
-  userId: string;
-  username: string;
-}
+import { TiTick } from "react-icons/ti";
+import { TbPigMoney } from "react-icons/tb";
+import { CollectorRecord } from "../types";
+import "../styles/CollectorsList.css";
 
 function CollectorsList() {
   const { t } = useLanguage();
+
   const [collectors, setCollectors] = useState<CollectorRecord[]>([]);
   const [isAddingCollector, setIsAddingCollector] = useState(false);
   const [collectorName, setCollectorName] = useState("");
@@ -31,56 +30,51 @@ function CollectorsList() {
   }, [error]);
 
   function validateCollectorInput(date: string, name: string): boolean {
-    if (!date.trim() || !name.trim()) {
-      return false;
-    }
-    // Ensure date format is YYYY-MM-DD
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!dateRegex.test(date.trim())) {
-      return false;
-    }
+    if (!date.trim() || !name.trim()) return false;
 
-    // Ensure name is longer than 2 characters
-    if (name.trim().length < 2) {
-      return false;
-    }
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(date.trim())) return false;
+
+    if (name.trim().length < 2) return false;
 
     return true;
   }
 
   function addCollector(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
+
     if (!validateCollectorInput(collectorDate, collectorName)) {
       setError(
         "Date must be in YYYY-MM-DD format and name must be at least 2 characters long.",
       );
       return;
     }
-    setCollectors((prev) => [
-      ...prev,
-      {
-        weekKey: collectorDate.trim(),
-        userId: "",
-        username: collectorName.trim(),
-      },
-    ]);
+
+    const newCollector = {
+      weekKey: collectorDate.trim(),
+      userId: "",
+      username: collectorName.trim(),
+    };
+
+    setCollectors((prev) => [newCollector, ...prev]);
+
     setCollectorDate("");
     setCollectorName("");
     setIsAddingCollector(false);
     setError("");
 
-    apiService
-      .addCollector(collectorName, collectorDate.trim())
-      .catch((err) => {
-        setError(err?.message || "Failed to add collector");
-      });
+    apiService.addCollector(newCollector).catch((err) => {
+      setError(err?.message || "Failed to add collector");
+    });
   }
 
   if (collectors.length === 0) {
     return (
       <div className="payments-list">
         <div className="empty-state">
-          <div className="empty-icon">💰</div>
+          <div className="empty-icon">
+            <TbPigMoney size={48} />
+          </div>
           <h4>{t.noCollectorsYet}</h4>
         </div>
       </div>
@@ -98,46 +92,55 @@ function CollectorsList() {
         </thead>
         <tbody>
           {collectors.map((c) => (
-            <tr key={c.weekKey}>
+            <tr key={`${c.weekKey}-${c.username}`}>
               <td>{c.weekKey}</td>
               <td>{c.username}</td>
             </tr>
           ))}
         </tbody>
       </table>
+
       {isAddingCollector && (
         <form className="add-collector-form">
           <input
-            id="collectorDate"
             type="text"
-            placeholder="Add date"
+            placeholder="YYYY-MM-DD"
             className="add-collector-input"
+            value={collectorDate}
             onChange={(e) => setCollectorDate(e.target.value)}
-          ></input>
+          />
+
           <input
-            id="collectorName"
             type="text"
-            placeholder="Add name"
+            placeholder="Name"
             className="add-collector-input"
+            value={collectorName}
             onChange={(e) => setCollectorName(e.target.value)}
-          ></input>
+          />
+
           {collectorDate && collectorName && (
-            <button className="save-collector-button" onClick={addCollector}>
-              <span className="save-collector-icon">✅</span>
+            <button
+              type="button"
+              className="save-collector-button"
+              onClick={addCollector}
+            >
+              <TiTick color="#57c457" />
             </button>
           )}
         </form>
       )}
+
       <button
         className={
           isAddingCollector
             ? "hide-add-collector-button"
             : "add-collector-button"
         }
-        onClick={() => (isAddingCollector ? null : setIsAddingCollector(true))}
+        onClick={() => setIsAddingCollector(true)}
       >
         Add new collector
       </button>
+
       {error && <div className="collector-error">{error}</div>}
     </div>
   );

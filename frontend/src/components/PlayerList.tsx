@@ -1,6 +1,11 @@
 import { PlayerListProps } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 import { apiService } from "../services/apiService";
+import { TbMoodEmpty } from "react-icons/tb";
+import { IoHourglassOutline } from "react-icons/io5";
+import { GiSoccerBall } from "react-icons/gi";
+import { FaShirt } from "react-icons/fa6";
+import { CgCloseO } from "react-icons/cg";
 
 function PlayerList({
   players,
@@ -16,7 +21,13 @@ function PlayerList({
         className={`player-list ${isMainList ? "main-list" : "reserve-list"}`}
       >
         <div className="empty-state">
-          <div className="empty-icon">{isMainList ? "🏟️" : "⏳"}</div>
+          <div className="empty-icon">
+            {isMainList ? (
+              <TbMoodEmpty size={24} />
+            ) : (
+              <IoHourglassOutline size={24} />
+            )}
+          </div>
           <h4>{isMainList ? t.noPlayersYet : t.noReservesYet}</h4>
           <p>{isMainList ? t.beTheFirstToSignUp : t.noOneWaitingYet}</p>
         </div>
@@ -44,14 +55,8 @@ function PlayerList({
                 <span className="player-name">
                   {player.username}
                   {isCurrentUser && <span className="you-badge">{t.you}</span>}
-                  {player.bibWasher && (
-                    <span className="bib-washer-badge">{t.bibWasherBadge}</span>
-                  )}
-                  {player.ballBringer && (
-                    <span className="ball-bringer-badge">
-                      {t.ballBringerBadge}
-                    </span>
-                  )}
+                  {player.bibWasher && <FaShirt size={16} />}
+                  {player.ballBringer && <GiSoccerBall size={16} />}
                 </span>
                 <span className="signup-time">
                   {t.signedUpAt}{" "}
@@ -82,9 +87,15 @@ function PlayerList({
                         }
                       }}
                     >
-                      {player.bibWasher
-                        ? t.unvolunteerBibs
-                        : t.volunteerToWashBibs}
+                      {player.bibWasher ? (
+                        <span className="unvolunteer-bibs-text">
+                          <CgCloseO size={16} /> {t.unvolunteerBibs}
+                        </span>
+                      ) : (
+                        <span className="volunteer-bibs-text">
+                          <FaShirt size={16} /> {t.volunteerToWashBibs}
+                        </span>
+                      )}
                     </button>
                   )}
                 {isCurrentUser && isMainList && (
@@ -102,7 +113,17 @@ function PlayerList({
                       }
                     }}
                   >
-                    {player.ballBringer ? t.unvolunteerBall : t.canBringBall}
+                    {player.ballBringer ? (
+                      <span className="unvolunteer-ball-text">
+                        <CgCloseO size={16} />
+                        {t.unvolunteerBall}
+                      </span>
+                    ) : (
+                      <span className="volunteer-ball-text">
+                        <GiSoccerBall size={16} />
+                        {t.canBringBall}
+                      </span>
+                    )}
                   </button>
                 )}
               </div>

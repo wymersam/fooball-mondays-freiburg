@@ -85,3 +85,30 @@ export interface PaymentsListProps {
   onRefresh: () => Promise<void>;
   onError: (message: string) => void;
 }
+
+export interface TabProps {
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+export interface AdminButtonControlsProps {
+  adminPassword: string;
+  overrideState: "auto" | "open" | "closed";
+  loadStatus: () => Promise<void>;
+  setOverrideState: (state: "auto" | "open" | "closed") => void;
+  onError: (message: string) => void;
+  t: any;
+}
+
+export interface RuleProps {
+  ruleHeader: string;
+  ruleDescription: string;
+  icon: React.ReactNode;
+}
+
+export interface CollectorRecord {
+  weekKey: string;
+  userId: string;
+  username: string;
+}

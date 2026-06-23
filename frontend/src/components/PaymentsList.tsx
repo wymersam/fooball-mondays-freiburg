@@ -1,7 +1,8 @@
-import React from "react";
 import { PaymentsListProps } from "../types";
 import { apiService } from "../services/apiService";
 import { useLanguage } from "../context/LanguageContext";
+import { TbMoneybag } from "react-icons/tb";
+import "../styles/PaymentsList.css";
 
 function PaymentsList({
   players,
@@ -17,7 +18,9 @@ function PaymentsList({
     return (
       <div className="payments-list">
         <div className="empty-state">
-          <div className="empty-icon">💶</div>
+          <div className="empty-icon">
+            <TbMoneybag size={48} />
+          </div>
           <h4>{t.noPaymentsToTrack}</h4>
           <p>{t.noPaymentsDesc}</p>
         </div>

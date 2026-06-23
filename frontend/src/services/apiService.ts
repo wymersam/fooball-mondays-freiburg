@@ -197,12 +197,15 @@ class ApiService {
     }
   }
 
-  async addCollector(name: string, weekKey: string): Promise<void> {
+  async addCollector(collector: {
+    username: string;
+    weekKey: string;
+  }): Promise<void> {
     const response = await fetch(`${API_BASE}/api/collectors`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ username: name, weekKey }),
+      body: JSON.stringify(collector),
     });
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));

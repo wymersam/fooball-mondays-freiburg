@@ -1,0 +1,171 @@
+.player-list {
+  background: var(--color-surface);
+  min-height: 60px;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+}
+
+.reserve-list {
+  border-color: var(--color-accent-light);
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s ease;
+}
+
+.player-item:last-child {
+  border-bottom: none;
+}
+
+.player-item:hover {
+  background: var(--color-accent-light);
+}
+
+.player-item.current-user {
+  background: rgba(232, 127, 36, 0.1);
+  border-left: 3px solid var(--color-accent);
+}
+
+.player-item.bib-washer-row,
+.player-item.ball-bringer-row {
+  background: rgba(232, 127, 36, 0.07);
+}
+
+.player-item.bib-washer-row.current-user,
+.player-item.ball-bringer-row.current-user {
+  background: rgba(232, 127, 36, 0.15);
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.player-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.player-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.you-badge {
+  background: var(--color-secondary-soft);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.signup-time {
+  font-size: 0.75rem;
+}
+
+.player-position {
+  background-color: var(--color-secondary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.bib-washer-button,
+.ball-bringer-button {
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  background: transparent;
+  color: var(--color-accent);
+  border: 1.5px solid var(--color-accent);
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+
+  max-width: 50%;
+  word-break: break-word;
+}
+
+.bib-washer-button:hover,
+.ball-bringer-button:hover {
+  background: var(--color-accent);
+  color: white;
+}
+
+.bib-washer-button--active,
+.ball-bringer-button--active {
+  background: var(--color-accent);
+  color: white;
+}
+
+.bib-washer-button--active:hover,
+.ball-bringer-button--active:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.volunteer-bibs-text,
+.volunteer-ball-text,
+.unvolunteer-bibs-text,
+.unvolunteer-ball-text {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-content: center;
+}
+
+.volunteer-bibs-text svg,
+.volunteer-ball-text svg {
+  color: black;
+}
+
+.list-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.list-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.list-section {
+  margin-bottom: 1.2rem;
+}
+
+/* Reserve list position badge */
+.reserve-list .player-position {
+  background: var(--color-accent);
+}

@@ -1,0 +1,84 @@
+/* Collectors List */
+.collectors-list {
+  margin: 1rem 0;
+  background: var(--color-surface);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.collectors-note {
+  margin: 0;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  background: #f1f8e9;
+}
+
+.collectors-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.collectors-table th {
+  text-align: left;
+  padding: 0.65rem 1.25rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  background: var(--color-accent-light);
+}
+
+.collectors-table td {
+  padding: 0.65rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.collectors-table tr:last-child td {
+  border-bottom: none;
+}
+
+.add-collector-form {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 0.5rem;
+}
+
+.collector-error {
+  color: var(--error-text);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  text-align: center;
+}
+
+input[type="text"].add-collector-input {
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 0.875rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--border-radius);
+  opacity: 0.8;
+}
+
+.add-collector-button {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--color-secondary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hide-add-collector-button {
+  display: none;
+}
+
+.save-collector-button {
+  display: flex;
+  font-size: 2rem;
+  cursor: pointer;
+  background: transparent;
+}
