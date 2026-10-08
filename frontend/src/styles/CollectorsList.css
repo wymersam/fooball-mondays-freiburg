@@ -18,8 +18,24 @@
 
 .collectors-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.9rem;
+}
+
+.collectors-table th:nth-child(1),
+.collectors-table td:nth-child(1) {
+  width: 25%;
+}
+
+.collectors-table th:nth-child(2),
+.collectors-table td:nth-child(2) {
+  width: 50%;
+}
+
+.collectors-table th:nth-child(3),
+.collectors-table td:nth-child(3) {
+  width: 25%;
 }
 
 .collectors-table th {
@@ -42,9 +58,13 @@
 }
 
 .add-collector-form {
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border);
+  background: var(--color-accent-light);
 }
 
 .collector-error {
@@ -55,12 +75,41 @@
 }
 
 input[type="text"].add-collector-input {
+  width: 100%;
+  min-width: 0;
   padding: 0.5rem;
   text-align: left;
   font-size: 0.875rem;
   border: 1.5px solid var(--border);
   border-radius: var(--border-radius);
   opacity: 0.8;
+}
+
+.add-collector-payment {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.5rem;
+  padding: 0 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.add-collector-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.add-collector-payment input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--color-secondary);
 }
 
 .add-collector-button {
@@ -77,8 +126,32 @@ input[type="text"].add-collector-input {
 }
 
 .save-collector-button {
-  display: flex;
-  font-size: 2rem;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-secondary-soft);
+  font-size: 0.875rem;
+  font-weight: 600;
   cursor: pointer;
-  background: transparent;
+}
+
+.save-collector-button:hover {
+  background: var(--color-secondary);
+}
+
+@media (max-width: 480px) {
+  .add-collector-form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .add-collector-actions {
+    grid-column: 1 / -1;
+  }
+
+  .save-collector-button {
+    width: auto;
+    min-width: 4rem;
+  }
 }

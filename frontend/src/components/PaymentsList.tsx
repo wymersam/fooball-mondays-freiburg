@@ -2,7 +2,7 @@ import { PaymentsListProps } from "../types";
 import { apiService } from "../services/apiService";
 import { useLanguage } from "../context/LanguageContext";
 import { TbMoneybag } from "react-icons/tb";
-import { getAvatar } from "../utils/get-avatar";
+import { AvatarPortrait, getAvatar } from "../utils/get-avatar";
 import "../styles/PaymentsList.css";
 
 function PaymentsList({
@@ -41,7 +41,7 @@ function PaymentsList({
         </span>
       </div>
       {players.map((player, index) => {
-        const AvatarIcon = getAvatar(player.username);
+        const avatar = getAvatar(player.username);
         return (
           <div
             key={player.userId || index}
@@ -49,7 +49,7 @@ function PaymentsList({
           >
             <div className="payment-player-info">
               <div className="player-avatar">
-                <AvatarIcon size={32} />
+                <AvatarPortrait avatar={avatar} />
               </div>
               <span className="payment-username">
                 {player.username}

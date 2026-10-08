@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiService } from "../services/apiService";
 import { useLanguage } from "../context/LanguageContext";
-import { TiTick } from "react-icons/ti";
 import { TbPigMoney } from "react-icons/tb";
 import { CollectorRecord } from "../types";
 import "../styles/CollectorsList.css";
@@ -96,21 +95,16 @@ function CollectorsList() {
     });
   }
 
-  if (collectors.length === 0) {
-    return (
-      <div className="payments-list">
+  return (
+    <div className="collectors-list">
+      {collectors.length === 0 && (
         <div className="empty-state">
           <div className="empty-icon">
             <TbPigMoney size={48} />
           </div>
           <h4>{t.noCollectorsYet}</h4>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="collectors-list">
+      )}
       <table className="collectors-table">
         <thead>
           <tr>
@@ -156,15 +150,26 @@ function CollectorsList() {
             onChange={(e) => setCollectorName(e.target.value)}
           />
 
-          {collectorDate && collectorName && collectorPaymentStatus && (
-            <button
-              type="button"
-              className="save-collector-button"
-              onClick={addCollector}
-            >
-              <TiTick color="#57c457" />
-            </button>
-          )}
+          <div className="add-collector-actions">
+            <label className="add-collector-payment">
+              <input
+                type="checkbox"
+                checked={collectorPaymentStatus}
+                onChange={togglePaymentCheckbox}
+              />
+              Paid
+            </label>
+
+            {collectorDate && collectorName && (
+              <button
+                type="button"
+                className="save-collector-button"
+                onClick={addCollector}
+              >
+                Add
+              </button>
+            )}
+          </div>
         </form>
       )}
 
