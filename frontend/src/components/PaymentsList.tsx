@@ -42,8 +42,6 @@ function PaymentsList({
       </div>
       {players.map((player, index) => {
         const AvatarIcon = getAvatar(player.username);
-        const isCurrentUser =
-          currentUser && player.username === currentUser.username;
         return (
           <div
             key={player.userId || index}
@@ -55,7 +53,7 @@ function PaymentsList({
               </div>
               <span className="payment-username">
                 {player.username}
-                {isCurrentUser && (
+                {currentUser && player.username === currentUser.username && (
                   <span className="you-badge" style={{ marginLeft: "0.5rem" }}>
                     {t.you}
                   </span>
@@ -74,27 +72,23 @@ function PaymentsList({
                 </span>
               )}
 
-              {isCurrentUser && (
-                <button
-                  className={`payment-toggle-btn ${
-                    player.hasPaid
-                      ? "payment-toggle-btn--undo"
-                      : "payment-toggle-btn--pay"
-                  }`}
-                  onClick={async () => {
-                    try {
-                      await apiService.setPaid(!player.hasPaid);
-                      await onRefresh();
-                    } catch (err: any) {
-                      onError(
-                        err?.message || "Failed to update payment status",
-                      );
-                    }
-                  }}
-                >
-                  {player.hasPaid ? t.undo : t.markAsPaid}
-                </button>
-              )}
+              <button
+                className={`payment-toggle-btn ${
+                  player.hasPaid
+                    ? "payment-toggle-btn--undo"
+                    : "payment-toggle-btn--pay"
+                }`}
+                onClick={async () => {
+                  try {
+                    await apiService.setPaid(player.userId, !player.hasPaid);
+                    await onRefresh();
+                  } catch (err: any) {
+                    onError(err?.message || "Failed to update payment status");
+                  }
+                }}
+              >
+                {player.hasPaid ? t.undo : t.markAsPaid}
+              </button>
             </div>
           </div>
         );

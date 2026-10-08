@@ -205,7 +205,7 @@ func SetCollectorsHandler(dbConn *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		err := db.SetCollector(dbConn, req.WeekKey, req.UserID, req.Username)
+		err := db.SetCollector(dbConn, req.WeekKey, req.UserID, req.Username, req.PaymentStatus)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to set collector"})
 			return

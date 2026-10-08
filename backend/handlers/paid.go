@@ -10,10 +10,11 @@ import (
 )
 
 type paidRequest struct {
-	HasPaid bool `json:"hasPaid"`
+	UserID  string `json:"userId"`
+	HasPaid bool   `json:"hasPaid"`
 }
 
-// PaidHandler allows the authenticated user to mark themselves as paid or unpaid for the previous week's game.
+// PaidHandler allows an authenticated user to update a player's payment status for the previous week's game.
 func PaidHandler(dbConn *sql.DB, getCurrentWeekKey func() string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userID, err := c.Cookie("userId")
@@ -23,13 +24,13 @@ func PaidHandler(dbConn *sql.DB, getCurrentWeekKey func() string) gin.HandlerFun
 		}
 
 		var req paidRequest
-		if err := c.ShouldBindJSON(&req); err != nil {
+		if err := c.ShouldBindJSON(&req); err != nil || req.UserID == "" {
 			c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Invalid request"})
 			return
 		}
 
 		weekKey := prevWeekKey(getCurrentWeekKey())
-		if err := db.TogglePaid(dbConn, userID, weekKey, req.HasPaid); err != nil {
+		if err := db.TogglePaid(dbConn, req.UserID, weekKey, req.HasPaid); err != nil {
 			c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "Failed to update payment status"})
 			return
 		}

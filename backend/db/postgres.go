@@ -29,7 +29,8 @@ func CreateTables(db *sql.DB) error {
     CREATE TABLE IF NOT EXISTS collectors (
         week_key TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
-        username TEXT NOT NULL
+        username TEXT NOT NULL,
+		payment_status BOOLEAN DEFAULT FALSE
     );
     `)
 	return err
@@ -47,8 +48,14 @@ func MigrateSchema(db *sql.DB) error {
     CREATE TABLE IF NOT EXISTS collectors (
         week_key TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
-        username TEXT NOT NULL
+        username TEXT NOT NULL,
+		payment_status BOOLEAN NOT NULL DEFAULT FALSE
     );
+		ALTER TABLE collectors ADD COLUMN IF NOT EXISTS payment_status BOOLEAN NOT NULL DEFAULT FALSE;
+		ALTER TABLE collectors ALTER COLUMN payment_status TYPE BOOLEAN
+				USING CASE WHEN lower(payment_status::text) IN ('true', 'paid', 'yes', '1') THEN TRUE ELSE FALSE END;
+		ALTER TABLE collectors ALTER COLUMN payment_status SET DEFAULT FALSE;
+		ALTER TABLE collectors ALTER COLUMN payment_status SET NOT NULL;
     `)
 	return err
 }
@@ -187,7 +194,7 @@ func GetBallBringer(db *sql.DB, weekKey string) (string, error) {
 
 // GetCollectors returns all collector records ordered by week descending.
 func GetCollectors(db *sql.DB) ([]models.CollectorRecord, error) {
-	rows, err := db.Query(`SELECT week_key, user_id, username FROM collectors ORDER BY week_key DESC`)
+	rows, err := db.Query(`SELECT week_key, user_id, username, payment_status FROM collectors ORDER BY week_key DESC`)
 	if err != nil {
 		return nil, err
 	}
@@ -195,7 +202,7 @@ func GetCollectors(db *sql.DB) ([]models.CollectorRecord, error) {
 	var records []models.CollectorRecord
 	for rows.Next() {
 		var r models.CollectorRecord
-		if err := rows.Scan(&r.WeekKey, &r.UserID, &r.Username); err != nil {
+		if err := rows.Scan(&r.WeekKey, &r.UserID, &r.Username, &r.PaymentStatus); err != nil {
 			return nil, err
 		}
 		records = append(records, r)
@@ -203,12 +210,12 @@ func GetCollectors(db *sql.DB) ([]models.CollectorRecord, error) {
 	return records, nil
 }
 
-func SetCollector(db *sql.DB, weekKey, userID, username string) error {
+func SetCollector(db *sql.DB, weekKey, userID, username string, paymentStatus bool) error {
 	_, err := db.Exec(`
-		INSERT INTO collectors (week_key, user_id, username)
-		VALUES ($1, $2, $3)
-		ON CONFLICT (week_key) DO UPDATE SET user_id = EXCLUDED.user_id, username = EXCLUDED.username
-	`, weekKey, userID, username)
+		INSERT INTO collectors (week_key, user_id, username, payment_status)
+		VALUES ($1, $2, $3, $4)
+		ON CONFLICT (week_key) DO UPDATE SET user_id = EXCLUDED.user_id, username = EXCLUDED.username, payment_status = EXCLUDED.payment_status
+	`, weekKey, userID, username, paymentStatus)
 	return err
 }
 

@@ -46,9 +46,10 @@ type User struct {
 }
 
 type CollectorRecord struct {
-	WeekKey  string `json:"weekKey"`
-	UserID   string `json:"userId"`
-	Username string `json:"username"`
+	WeekKey       string `json:"weekKey"`
+	UserID        string `json:"userId"`
+	Username      string `json:"username"`
+	PaymentStatus bool   `json:"paymentStatus"`
 }
 
 type SignupStatus struct {
@@ -62,7 +63,8 @@ type SignupStatus struct {
 }
 
 type SetCollectorsRequest struct {
-	WeekKey  string `json:"weekKey"`
-	UserID   string `json:"userId,omitempty"`
-	Username string `json:"username"`
+	WeekKey       string `json:"weekKey"`
+	UserID        string `json:"userId,omitempty"`
+	Username      string `json:"username"`
+	PaymentStatus bool   `json:"paymentStatus"`
 }

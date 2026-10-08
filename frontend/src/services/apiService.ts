@@ -184,12 +184,12 @@ class ApiService {
     }
   }
 
-  async setPaid(value: boolean): Promise<void> {
+  async setPaid(userId: string, value: boolean): Promise<void> {
     const response = await fetch(`${API_BASE}/api/paid`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ hasPaid: value }),
+      body: JSON.stringify({ userId, hasPaid: value }),
     });
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
@@ -198,8 +198,10 @@ class ApiService {
   }
 
   async addCollector(collector: {
+    userId: string;
     username: string;
     weekKey: string;
+    paymentStatus: boolean;
   }): Promise<void> {
     const response = await fetch(`${API_BASE}/api/collectors`, {
       method: "POST",
@@ -214,7 +216,12 @@ class ApiService {
   }
 
   async getCollectors(): Promise<
-    { weekKey: string; userId: string; username: string }[]
+    {
+      weekKey: string;
+      userId: string;
+      username: string;
+      paymentStatus: boolean;
+    }[]
   > {
     const response = await fetch(`${API_BASE}/api/collectors`, {
       credentials: "include",

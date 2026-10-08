@@ -13,6 +13,7 @@ function CollectorsList() {
   const [isAddingCollector, setIsAddingCollector] = useState(false);
   const [collectorName, setCollectorName] = useState("");
   const [collectorDate, setCollectorDate] = useState("");
+  const [collectorPaymentStatus, setCollectorPaymentStatus] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -54,17 +55,44 @@ function CollectorsList() {
       weekKey: collectorDate.trim(),
       userId: "",
       username: collectorName.trim(),
+      paymentStatus: collectorPaymentStatus,
     };
 
     setCollectors((prev) => [newCollector, ...prev]);
 
     setCollectorDate("");
     setCollectorName("");
+    setCollectorPaymentStatus(false);
     setIsAddingCollector(false);
     setError("");
 
     apiService.addCollector(newCollector).catch((err) => {
       setError(err?.message || "Failed to add collector");
+    });
+  }
+
+  function togglePaymentCheckbox() {
+    setCollectorPaymentStatus(!collectorPaymentStatus);
+  }
+
+  function toggleCollectorPayment(collector: CollectorRecord) {
+    const updatedCollector = {
+      ...collector,
+      paymentStatus: !collector.paymentStatus,
+    };
+    setCollectors((prev) =>
+      prev.map((item) =>
+        item.weekKey === collector.weekKey ? updatedCollector : item,
+      ),
+    );
+
+    apiService.addCollector(updatedCollector).catch((err) => {
+      setCollectors((prev) =>
+        prev.map((item) =>
+          item.weekKey === collector.weekKey ? collector : item,
+        ),
+      );
+      setError(err?.message || "Failed to update payment status");
     });
   }
 
@@ -88,6 +116,7 @@ function CollectorsList() {
           <tr>
             <th>Date</th>
             <th>Collector</th>
+            <th>Paid</th>
           </tr>
         </thead>
         <tbody>
@@ -95,6 +124,15 @@ function CollectorsList() {
             <tr key={`${c.weekKey}-${c.username}`}>
               <td>{c.weekKey}</td>
               <td>{c.username}</td>
+              <td>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={c.paymentStatus}
+                    onChange={() => toggleCollectorPayment(c)}
+                  />
+                </label>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -118,7 +156,7 @@ function CollectorsList() {
             onChange={(e) => setCollectorName(e.target.value)}
           />
 
-          {collectorDate && collectorName && (
+          {collectorDate && collectorName && collectorPaymentStatus && (
             <button
               type="button"
               className="save-collector-button"

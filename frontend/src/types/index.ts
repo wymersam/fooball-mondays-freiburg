@@ -111,4 +111,5 @@ export interface CollectorRecord {
   weekKey: string;
   userId: string;
   username: string;
+  paymentStatus: boolean;
 }

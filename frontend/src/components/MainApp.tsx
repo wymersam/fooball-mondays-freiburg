@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import StatusCard from "./StatusCard";
 import PlayerLists from "./PlayerLists";
 import PaymentsList from "./PaymentsList";
@@ -10,6 +10,7 @@ import { MainAppProps, SignupStatus } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 import Tab from "./Tab";
 import AdminButtonControls from "./AdminButtonControls";
+import ericGIF from "../images/eric-GIF.gif";
 
 function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
   const { t, language } = useLanguage();
@@ -17,6 +18,8 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminPassword, setAdminPassword] = useState("");
+  const [showEricGIF, setShowEricGIF] = useState(false);
+  const ericGifTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [overrideState, setOverrideState] = useState<
     "auto" | "open" | "closed"
   >("auto");
@@ -43,6 +46,12 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
     });
   }, [currentUser.username]);
 
+  useEffect(() => {
+    return () => {
+      if (ericGifTimer.current) clearTimeout(ericGifTimer.current);
+    };
+  }, []);
+
   const loadStatus = async (): Promise<void> => {
     try {
       const statusData = await apiService.getStatus(currentUser.username);
@@ -65,6 +74,9 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
   const handleSignup = async (): Promise<void> => {
     try {
       await apiService.signup();
+      setShowEricGIF(true);
+      if (ericGifTimer.current) clearTimeout(ericGifTimer.current);
+      ericGifTimer.current = setTimeout(() => setShowEricGIF(false), 5000);
       await loadStatus();
     } catch (error: any) {
       handleAuthError(error);
@@ -103,6 +115,31 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
         onSignup={handleSignup}
         onRemoveSignup={handleRemoveSignup}
       />
+      {showEricGIF && (
+        <div
+          className="signup-celebration-backdrop"
+          role="presentation"
+          onClick={() => setShowEricGIF(false)}
+        >
+          <div
+            className="signup-celebration-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Signup celebration"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="signup-celebration-close"
+              type="button"
+              aria-label="Close celebration"
+              onClick={() => setShowEricGIF(false)}
+            >
+              &times;
+            </button>
+            <img src={ericGIF} alt="Signup celebration" />
+          </div>
+        </div>
+      )}
       <div className="tab-bar">
         <Tab
           label={t.playersTab}
