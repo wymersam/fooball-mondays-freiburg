@@ -116,7 +116,7 @@ export const translations: Record<Language, Translations> = {
     signupWindow: "Sign-up Window",
     signupWindowDesc: "List resets Monday 7:00 PM, signups open at 10:00 PM",
     playingSpots: "Playing Spots",
-    playingSpotsDesc: "First 12 people get to play",
+    playingSpotsDesc: "First 10 people get to play",
     reserveListRule: "Reserve List",
     reserveListRuleDesc: "Additional signups go to reserves",
     selfSignupOnly: "Self Sign-up Only",
@@ -205,7 +205,7 @@ export const translations: Record<Language, Translations> = {
     signupWindowDesc:
       "La lista se reinicia el lunes a las 19:00, inscripciones abren a las 22:00",
     playingSpots: "Lugares para Jugar",
-    playingSpotsDesc: "Las primeras 12 personas pueden jugar",
+    playingSpotsDesc: "Las primeras 10 personas pueden jugar",
     reserveListRule: "Lista de Reserva",
     reserveListRuleDesc: "Las inscripciones adicionales van a reservas",
     selfSignupOnly: "Solo Inscripción Personal",
@@ -294,7 +294,7 @@ export const translations: Record<Language, Translations> = {
     signupWindowDesc:
       "L'elenco si azzera lunedì alle 19:00, iscrizioni aperte alle 22:00",
     playingSpots: "Posti per Giocare",
-    playingSpotsDesc: "Le prime 12 persone possono giocare",
+    playingSpotsDesc: "Le prime 10 persone possono giocare",
     reserveListRule: "Lista di Riserva",
     reserveListRuleDesc: "Le iscrizioni aggiuntive vanno in riserva",
     selfSignupOnly: "Solo Iscrizione Personale",
@@ -383,7 +383,7 @@ export const translations: Record<Language, Translations> = {
     signupWindowDesc:
       "تتم إعادة تعيين القائمة يوم الاثنين الساعة 19:00، التسجيلات تفتح الساعة 22:00",
     playingSpots: "أماكن اللعب",
-    playingSpotsDesc: "أول 12 أشخاص يمكنهم اللعب",
+    playingSpotsDesc: "أول 10 أشخاص يمكنهم اللعب",
     reserveListRule: "القائمة الاحتياطية",
     reserveListRuleDesc: "التسجيلات الإضافية تذهب إلى الاحتياطيين",
     selfSignupOnly: "التسجيل الذاتي فقط",
@@ -471,7 +471,7 @@ export const translations: Record<Language, Translations> = {
     signupWindowDesc:
       "Liste wird Montag 19:00 Uhr zurückgesetzt, Anmeldungen öffnen um 22:00 Uhr",
     playingSpots: "Spielplätze",
-    playingSpotsDesc: "Die ersten 12 Personen können spielen",
+    playingSpotsDesc: "Die ersten 10 Personen können spielen",
     reserveListRule: "Reserveliste",
     reserveListRuleDesc: "Zusätzliche Anmeldungen gehen auf die Reserve",
     selfSignupOnly: "Nur Selbstanmeldung",
@@ -561,7 +561,7 @@ export const translations: Record<Language, Translations> = {
     signupWindowDesc:
       "A lista reinicia segunda-feira às 19:00, inscrições abrem às 22:00",
     playingSpots: "Vagas para Jogar",
-    playingSpotsDesc: "As primeiras 12 pessoas podem jogar",
+    playingSpotsDesc: "As primeiras 10 pessoas podem jogar",
     reserveListRule: "Lista de Reservas",
     reserveListRuleDesc: "Inscrições adicionais vão para as reservas",
     selfSignupOnly: "Apenas Inscrição Própria",
