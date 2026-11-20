@@ -2,7 +2,7 @@ import { PaymentsListProps } from "../types";
 import { apiService } from "../services/apiService";
 import { useLanguage } from "../context/LanguageContext";
 import { TbMoneybag } from "react-icons/tb";
-import { AvatarPortrait, getAvatar } from "../utils/get-avatar";
+import { assignTeamCrests, CrestPortrait } from "../utils/team-crest";
 import "../styles/PaymentsList.css";
 
 function PaymentsList({
@@ -29,6 +29,8 @@ function PaymentsList({
     );
   }
 
+  const crests = assignTeamCrests(players.map((p) => p.username));
+
   return (
     <div className="payments-list">
       <div className="payments-summary">
@@ -41,7 +43,7 @@ function PaymentsList({
         </span>
       </div>
       {players.map((player, index) => {
-        const avatar = getAvatar(player.username);
+        const team = crests.get(player.username)!;
         return (
           <div
             key={player.userId || index}
@@ -49,7 +51,7 @@ function PaymentsList({
           >
             <div className="payment-player-info">
               <div className="player-avatar">
-                <AvatarPortrait avatar={avatar} />
+                <CrestPortrait team={team} />
               </div>
               <span className="payment-username">
                 {player.username}

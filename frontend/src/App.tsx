@@ -91,6 +91,9 @@ function App() {
       <p className="created-by-footer">
         <Footer />
       </p>
+      <p className="crest-credit">
+        Club logos: <a href="https://football-logos.cc/" target="_blank" rel="noopener noreferrer">football-logos.cc</a>
+      </p>
     </LanguageProvider>
   );
 }
