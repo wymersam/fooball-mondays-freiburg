@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"football-mondays/db"
 	"football-mondays/models"
+	"football-mondays/utils"
 	"net/http"
 	"os"
 	"strconv"
@@ -43,13 +44,15 @@ func StatusHandler(dbConn *sql.DB, getCurrentWeekKey func() string, isSignupTime
 			}
 		}
 		response := models.SignupStatus{
-			CurrentWeek:  currentWeek,
-			CanSignup:    isSignupTime(),
-			MainList:     mainList,
-			ReserveList:  reserveList,
-			PrevMainList: prevMainList,
-			UserSignedUp: userSignedUp,
-			NextReset:    nextResetTime(),
+			CurrentWeek:        currentWeek,
+			CanSignup:          isSignupTime(),
+			MainList:           mainList,
+			ReserveList:        reserveList,
+			PrevMainList:       prevMainList,
+			UserSignedUp:       userSignedUp,
+			NextReset:          nextResetTime(),
+			BibWasherEnabled:   utils.BibWasherEnabled(),
+			BallBringerEnabled: utils.BallBringerEnabled(),
 		}
 		c.JSON(http.StatusOK, response)
 	}

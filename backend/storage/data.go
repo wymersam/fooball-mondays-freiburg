@@ -3,6 +3,7 @@ package storage
 import (
 	"database/sql"
 	"football-mondays/db"
+	"football-mondays/utils"
 	"log"
 	"os"
 	"strconv"
@@ -76,10 +77,12 @@ func checkWeeklyResetAt(dbConn *sql.DB, now time.Time) {
 		// The bib washer must be looked up from last week's game (currentWeek-7), not weekToClean.
 		bibWasherSource := currentWeek.AddDate(0, 0, -7).Format("2006-01-02")
 		log.Printf("Resetting signups for week %s (clearing %s) at %s %02d:%02d (Europe/Berlin)", currentWeekKey, weekToClean, blockDay, blockHour, blockMinute)
-		if carried, err := db.CarryForwardBibWasher(dbConn, bibWasherSource, currentWeekKey); err != nil {
-			log.Printf("Error carrying forward bib washer from %s to %s: %v", bibWasherSource, currentWeekKey, err)
-		} else if carried {
-			log.Printf("Bib washer carried forward from %s to %s", bibWasherSource, currentWeekKey)
+		if utils.BibWasherEnabled() {
+			if carried, err := db.CarryForwardBibWasher(dbConn, bibWasherSource, currentWeekKey); err != nil {
+				log.Printf("Error carrying forward bib washer from %s to %s: %v", bibWasherSource, currentWeekKey, err)
+			} else if carried {
+				log.Printf("Bib washer carried forward from %s to %s", bibWasherSource, currentWeekKey)
+			}
 		}
 		_ = db.ClearSignupsForWeek(dbConn, weekToClean)
 		lastResetWeekKey = currentWeekKey

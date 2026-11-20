@@ -12,6 +12,8 @@ function PlayerList({
   players,
   currentUser,
   isMainList,
+  bibWasherEnabled = true,
+  ballBringerEnabled = true,
   onRefresh,
   onError,
 }: PlayerListProps) {
@@ -58,8 +60,12 @@ function PlayerList({
                 <span className="player-name">
                   {player.username}
                   {isCurrentUser && <span className="you-badge">{t.you}</span>}
-                  {player.bibWasher && <FaShirt size={16} />}
-                  {player.ballBringer && <GiSoccerBall size={16} />}
+                  {player.bibWasher && bibWasherEnabled && (
+                    <FaShirt size={16} />
+                  )}
+                  {player.ballBringer && ballBringerEnabled && (
+                    <GiSoccerBall size={16} />
+                  )}
                 </span>
                 <span className="signup-time">
                   {t.signedUpAt}{" "}
@@ -73,6 +79,7 @@ function PlayerList({
                 </span>
                 {isCurrentUser &&
                   isMainList &&
+                  bibWasherEnabled &&
                   !players.some(
                     (p) => p.bibWasher && p.username !== currentUser?.username,
                   ) && (
@@ -101,7 +108,7 @@ function PlayerList({
                       )}
                     </button>
                   )}
-                {isCurrentUser && isMainList && (
+                {isCurrentUser && isMainList && ballBringerEnabled && (
                   <button
                     className={`ball-bringer-button ${player.ballBringer ? "ball-bringer-button--active" : ""}`}
                     onClick={async () => {

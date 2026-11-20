@@ -154,8 +154,12 @@ func main() {
 		api.POST("/login", handlers.LoginHandler(sqlDB, setUserCookie))
 		api.POST("/signup", handlers.SignupHandler(sqlDB, utils.GetCurrentWeekKey, utils.IsSignupTime))
 		api.DELETE("/signup", handlers.RemoveSignupHandler(sqlDB, utils.GetCurrentWeekKey))
-		api.PATCH("/bib-washer", handlers.BibWasherHandler(sqlDB, utils.GetCurrentWeekKey))
-		api.PATCH("/ball-bringer", handlers.BallBringerHandler(sqlDB, utils.GetCurrentWeekKey))
+		if utils.BibWasherEnabled() {
+			api.PATCH("/bib-washer", handlers.BibWasherHandler(sqlDB, utils.GetCurrentWeekKey))
+		}
+		if utils.BallBringerEnabled() {
+			api.PATCH("/ball-bringer", handlers.BallBringerHandler(sqlDB, utils.GetCurrentWeekKey))
+		}
 		api.PATCH("/paid", handlers.PaidHandler(sqlDB, utils.GetCurrentWeekKey))
 		api.GET("/collectors", handlers.CollectorsHandler(sqlDB))
 		api.POST("/collectors", handlers.SetCollectorsHandler(sqlDB))

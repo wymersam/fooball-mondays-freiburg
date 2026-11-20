@@ -8,7 +8,13 @@ import { GiSoccerBall } from "react-icons/gi";
 import { TbMoneybag, TbNumber10Small } from "react-icons/tb";
 import "../styles/Rules.css";
 
-function Rules() {
+function Rules({
+  bibWasherEnabled = true,
+  ballBringerEnabled = true,
+}: {
+  bibWasherEnabled?: boolean;
+  ballBringerEnabled?: boolean;
+}) {
   const { t } = useLanguage();
   return (
     <div className="rules-container">
@@ -37,16 +43,20 @@ function Rules() {
             ruleDescription={t.selfSignupOnlyDesc}
             icon={<IoPersonOutline size={24} />}
           />
-          <Rule
-            ruleHeader={t.bibRule}
-            ruleDescription={t.bibRuleDesc}
-            icon={<FaShirt size={24} />}
-          />
-          <Rule
-            ruleHeader={t.ballRule}
-            ruleDescription={t.ballRuleDesc}
-            icon={<GiSoccerBall size={24} />}
-          />
+          {bibWasherEnabled && (
+            <Rule
+              ruleHeader={t.bibRule}
+              ruleDescription={t.bibRuleDesc}
+              icon={<FaShirt size={24} />}
+            />
+          )}
+          {ballBringerEnabled && (
+            <Rule
+              ruleHeader={t.ballRule}
+              ruleDescription={t.ballRuleDesc}
+              icon={<GiSoccerBall size={24} />}
+            />
+          )}
           <Rule
             ruleHeader={t.paymentRule}
             ruleDescription={t.paymentRuleDesc}

@@ -123,6 +123,19 @@ func TestBibWasherCarriedFromLastGameWeek(t *testing.T) {
 	}
 }
 
+// TestBibWasherNotCarriedWhenDisabled ensures the carry-forward is skipped while BIB_WASHER_ENABLED=false.
+func TestBibWasherNotCarriedWhenDisabled(t *testing.T) {
+	t.Setenv("BIB_WASHER_ENABLED", "false")
+	sqlDB := newDB(t)
+	insertSignup(t, sqlDB, "u1", "alice", weekLastGame, true)
+
+	resetAt(sqlDB, resetNow)
+
+	if n := countSignups(t, sqlDB, weekCurrent); n != 0 {
+		t.Errorf("expected no bib washer carry-forward into %s while disabled, got %d signups", weekCurrent, n)
+	}
+}
+
 // TestBibWasherNotCarriedFromTwoWeeksAgo ensures a bib washer set two weeks ago
 // (without being in last week) is NOT mistakenly carried forward.
 func TestBibWasherNotCarriedFromTwoWeeksAgo(t *testing.T) {

@@ -175,7 +175,10 @@ function MainApp({ currentUser, onError, onSessionExpired }: MainAppProps) {
       ) : (
         <CollectorsList />
       )}
-      <Rules />
+      <Rules
+        bibWasherEnabled={status?.bibWasherEnabled}
+        ballBringerEnabled={status?.ballBringerEnabled}
+      />
     </div>
   );
 }

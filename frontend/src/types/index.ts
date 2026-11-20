@@ -22,6 +22,8 @@ export interface SignupStatus {
   prevMainList: Signup[];
   userSignedUp: boolean;
   nextReset: string;
+  bibWasherEnabled?: boolean;
+  ballBringerEnabled?: boolean;
 }
 
 export interface RegisterResponse {
@@ -57,6 +59,8 @@ export interface PlayerListProps {
   players: Signup[];
   currentUser: User | null;
   isMainList: boolean;
+  bibWasherEnabled?: boolean;
+  ballBringerEnabled?: boolean;
   onRefresh: () => Promise<void>;
   onError: (message: string) => void;
 }

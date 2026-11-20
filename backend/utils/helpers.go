@@ -8,6 +8,18 @@ import (
 	"time"
 )
 
+// BibWasherEnabled reports whether the bib washer feature is on.
+// It stays on unless BIB_WASHER_ENABLED is set to "false".
+func BibWasherEnabled() bool {
+	return os.Getenv("BIB_WASHER_ENABLED") != "false"
+}
+
+// BallBringerEnabled reports whether the ball bringer feature is on.
+// It stays on unless BALL_BRINGER_ENABLED is set to "false".
+func BallBringerEnabled() bool {
+	return os.Getenv("BALL_BRINGER_ENABLED") != "false"
+}
+
 // Get current week key (Monday of the active signup week).
 // Before the reset time on the reset day, signups still belong to the previous week's game,
 // so we return last Monday's key. After the reset, we return this Monday's key.

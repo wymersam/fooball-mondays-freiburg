@@ -27,6 +27,8 @@ function PlayerLists({
           players={mainList}
           currentUser={currentUser}
           isMainList={true}
+          bibWasherEnabled={status.bibWasherEnabled}
+          ballBringerEnabled={status.ballBringerEnabled}
           onRefresh={onRefresh}
           onError={onError}
         />

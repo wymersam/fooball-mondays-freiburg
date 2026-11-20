@@ -53,13 +53,15 @@ type CollectorRecord struct {
 }
 
 type SignupStatus struct {
-	CurrentWeek  string    `json:"currentWeek"`
-	CanSignup    bool      `json:"canSignup"`
-	MainList     []Signup  `json:"mainList"`
-	ReserveList  []Signup  `json:"reserveList"`
-	PrevMainList []Signup  `json:"prevMainList"`
-	UserSignedUp bool      `json:"userSignedUp"`
-	NextReset    time.Time `json:"nextReset"`
+	CurrentWeek        string    `json:"currentWeek"`
+	CanSignup          bool      `json:"canSignup"`
+	MainList           []Signup  `json:"mainList"`
+	ReserveList        []Signup  `json:"reserveList"`
+	PrevMainList       []Signup  `json:"prevMainList"`
+	UserSignedUp       bool      `json:"userSignedUp"`
+	NextReset          time.Time `json:"nextReset"`
+	BibWasherEnabled   bool      `json:"bibWasherEnabled"`
+	BallBringerEnabled bool      `json:"ballBringerEnabled"`
 }
 
 type SetCollectorsRequest struct {
